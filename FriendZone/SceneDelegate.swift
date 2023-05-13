@@ -6,20 +6,36 @@
 //
 
 import UIKit
+import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
-
+    var appcoordinator: AppCoordinator?
+   
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        self.window = UIWindow(windowScene: windowScene)
+        
+        let factory = AppFactory(checkService: CheckerService())
+        let navigationController = UINavigationController.init()
+        let appCoordinator = AppCoordinator(factory: factory, navigationController: navigationController)
+        self.appcoordinator = appCoordinator
+        
+        self.window?.rootViewController = appCoordinator.start()
+        
+        self.window?.makeKeyAndVisible()
+        
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
+        
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print(error)
+        }
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
@@ -47,7 +63,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
 
         // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
 
