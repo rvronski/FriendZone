@@ -5,7 +5,7 @@
 //  Created by ROMAN VRONSKY on 13.05.2023.
 //
 
-import Foundation
+import UIKit
 
 protocol LoginViewModelProtocol: ViewModelProtocol {
     func viewInputDidChange(viewInput: LoginViewModel.ViewInput)
@@ -20,26 +20,30 @@ class LoginViewModel: LoginViewModelProtocol {
         case tapFaceID
     }
     
-    private let checkService: CheckerServiceProtocol
+    private let firebaseService: FirebaseServiceProtocol
 
-    init(checkService: CheckerServiceProtocol) {
-        self.checkService = checkService
+    init(checkService: FirebaseServiceProtocol) {
+        self.firebaseService = checkService
     }
     var coordinator: AppCoordinator?
     
     func authorization(email: String, password: String, completion: @escaping () -> Void) {
-        checkService.checkCredentials(email: email, password: password) { [weak self] result in
+        firebaseService.checkCredentials(email: email, password: password) { [weak self] result, uid  in
+            guard let uid else { return }
             if result {
                 self?.viewInputDidChange(viewInput: .tapLogin)
+                UserDefaults.standard.set(uid, forKey: "UserID")
             } else {
                 completion()
             }
         }
     }
     func registration(email: String, password: String, userName: String, completion: @escaping () -> Void) {
-        checkService.signUp(email: email, password: password, userName: userName) { [weak self] result in
+        firebaseService.signUp(email: email, password: password, userName: userName) { [weak self] result, uid  in
+            guard let uid else {return}
             if result {
                 self?.viewInputDidChange(viewInput: .tapLogin)
+                UserDefaults.standard.set(uid, forKey: "UserID")
             } else {
                 completion()
             }

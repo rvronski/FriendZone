@@ -9,9 +9,9 @@ import UIKit
 
 class AppFactory {
     
-    private let checkService: CheckerServiceProtocol
+    private let checkService: FirebaseServiceProtocol
     
-    init(checkService: CheckerServiceProtocol) {
+    init(checkService: FirebaseServiceProtocol) {
         self.checkService = checkService
     }
     func makeModule(ofType moduleType: Module.ModuleType) -> Module {
@@ -25,7 +25,7 @@ class AppFactory {
             let view = UINavigationController(rootViewController: MainViewController())
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
         case .profile:
-            let viewModel = ProfileViewModel()
+            let viewModel = ProfileViewModel(checkService: checkService)
             let view = UINavigationController(rootViewController: ProfileViewController(viewModel: viewModel))
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
         case .like:

@@ -14,12 +14,32 @@ protocol ProfileViewDelegate: AnyObject {
 
 final class ProfileView: UIView {
     
-    private lazy var headerView: UIView = {
-        let headerView = UIView()
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.backgroundColor = .systemGray5
-        return headerView
-    }()
+    lazy var nameLabel = CustomLabel(inform: "", size: 18, weight: .bold, color: .createColor(light: .black, dark: .white))
+
+    lazy var publicationsButton = CustomButton(buttonText: "Публикации", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
+    
+    lazy var publicationsCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
+    
+    lazy var followButton = CustomButton(buttonText: "Подписок", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
+    
+    lazy var followCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
+    
+    lazy var followersButton =  CustomButton(buttonText: "Подписчики", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
+    
+    lazy var followersCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
+    
+    lazy var noteLabel = CustomLabel(inform: "Запись", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
+    
+    lazy var noteButton = ButtonWithSystemImage(background: nil, image: "square.and.pencil", imageSize: 20, symbolScale: .medium, tintcolor: .black)
+    
+    lazy var historyLabel = CustomLabel(inform: "История", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
+    
+    lazy var historyButton = ButtonWithSystemImage(background: nil, image: "camera", imageSize: 20, symbolScale: .medium, tintcolor: .black)
+    
+    lazy var fotoLabel =  CustomLabel(inform: "Фото", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
+    
+    lazy var fotoButton = ButtonWithSystemImage(background: nil, image: "photo.stack", imageSize: 20, symbolScale: .medium, tintcolor: .black)
+   
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -30,15 +50,7 @@ final class ProfileView: UIView {
         tableView.dragInteractionEnabled = true
         return tableView
     }()
-    
-    private lazy var mapButton: UIButton = {
-        let button  = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(tapMapButton), for: .touchUpInside)
-        button.setImage(UIImage(named: "buttonGeo"), for: .normal)
-        return button
-    }()
-    
+
     lazy var avatarImage: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .orange
@@ -52,91 +64,17 @@ final class ProfileView: UIView {
         return imageView
     }()
     
-    lazy var nameLabel: UILabel = {
-        let nameLabel = UILabel(frame: CGRect(x: 152, y: 27, width: 100, height: 21.5))
-        nameLabel.font = UIFont(name: "bold", size: 18)
-        nameLabel.textColor = .createColor(light: .black, dark: .white)
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        return nameLabel
-    }()
-    
-    lazy var disctiptionLabel: UILabel = {
-        let discriptionLabel = UILabel(frame: CGRect(x: 152 , y: 58.5, width: 100, height: 21.5))
-        discriptionLabel.font = UIFont(name: "regular", size: 14)
-        discriptionLabel.textColor = .createColor(light: .gray, dark: .white)
-        discriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        return discriptionLabel
-    }()
-    
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView(frame: CGRect(x: 152, y: 27, width: 100, height: 73))
-        stackView.distribution = .fillEqually
-        stackView.spacing = 20
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    
-    lazy var setStatusButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 16, y: 166, width: 100, height: 50))
-        button.layer.cornerRadius = 10
-        button.backgroundColor = .systemBlue
-        button.setTitle("Показать статус", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.shadowOffset = CGSize(width: 4, height: 4)
-        button.layer.shadowRadius = 4
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.7
-        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    lazy var statusTextField: UITextField = {
-        let status = UITextField(frame: CGRect(x: 152, y: 110, width: 100, height: 40))
-        status.textColor = .black
-        status.layer.cornerRadius = 12
-        status.layer.borderWidth = 1
-        status.layer.borderColor = UIColor.black.cgColor
-        status.font = UIFont(name: "regular", size: 15)
-        status.backgroundColor = .white
-        status.attributedPlaceholder = NSAttributedString(string: " ", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray ])
-        status.addTarget(self, action: #selector(self.statusTextChanged), for: .editingChanged)
-        status.textAlignment = .center
-        status.clearsOnBeginEditing = true
-        //        status.becomeFirstResponder()
-        status.translatesAutoresizingMaskIntoConstraints = false
-        return status
-    }()
+    lazy var setStatusButton = CustomButton(buttonText: "Редактировать", textColor: .white, background: .buttonColor, fontSize: 15, fontWeight: .bold)
     
     weak var delegate: ProfileViewDelegate?
-    var statusText: String = " "
-    
-    @objc func statusTextChanged(_ textField: UITextField) {
-        
-        statusText = textField.text ?? "No text"
-        
-    }
-    @objc func buttonPressed() {
-        
-        disctiptionLabel.text = statusText
-        statusTextField.resignFirstResponder()
-        statusTextField.placeholder = ""
-        statusTextField.text = ""
-        
-    }
-    
+   
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.setupView()
         self.setupGesture()
         self.gestureAvatar()
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { [weak self] timer  in
-            self?.flashStatusTextField()
-            timer.invalidate()
-        }
+        
     }
     
     required init?(coder: NSCoder) {
@@ -147,89 +85,84 @@ final class ProfileView: UIView {
         self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
     }
     
-    private func headerViewConstraints() -> [NSLayoutConstraint] {
-        let topConstraint = self.headerView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor)
-        let leftConstraint = self.headerView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor)
-        let rightConstraint = self.headerView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor)
-        let heightConsraint = self.headerView.heightAnchor.constraint(equalToConstant: 220)
-        
-        return [topConstraint, leftConstraint, rightConstraint, heightConsraint]
-    }
-    
-    func avatarViewConstraint() -> [NSLayoutConstraint] {
-        let topConstraint = self.avatarImage.topAnchor.constraint(equalTo: self.headerView.topAnchor, constant: 16)
-        let leadingConstraint = self.avatarImage.leadingAnchor.constraint(equalTo: self.headerView.leadingAnchor, constant: 16)
-        let widthConstraint = self.avatarImage.widthAnchor.constraint(lessThanOrEqualTo: self.headerView.widthAnchor, multiplier: 0.2415)
-        let heightAnchor = self.avatarImage.heightAnchor.constraint(equalTo: self.avatarImage.widthAnchor)
-        
-        return [topConstraint,leadingConstraint, widthConstraint, heightAnchor ]
-    }
-    
-    private func stackViewConstraint() -> [NSLayoutConstraint] {
-        let topConstraint = self.stackView.topAnchor.constraint(equalTo: self.headerView.topAnchor, constant:27)
-        let widthConstraint = self.stackView.widthAnchor.constraint(equalTo: self.headerView.widthAnchor, multiplier: 0.57)
-        let leadingConstraint = self.stackView.leadingAnchor.constraint(equalTo: self.avatarImage.trailingAnchor, constant: 20)
-        return [topConstraint, widthConstraint, leadingConstraint]
-    }
-    
-    private func statusTextFieldConstraints() -> [NSLayoutConstraint] {
-        let topConstraint = self.statusTextField.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 16)
-        let leadingConstraint = self.statusTextField.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor)
-        let heightConstraint = self.statusTextField.heightAnchor.constraint(equalToConstant: 40)
-        let widthConstraint = self.statusTextField.widthAnchor.constraint(equalTo: self.headerView.widthAnchor, multiplier: 0.57)
-        return [topConstraint, leadingConstraint, heightConstraint, widthConstraint]
-    }
-    private func buttonConstraints() -> [NSLayoutConstraint] {
-        let topConstraint = self.setStatusButton.topAnchor.constraint(greaterThanOrEqualTo: self.statusTextField.bottomAnchor, constant: 16)
-        let leadingConstraint = self.setStatusButton.leadingAnchor.constraint(equalTo: self.headerView.leadingAnchor, constant: 16)
-        let centerConstraint = self.setStatusButton.centerXAnchor.constraint(equalTo: self.headerView.centerXAnchor)
-        let bottomConstraint = self.setStatusButton.bottomAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: -5)
-        let heightConstraint = self.setStatusButton.heightAnchor.constraint(equalToConstant: 50)
-        return [topConstraint, leadingConstraint, heightConstraint, bottomConstraint, centerConstraint ]
-    }
-    
-    private func mapButtonConstraints() -> [NSLayoutConstraint] {
-        let topConstraint = self.mapButton.topAnchor.constraint(equalTo: self.headerView.topAnchor,constant: 16)
-        let trailingConstraint = self.mapButton.trailingAnchor.constraint(equalTo: self.headerView.trailingAnchor, constant: -16)
-        let widthConstraint = self.mapButton.widthAnchor.constraint(equalTo: self.headerView.widthAnchor, multiplier: 0.1)
-        let heightConstraint = self.mapButton.heightAnchor.constraint(equalTo: self.mapButton.widthAnchor)
-        
-        return [topConstraint, trailingConstraint, widthConstraint, heightConstraint]
-    }
-    
-    private func tableViewConstaints() -> [NSLayoutConstraint] {
-        let topConstraint = self.tableView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor)
-        let leftConsraint = self.tableView.leftAnchor.constraint(equalTo: self.leftAnchor)
-        let rightConsraint = self.tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
-        let bottomConstraint = self.tableView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor)
-        
-        return [topConstraint, leftConsraint, rightConsraint, bottomConstraint ]
-    }
-    
     private func setupView() {
-        self.addSubview(self.headerView)
         self.addSubview(self.tableView)
-        self.headerView.addSubview(self.avatarImage)
-        self.headerView.addSubview(self.stackView)
-        self.headerView.addSubview(self.setStatusButton)
-        self.headerView.addSubview(self.mapButton)
-        self.headerView.addSubview(statusTextField)
-        self.stackView.addArrangedSubview(self.nameLabel)
-        self.stackView.addArrangedSubview(self.disctiptionLabel)
+        self.addSubview(self.avatarImage)
+        self.addSubview(self.setStatusButton)
+        self.addSubview(self.nameLabel)
+        self.addSubview(self.followButton)
+        self.addSubview(self.followCount)
+        self.addSubview(self.followersButton)
+        self.addSubview(self.followersCount)
+        self.addSubview(self.publicationsButton)
+        self.addSubview(self.publicationsCount)
+        self.addSubview(self.noteLabel)
+        self.addSubview(self.noteButton)
+        self.addSubview(self.historyLabel)
+        self.addSubview(self.historyButton)
+        self.addSubview(self.fotoLabel)
+        self.addSubview(self.fotoButton)
         
-        let mapButtonConstraints = self.mapButtonConstraints()
-        let hederViewConsraints = self.headerViewConstraints()
-        let tableViewConstaints = self.tableViewConstaints()
-        let avatarViewConstraints = self.avatarViewConstraint()
-        let stackViewConstraints = self.stackViewConstraint()
-        let statusTextFieldConstraints = self.statusTextFieldConstraints()
-        let buttonConstraints = self.buttonConstraints()
         
-        
-        NSLayoutConstraint.activate(hederViewConsraints + tableViewConstaints + avatarViewConstraints + stackViewConstraints + statusTextFieldConstraints + buttonConstraints + mapButtonConstraints )
+        NSLayoutConstraint.activate([
+            
+            self.avatarImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
+            self.avatarImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.avatarImage.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.2415),
+            self.avatarImage.heightAnchor.constraint(equalTo: self.avatarImage.widthAnchor),
+            
+            self.nameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant:27),
+            self.nameLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.57),
+            self.nameLabel.leadingAnchor.constraint(equalTo: self.avatarImage.trailingAnchor, constant: 20),
+            
+            self.followButton.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 30),
+            self.followButton.leadingAnchor.constraint(equalTo: self.nameLabel.leadingAnchor),
+            
+            self.followCount.bottomAnchor.constraint(equalTo: self.followButton.topAnchor, constant: -5),
+            self.followCount.centerXAnchor.constraint(equalTo: self.followButton.centerXAnchor),
+            
+            self.followersButton.centerYAnchor.constraint(equalTo: self.followButton.centerYAnchor),
+            self.followersButton.leadingAnchor.constraint(equalTo: self.followButton.trailingAnchor, constant: 20),
+            
+            self.followersCount.bottomAnchor.constraint(equalTo: self.followersButton.topAnchor, constant: -5),
+            self.followersCount.centerXAnchor.constraint(equalTo: self.followersButton.centerXAnchor),
+            
+            self.publicationsButton.centerYAnchor.constraint(equalTo: self.followersButton.centerYAnchor),
+            self.publicationsButton.leadingAnchor.constraint(equalTo: self.followersButton.trailingAnchor, constant: 20),
+            
+            self.publicationsCount.bottomAnchor.constraint(equalTo: self.publicationsButton.topAnchor, constant: -5),
+            self.publicationsCount.centerXAnchor.constraint(equalTo: self.publicationsButton.centerXAnchor),
+            
+            self.setStatusButton.topAnchor.constraint(equalTo: self.avatarImage.bottomAnchor, constant: 16),
+            self.setStatusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.setStatusButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.setStatusButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            self.historyButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.historyButton.topAnchor.constraint(equalTo: self.setStatusButton.bottomAnchor, constant: 16),
+            
+            self.historyLabel.centerXAnchor.constraint(equalTo: self.historyButton.centerXAnchor),
+            self.historyLabel.topAnchor.constraint(equalTo: self.historyButton.bottomAnchor,constant: 5),
+            
+            self.noteButton.centerYAnchor.constraint(equalTo: self.historyButton.centerYAnchor),
+            self.noteButton.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: 50),
+            
+            self.noteLabel.centerXAnchor.constraint(equalTo: self.noteButton.centerXAnchor),
+            self.noteLabel.topAnchor.constraint(equalTo: self.noteButton.bottomAnchor,constant: 5),
+            
+            self.fotoButton.centerYAnchor.constraint(equalTo: self.historyButton.centerYAnchor),
+            self.fotoButton.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -50),
+            
+            self.fotoLabel.centerXAnchor.constraint(equalTo: self.fotoButton.centerXAnchor),
+            self.fotoLabel.centerYAnchor.constraint(equalTo: self.historyLabel.centerYAnchor),
+            
+            self.tableView.topAnchor.constraint(equalTo: self.historyLabel.bottomAnchor, constant: 16),
+            self.tableView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            self.tableView.rightAnchor.constraint(equalTo: self.rightAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            
+        ])
     }
-    
-    
     
     func reload() {
         self.tableView.reloadData()
@@ -260,35 +193,4 @@ final class ProfileView: UIView {
         
     }
     
-     private func flashStatusTextField() {
-        self.statusTextField.layer.borderWidth = 2
-        self.statusTextField.layer.borderColor = UIColor.systemPink.cgColor
-        greetingStatus()
-    }
-    
-    @objc private func tapMapButton() {
-        self.delegate?.pushMapView()
-    }
-    
-    private func greetingStatus() {
-        let greeting = "Напишите статус"
-             var count = 0
-             var ind = greeting.startIndex
-             let times = greeting.count
-             Timer.scheduledTimer(
-                withTimeInterval: 0.1,
-                repeats: true
-             ) { [weak self] timer in
-                 if count == times {
-                     timer.invalidate()
-                     self?.statusTextField.layer.borderWidth = 1
-                     self?.statusTextField.layer.borderColor = UIColor.black.cgColor
-                 } else {
-                     let char = greeting[ind]
-                     ind = greeting.index(after: ind)
-                     self?.statusTextField.placeholder?.append(char)
-                 }
-                 count += 1
-             }
-        }
 }

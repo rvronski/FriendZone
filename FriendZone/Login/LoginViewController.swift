@@ -76,17 +76,8 @@ class LoginViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var button: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 10
-        button.backgroundColor = .buttonColor
-        button.setTitle("Log in", for: .normal)
-        button.addTarget(self, action: #selector(self.didTapButton), for: .touchUpInside)
-        button.clipsToBounds = true
-        return button
-    }()
-    
+    private lazy var button = CustomButton(buttonText: "Log in", textColor: .white, background: .buttonColor, fontSize: 15, fontWeight: .bold)
+
     private lazy var logoImage: UIImageView = {
         let logoImage = UIImageView()
         logoImage.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +91,11 @@ class LoginViewController: UIViewController {
         self.setupView()
         self.setupGesture()
         self.tabBarController?.tabBar.isHidden = true
-        
+        button.tapButton = { [weak self] in
+            self?.didTapButton()
+        }
+        UserDefaults.standard.set(nil, forKey: "imageURL")
+        UserDefaults.standard.set(nil, forKey: "UserID")
     }
     private func setupView() {
         self.view.addSubview(scrollView)
@@ -115,6 +110,8 @@ class LoginViewController: UIViewController {
         self.scrollView.addSubview(self.faceIDButton)
         self.passwordTextField.bringSubviewToFront(activityIndicator)
        
+        loginTextField.text = "rv@gmail.com"
+        passwordTextField.text = "qwerty"
         
         NSLayoutConstraint.activate([
             self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -124,8 +121,8 @@ class LoginViewController: UIViewController {
             
             self.logoImage.centerYAnchor.constraint(lessThanOrEqualTo: self.scrollView.centerYAnchor, constant: -220),
             self.logoImage.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor),
-            self.logoImage.heightAnchor.constraint(equalToConstant: 100),
-            self.logoImage.widthAnchor.constraint(equalTo: self.logoImage.heightAnchor, multiplier: 1),
+            self.logoImage.widthAnchor.constraint(equalTo: self.view.widthAnchor,multiplier: 0.3),
+            self.logoImage.heightAnchor.constraint(equalTo: self.logoImage.widthAnchor),
             
             self.stackView.topAnchor.constraint(lessThanOrEqualTo: self.logoImage.bottomAnchor, constant: 120),
             self.stackView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),

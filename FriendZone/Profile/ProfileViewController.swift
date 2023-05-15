@@ -11,6 +11,9 @@ import UniformTypeIdentifiers
 
 class ProfileViewController: UIViewController {
     
+    var userID = UserDefaults.standard.string(forKey: "UserID")
+    var imageURL = UserDefaults.standard.string(forKey: "imageURL")
+    
     let coreManager = CoreDataManager.shared
     let locationManager = CLLocationManager()
     private let viewModel: ProfileViewModelProtocol
@@ -37,8 +40,7 @@ class ProfileViewController: UIViewController {
     lazy var profileView: ProfileView = {
         let profileView = ProfileView()
         profileView.avatarImage.image = UIImage(named: "IMG_1824")
-        profileView.nameLabel.text = "userName"
-        profileView.disctiptionLabel.text = " "
+        profileView.nameLabel.text = ""
         profileView.delegate = self
         
         return profileView
@@ -59,12 +61,38 @@ class ProfileViewController: UIViewController {
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
-        
+        downloadAvatar()
+        downloadUserInfo()
+        print("🍎 \(userID)")
+        print("🍎 \(imageURL)")
     }
     
     
     
+    private func downloadAvatar() {
+        guard let imageURL else { return }
+        viewModel.downloadAvatar(avatarURL: imageURL) { data in
+            DispatchQueue.main.async {
+            guard let data else { self.alertOk(title: "Невозможно загрузить аватар", message: nil)
+                return
+            }
+            let image = UIImage(data: data)
+           
+                self.profileView.avatarImage.image = image
+            }
+        }
+    }
     
+    private func downloadUserInfo() {
+        viewModel.downloadUserInfo { userName in
+            DispatchQueue.main.async {
+                guard let userName else { self.alertOk(title: "Ошибка получения данных", message: nil)
+                    return
+                }
+                self.profileView.nameLabel.text = userName
+            }
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -105,8 +133,8 @@ class ProfileViewController: UIViewController {
         let widthAvatar = avatarImage.bounds.width
         let width = widthScreen / widthAvatar
         
-        UIView.animateKeyframes(withDuration: 2, delay: 0, options: .calculationModeCubic) {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) { [self] in
+        UIView.animateKeyframes(withDuration: 1, delay: 0, options: .calculationModeCubic) {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) { [self] in
                 self.avatarView.isHidden = false
                 self.avatarView.bringSubviewToFront(avatarImage)
                 self.avatarView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -203,7 +231,10 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
     func changeLayout() {
-        self.changeLayoutAvatar()
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
     }
     
     func pushMapView() {
@@ -215,5 +246,14 @@ extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
 extension ProfileViewController: CellDelegate {
     func reload() {
         profileView.reload()
+    }
+}
+extension ProfileViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        profileView.avatarImage.image = image
+        self.viewModel.uploadFoto(currentUserId: userID!, photo: image)
     }
 }
