@@ -60,7 +60,6 @@ final class ProfileView: UIView {
         imageView.clipsToBounds = true
         imageView.isUserInteractionEnabled = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.zPosition = .greatestFiniteMagnitude
         return imageView
     }()
     

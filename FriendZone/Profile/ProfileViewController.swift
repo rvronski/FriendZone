@@ -39,7 +39,7 @@ class ProfileViewController: UIViewController {
     
     lazy var profileView: ProfileView = {
         let profileView = ProfileView()
-        profileView.avatarImage.image = UIImage(named: "IMG_1824")
+        profileView.avatarImage.image = UIImage(named: "navigationLogo")
         profileView.nameLabel.text = ""
         profileView.delegate = self
         
@@ -61,10 +61,9 @@ class ProfileViewController: UIViewController {
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
-        downloadAvatar()
+//        downloadAvatar()
         downloadUserInfo()
-        print("🍎 \(userID)")
-        print("🍎 \(imageURL)")
+       
     }
     
     
@@ -84,11 +83,13 @@ class ProfileViewController: UIViewController {
     }
     
     private func downloadUserInfo() {
-        viewModel.downloadUserInfo { userName in
+        viewModel.downloadUserInfo { userName, data in
+            guard let userName,
+                  let data else {return}
+            
             DispatchQueue.main.async {
-                guard let userName else { self.alertOk(title: "Ошибка получения данных", message: nil)
-                    return
-                }
+                let image = UIImage(data: data)
+                self.profileView.avatarImage.image = image
                 self.profileView.nameLabel.text = userName
             }
         }

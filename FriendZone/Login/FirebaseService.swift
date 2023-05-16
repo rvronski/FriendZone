@@ -15,7 +15,7 @@ protocol FirebaseServiceProtocol {
     func signUp(email: String, password: String, userName: String, completion: @escaping ((Bool, String?) -> Void))
     func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
-    func downloadUserInfo(completion: @escaping (String?) -> Void )
+    func downloadUserInfo(completion: @escaping (NSDictionary?) -> Void )
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -29,6 +29,7 @@ class FirebaseService: FirebaseServiceProtocol {
             }
             guard let result else { return }
             let uid = result.user.uid
+            UserDefaults.standard.set(uid, forKey: "UserID")
             print("🍎 \(uid)")
             completion(true, uid)
         }
@@ -57,6 +58,7 @@ class FirebaseService: FirebaseServiceProtocol {
                     "email": email,
                     "avatarURL": "",
                     "uid": result.user.uid ])
+                UserDefaults.standard.set(result.user.uid, forKey: "UserID")
                 completion(true, result.user.uid)
                 //
                 //                Auth.auth().currentUser?.sendEmailVerification { error in
@@ -109,18 +111,21 @@ class FirebaseService: FirebaseServiceProtocol {
        }
    }
     
-    func downloadUserInfo(completion: @escaping (String?) -> Void ) {
+    func downloadUserInfo(completion: @escaping (NSDictionary?) -> Void ) {
+       
         guard let uid = UserDefaults.standard.value(forKey: "UserID") else { return }
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users/\(uid)/userName").getData(completion:  { error, snapshot in
-          guard error == nil else {
-            print(error!.localizedDescription)
-              completion(nil)
-            return;
-          }
-            let userName = snapshot?.value as? String ?? "Unknown"
-            completion(userName)
-        })
+        ref.child("Users").child(uid as! String).observeSingleEvent(of: .value, with: { snapshot in
+         
+          let value = snapshot.value as? NSDictionary
+          
+            completion(value)
+         
+        }) { error in
+          print(error.localizedDescription)
+            completion(nil)
+        }
+        
     }
 }
