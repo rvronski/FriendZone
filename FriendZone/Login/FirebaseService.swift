@@ -16,6 +16,7 @@ protocol FirebaseServiceProtocol {
     func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
     func downloadUserInfo(completion: @escaping (NSDictionary?) -> Void )
+    func addposts(userName: String, image: String, likes: Int)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -113,10 +114,10 @@ class FirebaseService: FirebaseServiceProtocol {
     
     func downloadUserInfo(completion: @escaping (NSDictionary?) -> Void ) {
        
-        guard let uid = UserDefaults.standard.value(forKey: "UserID") else { return }
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users").child(uid as! String).observeSingleEvent(of: .value, with: { snapshot in
+        ref.child("Users").child(uid).observeSingleEvent(of: .value, with: { snapshot in
          
           let value = snapshot.value as? NSDictionary
           
@@ -126,6 +127,16 @@ class FirebaseService: FirebaseServiceProtocol {
           print(error.localizedDescription)
             completion(nil)
         }
+        
+    }
+    
+    func addposts(userName: String, image: String, likes: Int) {
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        ref.child("Users").child(uid).child("posts").setValue( ["username": userName,
+                                                                "image": image,    "likes":likes
+                                                               ])
         
     }
 }

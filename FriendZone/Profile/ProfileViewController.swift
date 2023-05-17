@@ -17,11 +17,9 @@ class ProfileViewController: UIViewController {
     let coreManager = CoreDataManager.shared
     let locationManager = CLLocationManager()
     private let viewModel: ProfileViewModelProtocol
-    //    private let user: User
     
     init(viewModel: ProfileViewModelProtocol) {
         self.viewModel = viewModel
-        //        self.user = user
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -29,7 +27,7 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var posts = [Post]()
+    
     lazy var avatarView: AvatarView = {
         let avatarView = AvatarView()
         avatarView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +48,6 @@ class ProfileViewController: UIViewController {
         super.loadView()
         view = profileView
     }
-    
     
     
     override func viewDidLoad() {
@@ -97,7 +94,7 @@ class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: true)
         self.avatarView.isHidden = true
         profileView.reload()
     }
@@ -232,15 +229,13 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
     func changeLayout() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
+        viewModel.uploadFoto(delegate: self)
     }
     
-    func pushMapView() {
-        locationManager.requestWhenInUseAuthorization()
-//        self.viewModel.viewInputDidChange(viewInput: .tapMapButton)
+    func pushNoteButton() {
+        let postVC = PostViewController(viewModel: self.viewModel)
+        postVC.delegate = self
+        self.navigationController?.pushViewController(postVC, animated: true)
     }
 }
 
@@ -252,9 +247,16 @@ extension ProfileViewController: CellDelegate {
 extension ProfileViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        profileView.avatarImage.image = image
+        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
+        self.profileView.avatarImage.image = image
         self.viewModel.uploadFoto(currentUserId: userID!, photo: image)
+        self.viewModel.dismiss()
     }
+}
+extension ProfileViewController: PostViewControllerDelegate {
+    func presentImagePicker() {
+        viewModel.uploadFoto(delegate: self)
+    }
+    
+    
 }

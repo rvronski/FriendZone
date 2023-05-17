@@ -26,12 +26,13 @@
 		4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */; };
 		455BF4F22A12630E00AA3C34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */; };
 		455BF4F42A12645200AA3C34 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455BF4F32A12645200AA3C34 /* UIImageView+Extension.swift */; };
+		455BF4F62A13E69F00AA3C34 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455BF4F52A13E69F00AA3C34 /* PostViewController.swift */; };
 		45CC78FF2A1009BE00C25EE6 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 45CC78FE2A1009BE00C25EE6 /* FirebaseAuth */; };
 		45CC79012A1009BE00C25EE6 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 45CC79002A1009BE00C25EE6 /* FirebaseDatabase */; };
 		45CC79032A1009BE00C25EE6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 45CC79022A1009BE00C25EE6 /* FirebaseFirestore */; };
 		45CC79052A1009BE00C25EE6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 45CC79042A1009BE00C25EE6 /* FirebaseStorage */; };
 		45CC79072A101E2000C25EE6 /* LocalNotificationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */; };
-		45CC790E2A101E5800C25EE6 /* TextFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79092A101E5700C25EE6 /* TextFields.swift */; };
+		45CC790E2A101E5800C25EE6 /* TextFields+UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79092A101E5700C25EE6 /* TextFields+UITextView.swift */; };
 		45CC790F2A101E5800C25EE6 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790A2A101E5700C25EE6 /* UIViewController+Alert.swift */; };
 		45CC79102A101E5800C25EE6 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790B2A101E5700C25EE6 /* String+Extension.swift */; };
 		45CC79112A101E5800C25EE6 /* UIColor+createColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790C2A101E5700C25EE6 /* UIColor+createColor.swift */; };
@@ -77,8 +78,9 @@
 		4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeCoordinator.swift; sourceTree = "<group>"; };
 		455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		455BF4F32A12645200AA3C34 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
+		455BF4F52A13E69F00AA3C34 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsService.swift; sourceTree = "<group>"; };
-		45CC79092A101E5700C25EE6 /* TextFields.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFields.swift; sourceTree = "<group>"; };
+		45CC79092A101E5700C25EE6 /* TextFields+UITextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFields+UITextView.swift"; sourceTree = "<group>"; };
 		45CC790A2A101E5700C25EE6 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		45CC790B2A101E5700C25EE6 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		45CC790C2A101E5700C25EE6 /* UIColor+createColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+createColor.swift"; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				4558BF612A10021E00F40377 /* ProfileViewController.swift */,
 				45CC79272A10253D00C25EE6 /* ProfileView.swift */,
 				45CC792B2A10278D00C25EE6 /* PostTableViewCell.swift */,
+				455BF4F52A13E69F00AA3C34 /* PostViewController.swift */,
 				45CC792D2A1027F200C25EE6 /* Post.swift */,
 				45CC79352A102CA600C25EE6 /* PhotosTableViewCell.swift */,
 				45CC79292A10256800C25EE6 /* AvatarView.swift */,
@@ -202,7 +205,7 @@
 		45CC79082A101E5700C25EE6 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				45CC79092A101E5700C25EE6 /* TextFields.swift */,
+				45CC79092A101E5700C25EE6 /* TextFields+UITextView.swift */,
 				45CC79372A111A3D00C25EE6 /* UILabel+Extension.swift */,
 				45CC790A2A101E5700C25EE6 /* UIViewController+Alert.swift */,
 				45CC790B2A101E5700C25EE6 /* String+Extension.swift */,
@@ -317,6 +320,7 @@
 				45CC79362A102CA600C25EE6 /* PhotosTableViewCell.swift in Sources */,
 				4558BF462A0FE64400F40377 /* LoginViewController.swift in Sources */,
 				45CC79262A10235C00C25EE6 /* MainViewCoordinator.swift in Sources */,
+				455BF4F62A13E69F00AA3C34 /* PostViewController.swift in Sources */,
 				45CC792C2A10278D00C25EE6 /* PostTableViewCell.swift in Sources */,
 				45CC79222A10233600C25EE6 /* MainViewController.swift in Sources */,
 				45CC79342A102C0A00C25EE6 /* PhotosViewController.swift in Sources */,
@@ -335,7 +339,7 @@
 				45CC792A2A10256800C25EE6 /* AvatarView.swift in Sources */,
 				4558BF662A10025200F40377 /* ProfileViewModel.swift in Sources */,
 				4558BF5C2A1000F100F40377 /* AppFactory.swift in Sources */,
-				45CC790E2A101E5800C25EE6 /* TextFields.swift in Sources */,
+				45CC790E2A101E5800C25EE6 /* TextFields+UITextView.swift in Sources */,
 				45CC79112A101E5800C25EE6 /* UIColor+createColor.swift in Sources */,
 				45CC79382A111A3D00C25EE6 /* UILabel+Extension.swift in Sources */,
 				45CC791D2A10219C00C25EE6 /* FirebaseService.swift in Sources */,

@@ -9,7 +9,7 @@ import UIKit
 
 protocol ProfileViewDelegate: AnyObject {
     func changeLayout()
-    func pushMapView()
+    func pushNoteButton()
 }
 
 final class ProfileView: UIView {
@@ -73,7 +73,9 @@ final class ProfileView: UIView {
         self.setupView()
         self.setupGesture()
         self.gestureAvatar()
-        
+        noteButton.tapButton = { [weak self] in
+            self?.delegate?.pushNoteButton()
+        }
     }
     
     required init?(coder: NSCoder) {

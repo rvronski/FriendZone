@@ -97,6 +97,16 @@ class LoginViewController: UIViewController {
         UserDefaults.standard.set(nil, forKey: "imageURL")
         UserDefaults.standard.set(nil, forKey: "UserID")
     }
+    
+    private func removeObserver() {
+        NotificationCenter.default.removeObserver(self,
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.removeObserver(self,
+                                               name: UIResponder.keyboardDidHideNotification,
+                                               object: nil)
+    }
+    
     private func setupView() {
         self.view.addSubview(scrollView)
         self.view.backgroundColor = .createColor(light: .white, dark: .darkGray)
@@ -216,7 +226,7 @@ class LoginViewController: UIViewController {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
             
-            let loginButtonBottomPointY = self.button.frame.origin.y + self.button.frame.height
+            let loginButtonBottomPointY = self.faceIDButton.frame.origin.y + self.faceIDButton.frame.height
             let keyboardOriginY = self.view.frame.height - keyboardHeight
             
             let offset = keyboardOriginY <= loginButtonBottomPointY
@@ -260,6 +270,7 @@ class LoginViewController: UIViewController {
                 if let success = success {
                     if success {
                         self.viewModel.viewInputDidChange(viewInput: .tapLogin)
+                        self.removeObserver()
                     } else {
                         self.alertOk(title: "Не возможно пройти аутентификацию", message: "Проверьте настройки приватности")
                     }

@@ -34,4 +34,14 @@ class ProfileCoordinator: ModuleCoordinatable {
         (module?.view as? UINavigationController)?.pushViewController(vc, animated: true)
     }
     
+    func presentImagePicker(delegate: UIViewController) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = delegate as? any UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        imagePicker.allowsEditing = true
+        module?.view.present(imagePicker, animated: true)
+    }
+    
+    func dismiss() {
+        module?.view.dismiss(animated: true)
+    }
 }

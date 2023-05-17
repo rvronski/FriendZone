@@ -11,6 +11,9 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func uploadFoto(currentUserId: String, photo: UIImage)
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
     func downloadUserInfo(completion: @escaping (String?, Data?) -> Void)
+    func uploadFoto(delegate: UIViewController)
+    func dismiss()
+    func addposts(userName: String, image: String, likes: Int)
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
@@ -52,7 +55,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 return}
             username = value["userName"] as? String ?? ""
             avatarURL = value["avatarImageURL"] as? String ?? ""
-            
+            UserDefaults.standard.set(username, forKey: "userName")
             self.firebaseService.downloadAvatar(avatarURL: avatarURL) { data in
                 guard let data else {
                     completion(username, nil)
@@ -61,6 +64,17 @@ class ProfileViewModel: ProfileViewModelProtocol {
             }
         }
         
+    }
+    
+    func addposts(userName: String, image: String, likes: Int) {
+        firebaseService.addposts(userName: userName, image: image, likes: 0)
+    }
+    
+    func uploadFoto(delegate: UIViewController) {
+        coordinator?.presentImagePicker(delegate: delegate)
+    }
+    func dismiss() {
+        coordinator?.dismiss()
     }
 }
 

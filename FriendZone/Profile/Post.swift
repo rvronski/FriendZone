@@ -9,8 +9,9 @@ import UIKit
 
 public struct Post {
     public var author: String
-    public var description: String
-    public var image: UIImage
+    public var description: String?
+    public var image: UIImage?
     public var likes: Int
     public var views: Int
 }
+var posts = [Post]()
