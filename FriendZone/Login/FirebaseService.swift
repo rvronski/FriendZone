@@ -15,8 +15,8 @@ protocol FirebaseServiceProtocol {
     func signUp(email: String, password: String, userName: String, completion: @escaping ((Bool, String?) -> Void))
     func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
-    func downloadUserInfo(completion: @escaping (NSDictionary?) -> Void )
-    func addposts(userName: String, image: String, likes: Int)
+    func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -102,41 +102,80 @@ class FirebaseService: FirebaseServiceProtocol {
     }
     
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void) {
-       let reference = Storage.storage().reference(forURL: avatarURL)
-       let megaByte = Int64(1 * 1024 * 1024)
+        let reference = Storage.storage().reference(forURL: avatarURL)
+        let megaByte = Int64(1 * 1024 * 1024)
         reference.getData(maxSize: megaByte) { (data, error) in
-           guard let imageData = data else {
-               completion(nil)
-               return }
-          completion(imageData)
-       }
-   }
+            guard let imageData = data else {
+                completion(nil)
+                return }
+            completion(imageData)
+        }
+    }
     
-    func downloadUserInfo(completion: @escaping (NSDictionary?) -> Void ) {
-       
+    func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void ) {
+        
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        var postStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference()
         ref.child("Users").child(uid).observeSingleEvent(of: .value, with: { snapshot in
-         
-          let value = snapshot.value as? NSDictionary
-          
-            completion(value)
-         
+            
+            let value = snapshot.value as? NSDictionary
+            for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
+                for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
+                    postStringIDs.append(readingSnapshot.key)
+                }
+            }
+            completion(value, postStringIDs)
+            
         }) { error in
-          print(error.localizedDescription)
-            completion(nil)
+            print(error.localizedDescription)
+            completion(nil, nil)
         }
         
     }
     
-    func addposts(userName: String, image: String, likes: Int) {
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?) {
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
-        var ref: DatabaseReference!
-        ref = Database.database().reference()
-        ref.child("Users").child(uid).child("posts").setValue( ["username": userName,
-                                                                "image": image,    "likes":likes
-                                                               ])
-        
+        let postID = UUID().uuidString
+        let reference = Storage.storage().reference().child("\(uid)postImages").child(postID)
+        if let image {
+            
+            guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpeg"
+            reference.putData(imageData, metadata: metadata) { (metadata, error) in
+                guard let _ = metadata else {
+                    
+                    return
+                }
+                reference.downloadURL { (url, error) in
+                    guard let url = url else {
+                        return
+                    }
+                    
+                    var ref: DatabaseReference!
+                    ref = Database.database().reference()
+                    ref.child("Users").child(uid).child("posts").childByAutoId().setValue([
+                        "postID": postID,
+                        "username":  userName,
+                        "image":  url.absoluteString,
+                        "likes": likes,
+                        "postText": postText ?? ""
+                    ])
+                }
+            }
+            
+        } else {
+            var ref: DatabaseReference!
+            ref = Database.database().reference()
+            ref.child("Users").child(uid).child("posts").childByAutoId().setValue( [
+                "postID": postID,
+                "username":  userName,
+                "image":  "",
+                "likes": likes,
+                "postText": postText ?? ""
+            ])
+        }
     }
 }

@@ -93,13 +93,16 @@ class PostViewController: UIViewController {
     private func publication() {
         let text = postTextView.text
         let image = imageView.image
-        let userName = UserDefaults.standard.string(forKey: "userName")
-        let post = Post(author: userName ?? "", description: text, image: image, likes: 0, views: 0)
-        posts.append(post)
-        viewModel.addposts(userName: userName ?? "", image: "image", likes: 0)
-        self.navigationController?.popViewController(animated: true)
+        if text!.isEmpty && image == nil {
+            self.alertOk(title: "Поделитесь со всеми как ваши дела", message: nil)
+        } else {
+            let userName = UserDefaults.standard.string(forKey: "userName")
+            let post = Post(author: userName ?? "", description: text, image: image, likes: 0, views: 0)
+            posts.append(post)
+            viewModel.addposts(userName: userName!, image: image, likes: 0, postText: text)
+            self.navigationController?.popViewController(animated: true)
+        }
     }
-    
     @objc private func hideKeyboard() {
         self.view.endEditing(true)
     }

@@ -6,14 +6,15 @@
 //
 
 import UIKit
-
+import FirebaseDatabase
+import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
     func uploadFoto(currentUserId: String, photo: UIImage)
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
     func downloadUserInfo(completion: @escaping (String?, Data?) -> Void)
     func uploadFoto(delegate: UIViewController)
     func dismiss()
-    func addposts(userName: String, image: String, likes: Int)
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?)
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
@@ -49,12 +50,29 @@ class ProfileViewModel: ProfileViewModelProtocol {
     func downloadUserInfo(completion: @escaping (String?, Data?) -> Void) {
         var username = ""
         var avatarURL = ""
-        firebaseService.downloadUserInfo { value in
-            guard let value else {
+        firebaseService.downloadUserInfo { value, id in
+            guard let value,
+            let id else {
                 completion(nil, nil)
-                return}
+                return }
+            var poste = [PostAnswer]()
             username = value["userName"] as? String ?? ""
             avatarURL = value["avatarImageURL"] as? String ?? ""
+            let email = value["email"] as? String ?? ""
+            let posts = value["posts"] as? NSDictionary ?? [:]
+            for i in id {
+                let post = posts[i] as? NSDictionary ?? [:]
+                let userName = post["userName"] as? String ?? ""
+                let image = post["image"] as? String ?? ""
+                let postID = post["postID"] as? String ?? ""
+                let postText = post["postText"] as? String ?? ""
+                let likes = post["likes"] as? Int ?? 0
+                let answer = PostAnswer(userName: userName, image: image, likes:  likes, postText: postText)
+                poste.append(answer)
+            }
+           
+            print("🍅 \(value)")
+            print("🍇 \(poste)")
             UserDefaults.standard.set(username, forKey: "userName")
             self.firebaseService.downloadAvatar(avatarURL: avatarURL) { data in
                 guard let data else {
@@ -66,8 +84,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
         
     }
     
-    func addposts(userName: String, image: String, likes: Int) {
-        firebaseService.addposts(userName: userName, image: image, likes: 0)
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?) {
+        firebaseService.addposts(userName: userName, image: image, likes: likes, postText: postText)
     }
     
     func uploadFoto(delegate: UIViewController) {

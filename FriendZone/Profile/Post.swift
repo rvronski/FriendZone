@@ -15,3 +15,10 @@ public struct Post {
     public var views: Int
 }
 var posts = [Post]()
+
+struct PostAnswer {
+    let userName: String
+    let image: String
+    let likes: Int
+    let postText: String
+}
