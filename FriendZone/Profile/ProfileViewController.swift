@@ -88,6 +88,7 @@ class ProfileViewController: UIViewController {
                 let image = UIImage(data: data)
                 self.profileView.avatarImage.image = image
                 self.profileView.nameLabel.text = userName
+                self.profileView.reload()
             }
         }
     }

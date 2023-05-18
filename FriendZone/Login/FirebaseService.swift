@@ -17,6 +17,7 @@ protocol FirebaseServiceProtocol {
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
     func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
     func addposts(userName: String, image: UIImage?, likes: Int, postText: String?)
+    func downloadImagePost(imageURL: String, completion: @escaping (Data?) -> Void)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -103,6 +104,17 @@ class FirebaseService: FirebaseServiceProtocol {
     
     func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void) {
         let reference = Storage.storage().reference(forURL: avatarURL)
+        let megaByte = Int64(1 * 1024 * 1024)
+        reference.getData(maxSize: megaByte) { (data, error) in
+            guard let imageData = data else {
+                completion(nil)
+                return }
+            completion(imageData)
+        }
+    }
+    
+    func downloadImagePost(imageURL: String, completion: @escaping (Data?) -> Void) {
+        let reference = Storage.storage().reference(forURL: imageURL)
         let megaByte = Int64(1 * 1024 * 1024)
         reference.getData(maxSize: megaByte) { (data, error) in
             guard let imageData = data else {

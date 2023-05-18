@@ -55,24 +55,28 @@ class ProfileViewModel: ProfileViewModelProtocol {
             let id else {
                 completion(nil, nil)
                 return }
-            var poste = [PostAnswer]()
+           
             username = value["userName"] as? String ?? ""
             avatarURL = value["avatarImageURL"] as? String ?? ""
             let email = value["email"] as? String ?? ""
-            let posts = value["posts"] as? NSDictionary ?? [:]
+            let poste = value["posts"] as? NSDictionary ?? [:]
             for i in id {
-                let post = posts[i] as? NSDictionary ?? [:]
+                let post = poste[i] as? NSDictionary ?? [:]
                 let userName = post["userName"] as? String ?? ""
-                let image = post["image"] as? String ?? ""
+                let image = post["image"] as? String
                 let postID = post["postID"] as? String ?? ""
                 let postText = post["postText"] as? String ?? ""
                 let likes = post["likes"] as? Int ?? 0
-                let answer = PostAnswer(userName: userName, image: image, likes:  likes, postText: postText)
-                poste.append(answer)
+                var img: UIImage?
+                if image != "" {
+                    self.firebaseService.downloadImagePost(imageURL: image!) { data in
+                       img = UIImage(data: data!)!
+                    }
+                }
+                let answer = Post(author: userName, description: postText, image: img, likes: likes, views: 0)
+                posts.append(answer)
             }
-           
-            print("🍅 \(value)")
-            print("🍇 \(poste)")
+            
             UserDefaults.standard.set(username, forKey: "userName")
             self.firebaseService.downloadAvatar(avatarURL: avatarURL) { data in
                 guard let data else {
