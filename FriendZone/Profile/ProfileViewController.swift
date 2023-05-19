@@ -58,39 +58,35 @@ class ProfileViewController: UIViewController {
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
-//        downloadAvatar()
         downloadUserInfo()
        
     }
     
-    
-    
-    private func downloadAvatar() {
-        guard let imageURL else { return }
-        viewModel.downloadAvatar(avatarURL: imageURL) { data in
-            DispatchQueue.main.async {
-            guard let data else { self.alertOk(title: "Невозможно загрузить аватар", message: nil)
-                return
-            }
-            let image = UIImage(data: data)
-           
-                self.profileView.avatarImage.image = image
-            }
-        }
-    }
-    
     private func downloadUserInfo() {
-        viewModel.downloadUserInfo { userName, data in
+        viewModel.downloadUserInfo { userName, avatarData, imageData, postinfo in
             guard let userName,
-                  let data else {return}
-            
+                  let avatarData,
+                  let imageData,
+                  let postinfo else {return}
             DispatchQueue.main.async {
-                let image = UIImage(data: data)
-                self.profileView.avatarImage.image = image
+                let image = UIImage(data: avatarData)
+                posts = Post.getPost(postinfo, imageData)
                 self.profileView.nameLabel.text = userName
                 self.profileView.reload()
+                
             }
         }
+//            guard let userName,
+//                  let data,
+//                  let post else {return}
+//            posts = Post.getPost(post)
+//            DispatchQueue.main.async {
+//                let image = UIImage(data: data)
+//                self.profileView.avatarImage.image = image
+//                self.profileView.nameLabel.text = userName
+//                self.profileView.reload()
+//            }
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -5,6 +5,5 @@
         <attribute name="descriptionText" optional="YES" attributeType="String"/>
         <attribute name="postImage" optional="YES" attributeType="Binary"/>
         <attribute name="tag" optional="YES" attributeType="String"/>
-        <attribute name="views" optional="YES" attributeType="String"/>
     </entity>
 </model>

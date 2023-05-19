@@ -51,15 +51,6 @@ class LikeTableViewCell: UITableViewCell {
         return likesLabel
     }()
     
-    private lazy var viewsLabel: UILabel = {
-        let viewsLabel = UILabel()
-        viewsLabel.font = UIFont.systemFont(ofSize: 16)
-        viewsLabel.textColor = .black
-        viewsLabel.translatesAutoresizingMaskIntoConstraints = false
-        viewsLabel.setContentHuggingPriority(UILayoutPriority(1), for: .horizontal)
-        return viewsLabel
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupView()
@@ -77,7 +68,6 @@ class LikeTableViewCell: UITableViewCell {
         }
         self.authorLabel.text = viewModel.authorText
         self.descriptionLabel.text = viewModel.descriptionText
-        self.viewsLabel.text = viewModel.views
         var count = [Like]()
         guard let tag = viewModel.tag else { return }
         for like in coreManager.likes {
@@ -96,7 +86,7 @@ class LikeTableViewCell: UITableViewCell {
         self.contentView.addSubview(descriptionLabel)
         self.contentView.addSubview(authorLabel)
         self.contentView.addSubview(likesLabel)
-        self.contentView.addSubview(viewsLabel)
+        
         
         NSLayoutConstraint.activate([
             self.authorLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
@@ -119,10 +109,6 @@ class LikeTableViewCell: UITableViewCell {
             self.likesLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 16),
             self.likesLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
             self.likesLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
-            
-            self.viewsLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 16),
-            self.viewsLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
-            self.viewsLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16)
             
             
             

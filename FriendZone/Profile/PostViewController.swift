@@ -91,17 +91,16 @@ class PostViewController: UIViewController {
     }
     
     private func publication() {
-        let text = postTextView.text
-        let image = imageView.image
-        if text!.isEmpty && image == nil {
-            self.alertOk(title: "Поделитесь со всеми как ваши дела", message: nil)
-        } else {
-            let userName = UserDefaults.standard.string(forKey: "userName")
-            let post = Post(author: userName ?? "", description: text, image: image, likes: 0, views: 0)
-            posts.append(post)
-            viewModel.addposts(userName: userName!, image: image, likes: 0, postText: text)
-            self.navigationController?.popViewController(animated: true)
+        guard let image = imageView.image else { self.alertOk(title: "Добавьте фотографию", message: nil)
+            return
         }
+        let text = postTextView.text ?? ""
+        let userName = UserDefaults.standard.string(forKey: "userName")
+        let postID = UUID().uuidString
+        let post = Post(author: userName ?? "", description: text, image: image, likes: 0, postID: postID)
+        posts.append(post)
+        viewModel.addposts(userName: userName!, image: image, likes: 0, postText: text, postID: postID)
+        self.navigationController?.popViewController(animated: true)
     }
     @objc private func hideKeyboard() {
         self.view.endEditing(true)

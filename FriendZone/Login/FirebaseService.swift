@@ -14,10 +14,9 @@ protocol FirebaseServiceProtocol {
     func checkCredentials(email: String, password: String,  completion: @escaping ((Bool, String?) -> Void))
     func signUp(email: String, password: String, userName: String, completion: @escaping ((Bool, String?) -> Void))
     func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void)
-    func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
     func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?)
-    func downloadImagePost(imageURL: String, completion: @escaping (Data?) -> Void)
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
+    func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -102,18 +101,8 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
     
-    func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void) {
-        let reference = Storage.storage().reference(forURL: avatarURL)
-        let megaByte = Int64(1 * 1024 * 1024)
-        reference.getData(maxSize: megaByte) { (data, error) in
-            guard let imageData = data else {
-                completion(nil)
-                return }
-            completion(imageData)
-        }
-    }
     
-    func downloadImagePost(imageURL: String, completion: @escaping (Data?) -> Void) {
+    func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void) {
         let reference = Storage.storage().reference(forURL: imageURL)
         let megaByte = Int64(1 * 1024 * 1024)
         reference.getData(maxSize: megaByte) { (data, error) in
@@ -147,9 +136,8 @@ class FirebaseService: FirebaseServiceProtocol {
         
     }
     
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?) {
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String) {
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
-        let postID = UUID().uuidString
         let reference = Storage.storage().reference().child("\(uid)postImages").child(postID)
         if let image {
             

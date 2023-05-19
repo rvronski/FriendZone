@@ -10,11 +10,10 @@ import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
     func uploadFoto(currentUserId: String, photo: UIImage)
-    func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void)
-    func downloadUserInfo(completion: @escaping (String?, Data?) -> Void)
+    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postImage: [Data]?, _ postInfo: [PostAnswer]?) -> Void)
     func uploadFoto(delegate: UIViewController)
     func dismiss()
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?)
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
@@ -39,57 +38,49 @@ class ProfileViewModel: ProfileViewModelProtocol {
             }
         }
     }
-    func downloadAvatar(avatarURL: String, completion: @escaping (Data?) -> Void) {
-        firebaseService.downloadAvatar(avatarURL: avatarURL) { data in
-            guard let data else {
-                completion(nil)
-                return }
-            completion(data)
-        }
-    }
-    func downloadUserInfo(completion: @escaping (String?, Data?) -> Void) {
+    
+    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postImage: [Data]?, _ postInfo: [PostAnswer]?) -> Void) {
         var username = ""
         var avatarURL = ""
         firebaseService.downloadUserInfo { value, id in
             guard let value,
             let id else {
-                completion(nil, nil)
+                completion(nil, nil, nil, nil)
                 return }
-           
+            var postsAnswer = [PostAnswer]()
+            var datasArray = [Data]()
             username = value["userName"] as? String ?? ""
             avatarURL = value["avatarImageURL"] as? String ?? ""
             let email = value["email"] as? String ?? ""
             let poste = value["posts"] as? NSDictionary ?? [:]
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
-                let userName = post["userName"] as? String ?? ""
-                let image = post["image"] as? String
+                let userName = post["username"] as? String ?? ""
+                let image = post["image"] as? String ?? ""
                 let postID = post["postID"] as? String ?? ""
                 let postText = post["postText"] as? String ?? ""
                 let likes = post["likes"] as? Int ?? 0
-                var img: UIImage?
-                if image != "" {
-                    self.firebaseService.downloadImagePost(imageURL: image!) { data in
-                       img = UIImage(data: data!)!
+                self.firebaseService.downloadImage(imageURL: image) { data in
+                        guard let data else { return }
+                    datasArray.append(data)
                     }
-                }
-                let answer = Post(author: userName, description: postText, image: img, likes: likes, views: 0)
-                posts.append(answer)
+                let answer = PostAnswer(userName: userName, image: image, likes: likes, postText: postText, postID: postID)
+                postsAnswer.append(answer)
             }
             
             UserDefaults.standard.set(username, forKey: "userName")
-            self.firebaseService.downloadAvatar(avatarURL: avatarURL) { data in
+            self.firebaseService.downloadImage(imageURL: avatarURL) { data in
                 guard let data else {
-                    completion(username, nil)
+                    completion(username, nil, datasArray, postsAnswer)
                     return }
-                completion(username,data)
+                completion(username, data, datasArray, postsAnswer)
             }
         }
         
     }
     
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?) {
-        firebaseService.addposts(userName: userName, image: image, likes: likes, postText: postText)
+    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String) {
+        firebaseService.addposts(userName: userName, image: image, likes: likes, postText: postText, postID: postID)
     }
     
     func uploadFoto(delegate: UIViewController) {

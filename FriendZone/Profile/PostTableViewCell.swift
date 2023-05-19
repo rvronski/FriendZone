@@ -64,15 +64,6 @@ class PostTableViewCell: UITableViewCell {
         return likeButton
     }()
     
-    private lazy var viewsLabel: UILabel = {
-        let viewsLabel = UILabel()
-        viewsLabel.font = UIFont.systemFont(ofSize: 16)
-        viewsLabel.textColor = .createColor(light: .black, dark: .white)
-        viewsLabel.translatesAutoresizingMaskIntoConstraints = false
-        viewsLabel.setContentHuggingPriority(UILayoutPriority(1), for: .horizontal)
-        return viewsLabel
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupView()
@@ -87,7 +78,6 @@ class PostTableViewCell: UITableViewCell {
         self.postImageView.image = viewModel.image
         self.authorLabel.text = viewModel.author
         self.descriptionLabel.text = viewModel.description
-        self.viewsLabel.text =  "Views: \(viewModel.views)"
         self.likeButton.tag = index
         var count = [Like]()
         for like in coreManager.likes {
@@ -106,7 +96,6 @@ class PostTableViewCell: UITableViewCell {
         self.contentView.addSubview(descriptionLabel)
         self.contentView.addSubview(authorLabel)
         self.contentView.addSubview(likesLabel)
-        self.contentView.addSubview(viewsLabel)
         self.contentView.addSubview(likeButton)
         
         NSLayoutConstraint.activate([
@@ -133,16 +122,7 @@ class PostTableViewCell: UITableViewCell {
             
             self.likesLabel.centerYAnchor.constraint(equalTo: self.likeButton.centerYAnchor),
             self.likesLabel.leadingAnchor.constraint(equalTo: self.likeButton.trailingAnchor, constant: 5),
-            
-            self.viewsLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 16),
-            self.viewsLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
-            self.viewsLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16)
-            
-            
-            
-            
-            
-            
+        
         ])
     }
     
@@ -156,11 +136,10 @@ class PostTableViewCell: UITableViewCell {
     @objc private func tapLike() {
         guard let postImage = self.postImageView.image?.pngData() else { return }
         let authorText = self.authorLabel.text ?? ""
-        let views = self.viewsLabel.text ?? ""
         let descriptionText = self.descriptionLabel.text ?? ""
         let tag = "\(self.likeButton.tag)"
         if UserDefaults.standard.bool(forKey: "isLike\(likeButton.tag)") == false {
-            coreManager.createLike(authorText: authorText, descriptionText: descriptionText, postImage: postImage, views: views, tag: tag)  {
+            coreManager.createLike(authorText: authorText, descriptionText: descriptionText, postImage: postImage, tag: tag)  {
                 UserDefaults.standard.set(true, forKey: "isLike" + tag)
                 DispatchQueue.main.async {
                     self.coreManager.reloadLikes()
