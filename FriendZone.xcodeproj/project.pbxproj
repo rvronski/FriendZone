@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		455768D52A19179500076030 /* AppTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768D42A19179500076030 /* AppTabBarController.swift */; };
+		455768D72A19182800076030 /* ImageView+Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768D62A19182800076030 /* ImageView+Labels.swift */; };
+		455768DA2A19189200076030 /* TextFields+TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768D92A19189200076030 /* TextFields+TextView.swift */; };
+		455768DC2A19191F00076030 /* Buttons+ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768DB2A19191F00076030 /* Buttons+ImageView.swift */; };
+		455768DE2A191BD600076030 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768DD2A191BD600076030 /* String+Extensions.swift */; };
+		455768E02A191C4C00076030 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768DF2A191C4C00076030 /* UIColor+Extensions.swift */; };
+		455768E22A191D2B00076030 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768E12A191D2B00076030 /* UIViewController+Alert.swift */; };
+		455768E42A19240300076030 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768E32A19240300076030 /* RegisterViewController.swift */; };
 		4558BF422A0FE64400F40377 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF412A0FE64400F40377 /* AppDelegate.swift */; };
 		4558BF442A0FE64400F40377 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF432A0FE64400F40377 /* SceneDelegate.swift */; };
 		4558BF462A0FE64400F40377 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF452A0FE64400F40377 /* LoginViewController.swift */; };
@@ -25,16 +33,8 @@
 		4558BF6C2A1002C700F40377 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF6B2A1002C700F40377 /* ProfileCoordinator.swift */; };
 		4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */; };
 		455BF4F22A12630E00AA3C34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */; };
-		455BF4F42A12645200AA3C34 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455BF4F32A12645200AA3C34 /* UIImageView+Extension.swift */; };
 		455BF4F62A13E69F00AA3C34 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455BF4F52A13E69F00AA3C34 /* PostViewController.swift */; };
 		45CC79072A101E2000C25EE6 /* LocalNotificationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */; };
-		45CC790E2A101E5800C25EE6 /* TextFields+UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79092A101E5700C25EE6 /* TextFields+UITextView.swift */; };
-		45CC790F2A101E5800C25EE6 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790A2A101E5700C25EE6 /* UIViewController+Alert.swift */; };
-		45CC79102A101E5800C25EE6 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790B2A101E5700C25EE6 /* String+Extension.swift */; };
-		45CC79112A101E5800C25EE6 /* UIColor+createColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790C2A101E5700C25EE6 /* UIColor+createColor.swift */; };
-		45CC79122A101E5800C25EE6 /* Button+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC790D2A101E5700C25EE6 /* Button+Extension.swift */; };
-		45CC79152A101E6A00C25EE6 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79142A101E6900C25EE6 /* TabBarController.swift */; };
-		45CC79172A101EB500C25EE6 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79162A101EB500C25EE6 /* RegisterViewController.swift */; };
 		45CC791B2A101EF000C25EE6 /* Coordinatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */; };
 		45CC791D2A10219C00C25EE6 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791C2A10219C00C25EE6 /* FirebaseService.swift */; };
 		45CC791F2A10227D00C25EE6 /* LocalAuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791E2A10227D00C25EE6 /* LocalAuthorizationService.swift */; };
@@ -49,10 +49,17 @@
 		45CC79322A102AD100C25EE6 /* LikeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79312A102AD100C25EE6 /* LikeTableViewCell.swift */; };
 		45CC79342A102C0A00C25EE6 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79332A102C0A00C25EE6 /* PhotosViewController.swift */; };
 		45CC79362A102CA600C25EE6 /* PhotosTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79352A102CA600C25EE6 /* PhotosTableViewCell.swift */; };
-		45CC79382A111A3D00C25EE6 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79372A111A3D00C25EE6 /* UILabel+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		455768D42A19179500076030 /* AppTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBarController.swift; sourceTree = "<group>"; };
+		455768D62A19182800076030 /* ImageView+Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageView+Labels.swift"; sourceTree = "<group>"; };
+		455768D92A19189200076030 /* TextFields+TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFields+TextView.swift"; sourceTree = "<group>"; };
+		455768DB2A19191F00076030 /* Buttons+ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Buttons+ImageView.swift"; sourceTree = "<group>"; };
+		455768DD2A191BD600076030 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		455768DF2A191C4C00076030 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		455768E12A191D2B00076030 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		455768E32A19240300076030 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		4558BF3E2A0FE64400F40377 /* FriendZone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendZone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4558BF412A0FE64400F40377 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4558BF432A0FE64400F40377 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,16 +80,8 @@
 		4558BF6B2A1002C700F40377 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeCoordinator.swift; sourceTree = "<group>"; };
 		455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
-		455BF4F32A12645200AA3C34 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		455BF4F52A13E69F00AA3C34 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsService.swift; sourceTree = "<group>"; };
-		45CC79092A101E5700C25EE6 /* TextFields+UITextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFields+UITextView.swift"; sourceTree = "<group>"; };
-		45CC790A2A101E5700C25EE6 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
-		45CC790B2A101E5700C25EE6 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
-		45CC790C2A101E5700C25EE6 /* UIColor+createColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+createColor.swift"; sourceTree = "<group>"; };
-		45CC790D2A101E5700C25EE6 /* Button+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Button+Extension.swift"; sourceTree = "<group>"; };
-		45CC79142A101E6900C25EE6 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		45CC79162A101EB500C25EE6 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterViewController.swift; path = ../../../FriendZone2/FriendZone/Modules/Login/RegisterViewController.swift; sourceTree = "<group>"; };
 		45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatable.swift; sourceTree = "<group>"; };
 		45CC791C2A10219C00C25EE6 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		45CC791E2A10227D00C25EE6 /* LocalAuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuthorizationService.swift; sourceTree = "<group>"; };
@@ -97,7 +96,6 @@
 		45CC79312A102AD100C25EE6 /* LikeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeTableViewCell.swift; sourceTree = "<group>"; };
 		45CC79332A102C0A00C25EE6 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		45CC79352A102CA600C25EE6 /* PhotosTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosTableViewCell.swift; sourceTree = "<group>"; };
-		45CC79372A111A3D00C25EE6 /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +109,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		455768D32A19177B00076030 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				455768D42A19179500076030 /* AppTabBarController.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		455768D82A19183100076030 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				455768D62A19182800076030 /* ImageView+Labels.swift */,
+				455768D92A19189200076030 /* TextFields+TextView.swift */,
+				455768DB2A19191F00076030 /* Buttons+ImageView.swift */,
+				455768DD2A191BD600076030 /* String+Extensions.swift */,
+				455768DF2A191C4C00076030 /* UIColor+Extensions.swift */,
+				455768E12A191D2B00076030 /* UIViewController+Alert.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		4558BF352A0FE64400F40377 = {
 			isa = PBXGroup;
 			children = (
@@ -134,11 +153,11 @@
 				4558BF432A0FE64400F40377 /* SceneDelegate.swift */,
 				4558BF5B2A1000F000F40377 /* AppFactory.swift */,
 				4558BF5F2A10020300F40377 /* AppCoordinator.swift */,
+				455768D82A19183100076030 /* Extensions */,
 				4558BF5D2A1001D100F40377 /* Module.swift */,
 				45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */,
 				45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */,
-				45CC79132A101E6900C25EE6 /* TabBar */,
-				45CC79082A101E5700C25EE6 /* Extension */,
+				455768D32A19177B00076030 /* TabBar */,
 				4558BF6F2A10030F00F40377 /* Login */,
 				45CC79202A10231B00C25EE6 /* Main */,
 				4558BF702A10031F00F40377 /* Profile */,
@@ -161,7 +180,7 @@
 				45CC791E2A10227D00C25EE6 /* LocalAuthorizationService.swift */,
 				4558BF632A10023800F40377 /* LoginViewModel.swift */,
 				45CC791C2A10219C00C25EE6 /* FirebaseService.swift */,
-				45CC79162A101EB500C25EE6 /* RegisterViewController.swift */,
+				455768E32A19240300076030 /* RegisterViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -192,30 +211,6 @@
 				4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */,
 			);
 			path = Like;
-			sourceTree = "<group>";
-		};
-		45CC79082A101E5700C25EE6 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				45CC79092A101E5700C25EE6 /* TextFields+UITextView.swift */,
-				45CC79372A111A3D00C25EE6 /* UILabel+Extension.swift */,
-				45CC790A2A101E5700C25EE6 /* UIViewController+Alert.swift */,
-				45CC790B2A101E5700C25EE6 /* String+Extension.swift */,
-				45CC790C2A101E5700C25EE6 /* UIColor+createColor.swift */,
-				45CC790D2A101E5700C25EE6 /* Button+Extension.swift */,
-				455BF4F32A12645200AA3C34 /* UIImageView+Extension.swift */,
-			);
-			name = Extension;
-			path = ../../FriendZone2/FriendZone/Extension;
-			sourceTree = "<group>";
-		};
-		45CC79132A101E6900C25EE6 /* TabBar */ = {
-			isa = PBXGroup;
-			children = (
-				45CC79142A101E6900C25EE6 /* TabBarController.swift */,
-			);
-			name = TabBar;
-			path = ../../FriendZone2/FriendZone/TabBar;
 			sourceTree = "<group>";
 		};
 		45CC79202A10231B00C25EE6 /* Main */ = {
@@ -311,36 +306,35 @@
 				45CC792C2A10278D00C25EE6 /* PostTableViewCell.swift in Sources */,
 				45CC79222A10233600C25EE6 /* MainViewController.swift in Sources */,
 				45CC79342A102C0A00C25EE6 /* PhotosViewController.swift in Sources */,
-				45CC79172A101EB500C25EE6 /* RegisterViewController.swift in Sources */,
 				45CC791F2A10227D00C25EE6 /* LocalAuthorizationService.swift in Sources */,
-				45CC79122A101E5800C25EE6 /* Button+Extension.swift in Sources */,
 				4558BF422A0FE64400F40377 /* AppDelegate.swift in Sources */,
 				45CC791B2A101EF000C25EE6 /* Coordinatable.swift in Sources */,
 				4558BF442A0FE64400F40377 /* SceneDelegate.swift in Sources */,
-				45CC790F2A101E5800C25EE6 /* UIViewController+Alert.swift in Sources */,
 				45CC792E2A1027F200C25EE6 /* Post.swift in Sources */,
+				455768E22A191D2B00076030 /* UIViewController+Alert.swift in Sources */,
+				455768DA2A19189200076030 /* TextFields+TextView.swift in Sources */,
 				4558BF4C2A0FE64400F40377 /* FriendZone.xcdatamodeld in Sources */,
 				45CC79282A10253D00C25EE6 /* ProfileView.swift in Sources */,
-				455BF4F42A12645200AA3C34 /* UIImageView+Extension.swift in Sources */,
 				45CC79072A101E2000C25EE6 /* LocalNotificationsService.swift in Sources */,
 				45CC792A2A10256800C25EE6 /* AvatarView.swift in Sources */,
 				4558BF662A10025200F40377 /* ProfileViewModel.swift in Sources */,
+				455768DE2A191BD600076030 /* String+Extensions.swift in Sources */,
+				455768DC2A19191F00076030 /* Buttons+ImageView.swift in Sources */,
 				4558BF5C2A1000F100F40377 /* AppFactory.swift in Sources */,
-				45CC790E2A101E5800C25EE6 /* TextFields+UITextView.swift in Sources */,
-				45CC79112A101E5800C25EE6 /* UIColor+createColor.swift in Sources */,
-				45CC79382A111A3D00C25EE6 /* UILabel+Extension.swift in Sources */,
 				45CC791D2A10219C00C25EE6 /* FirebaseService.swift in Sources */,
+				455768E42A19240300076030 /* RegisterViewController.swift in Sources */,
+				455768D72A19182800076030 /* ImageView+Labels.swift in Sources */,
 				45CC79302A1029ED00C25EE6 /* CoreDataManager.swift in Sources */,
+				455768D52A19179500076030 /* AppTabBarController.swift in Sources */,
 				4558BF5E2A1001D100F40377 /* Module.swift in Sources */,
 				45CC79242A10234800C25EE6 /* MainViewModel.swift in Sources */,
-				45CC79102A101E5800C25EE6 /* String+Extension.swift in Sources */,
+				455768E02A191C4C00076030 /* UIColor+Extensions.swift in Sources */,
 				4558BF622A10021E00F40377 /* ProfileViewController.swift in Sources */,
 				45CC79322A102AD100C25EE6 /* LikeTableViewCell.swift in Sources */,
 				4558BF6C2A1002C700F40377 /* ProfileCoordinator.swift in Sources */,
 				4558BF602A10020300F40377 /* AppCoordinator.swift in Sources */,
 				4558BF682A10027300F40377 /* LikeViewController.swift in Sources */,
 				4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */,
-				45CC79152A101E6A00C25EE6 /* TabBarController.swift in Sources */,
 				4558BF642A10023900F40377 /* LoginViewModel.swift in Sources */,
 				4558BF6A2A10028900F40377 /* LikeViewModel.swift in Sources */,
 			);
