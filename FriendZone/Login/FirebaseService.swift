@@ -6,9 +6,11 @@
 //
 
 import Foundation
-import Firebase
+
 import FirebaseDatabase
 import FirebaseStorage
+import FirebaseAuth
+import FirebaseFirestore
 
 protocol FirebaseServiceProtocol {
     func checkCredentials(email: String, password: String,  completion: @escaping ((Bool, String?) -> Void))

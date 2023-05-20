@@ -25,7 +25,7 @@ class PostViewController: UIViewController {
 
     var delegate: PostViewControllerDelegate?
     
-    private lazy var postTextView = TextView(frame: .zero)
+    private lazy var postTextView = TextView(frame: .zero, textContainer: nil)
     
     private lazy var photoButton = ButtonWithSystemImage(background: nil, image: "photo", imageSize: 20, symbolScale: .medium, tintcolor: .black)
     
@@ -39,7 +39,7 @@ class PostViewController: UIViewController {
         return view
     }()
     
-    let imageView = CustomImageViewForTextView(img: nil)
+    let imageView = CustomImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()

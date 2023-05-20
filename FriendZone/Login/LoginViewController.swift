@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Firebase
+
 import LocalAuthentication
 
 
@@ -43,8 +43,8 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    private lazy var passwordTextField = PasswordTF()
-    private lazy var loginTextField = LoginTF()
+    private lazy var passwordTextField = ShowHideTextField()
+    private lazy var loginTextField = RegTextField(placeholderText: "Login/Email", typeKeyBoard: .emailAddress, isSecureText: false)
    
     private lazy var signUpButton: UIButton = {
         let signUpButton = UIButton()
