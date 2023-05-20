@@ -142,7 +142,7 @@ class LoginViewController: UIViewController {
             self.button.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 16),
             self.button.leftAnchor.constraint(equalTo: self.stackView.leftAnchor),
             self.button.rightAnchor.constraint(equalTo: self.stackView.rightAnchor),
-            self.button.heightAnchor.constraint(equalToConstant: 50),
+            self.button.heightAnchor.constraint(equalToConstant: 40),
             
             self.signUpButton.topAnchor.constraint(equalTo: self.button.bottomAnchor, constant: 16),
             self.signUpButton.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor),

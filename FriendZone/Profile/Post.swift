@@ -23,22 +23,3 @@ struct PostAnswer {
     let postText: String
     let postID: String
 }
-extension Post {
-    static func getPost(_ postAnswer: [PostAnswer], _ dataImage: [Data]) -> [Post] {
-        var postArray = [Post]()
-        var count = 0
-        while count < dataImage.count {
-            for post in postAnswer {
-                let author = post.userName
-                let description = post.postText
-                let likes = post.likes
-                let postID = post.postID
-                let image = UIImage(data: dataImage[count])
-                let item = Post(author: author, description: description, image: image, likes: likes, postID: postID)
-                postArray.append(item)
-                count += 1
-            }
-        }
-           return postArray
-    }
-}

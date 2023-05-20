@@ -85,9 +85,8 @@ class PostTableViewCell: UITableViewCell {
                 count.append(like)
             }
         }
-//        let likeMeas = "Likes".localized
-//        let like = String(format: likeMeas, count.count)
-        self.likesLabel.text = "Нравится" //"\(like): \(count.count)"
+
+        self.likesLabel.text = "Нравится: \(viewModel.likes)"
         }
 
     

@@ -30,13 +30,7 @@ class RegisterViewController: UIViewController {
         return scrollView
     }()
     
-    private lazy var registerView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 10
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        return view
-    }()
+private lazy var logoImage = CustomImageView()
     
     private lazy var registerLabel: UILabel = {
         let label = UILabel()
@@ -82,16 +76,7 @@ class RegisterViewController: UIViewController {
         return passwordTextField
     }()
     
-    private lazy var registrationButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Зарегистрироваться", for: .normal)
-        button.layer.cornerRadius = 10
-        button.setBackgroundImage(UIImage(named: "Blue_pixel.png"), for: .normal)
-        button.addTarget(self, action: #selector(didTapRegButton), for: .touchUpInside)
-        button.clipsToBounds = true
-        return button
-    }()
+    private lazy var registrationButton = CustomButton(buttonText: "Зарегистрироваться", textColor: .white, background: .buttonColor, fontSize: 15, fontWeight: .bold)
     
     private lazy var OutButton: UIButton = {
         let OutButton = UIButton()
@@ -106,7 +91,9 @@ class RegisterViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupGesture()
-        
+        registrationButton.tapButton = { [weak self] in
+            self?.didTapRegButton()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -128,16 +115,16 @@ class RegisterViewController: UIViewController {
     }
     
     private func setupView() {
-        self.view.backgroundColor = .white.withAlphaComponent(0.5)
+        self.view.backgroundColor = .white
         self.view.addSubview(self.scrollView)
-        self.scrollView.addSubview(self.registerView)
-        self.registerView.addSubview(self.registerLabel)
-        self.registerView.addSubview(self.emailTextField)
-        self.registerView.addSubview(self.passwordTextField)
-        self.registerView.addSubview(self.registrationButton)
-        self.registerView.addSubview(self.userNameTextField)
-        self.registerView.addSubview(self.OutButton)
-        
+        self.scrollView.addSubview(self.registerLabel)
+        self.scrollView.addSubview(self.logoImage)
+        self.scrollView.addSubview(self.emailTextField)
+        self.scrollView.addSubview(self.passwordTextField)
+        self.scrollView.addSubview(self.registrationButton)
+        self.scrollView.addSubview(self.userNameTextField)
+        self.scrollView.addSubview(self.OutButton)
+        self.logoImage.image = UIImage(named: "navigationLogo")
         NSLayoutConstraint.activate([
             
             self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -145,41 +132,41 @@ class RegisterViewController: UIViewController {
             self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
-            self.registerView.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor),
-            self.registerView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
-            self.registerView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20),
+           
             
             self.registerLabel.heightAnchor.constraint(equalToConstant: 20),
-            self.registerLabel.centerXAnchor.constraint(equalTo: self.registerView.centerXAnchor),
-            self.registerLabel.topAnchor.constraint(equalTo: self.registerView.topAnchor, constant: 20),
-            self.registerLabel.leftAnchor.constraint(equalTo: self.registerView.leftAnchor, constant: 20),
-            self.registerLabel.rightAnchor.constraint(equalTo: self.registerView.rightAnchor, constant: -20),
+            self.registerLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.registerLabel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            
+            self.logoImage.topAnchor.constraint(equalTo: self.registerLabel.bottomAnchor, constant: 20),
+            self.logoImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.logoImage.widthAnchor.constraint(equalTo: self.view.widthAnchor,multiplier: 0.3),
+            self.logoImage.heightAnchor.constraint(equalTo: self.logoImage.widthAnchor),
             
             self.userNameTextField.heightAnchor.constraint(equalToConstant: 50),
-            self.userNameTextField.topAnchor.constraint(equalTo: self.registerLabel.bottomAnchor, constant: 40),
-            self.userNameTextField.leftAnchor.constraint(equalTo: self.registerView.leftAnchor, constant: 20),
-            self.userNameTextField.rightAnchor.constraint(equalTo: self.registerView.rightAnchor, constant: -20),
+            self.userNameTextField.topAnchor.constraint(equalTo: self.logoImage.bottomAnchor, constant: 40),
+            self.userNameTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
+            self.userNameTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20),
             
             self.emailTextField.heightAnchor.constraint(equalToConstant: 50),
             self.emailTextField.topAnchor.constraint(equalTo: self.userNameTextField.bottomAnchor, constant: 16),
-            self.emailTextField.leftAnchor.constraint(equalTo: self.registerView.leftAnchor, constant: 20),
-            self.emailTextField.rightAnchor.constraint(equalTo: self.registerView.rightAnchor, constant: -20),
+            self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
+            self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20),
             
             self.passwordTextField.heightAnchor.constraint(equalToConstant: 50),
             self.passwordTextField.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 16),
-            self.passwordTextField.leftAnchor.constraint(equalTo: self.registerView.leftAnchor, constant: 20),
-            self.passwordTextField.rightAnchor.constraint(equalTo: self.registerView.rightAnchor, constant: -20),
+            self.passwordTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
+            self.passwordTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20),
             
-            self.registrationButton.heightAnchor.constraint(equalToConstant: 50),
+            self.registrationButton.heightAnchor.constraint(equalToConstant: 40),
             self.registrationButton.topAnchor.constraint(equalTo: self.passwordTextField.bottomAnchor, constant: 30),
-            self.registrationButton.leftAnchor.constraint(equalTo: self.registerView.leftAnchor, constant: 20),
-            self.registrationButton.rightAnchor.constraint(equalTo: self.registerView.rightAnchor, constant: -20),
+            self.registrationButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
+            self.registrationButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20),
             
             self.OutButton.heightAnchor.constraint(equalToConstant: 20),
             self.OutButton.topAnchor.constraint(equalTo: self.registrationButton.bottomAnchor, constant: 16),
-            self.OutButton.leftAnchor.constraint(equalTo: self.registerView.leftAnchor, constant: 20),
-            self.OutButton.rightAnchor.constraint(equalTo: self.registerView.rightAnchor, constant: -20),
-            self.OutButton.bottomAnchor.constraint(equalTo: self.registerView.bottomAnchor, constant: -20),
+            self.OutButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+           
         ])
         
     }
@@ -194,7 +181,7 @@ class RegisterViewController: UIViewController {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
             
-            let loginButtonBottomPointY = self.registerView.frame.origin.y + self.registerView.frame.height
+            let loginButtonBottomPointY = self.OutButton.frame.origin.y + self.OutButton.frame.height
             let keyboardOriginY = self.view.frame.height - keyboardHeight
             
             let offset = keyboardOriginY <= loginButtonBottomPointY

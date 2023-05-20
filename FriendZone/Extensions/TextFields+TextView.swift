@@ -105,7 +105,7 @@ class TextView: UITextView {
     }
 }
 extension TextView: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         text = ""
         textColor = .black
     }

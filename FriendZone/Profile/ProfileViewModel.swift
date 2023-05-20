@@ -10,7 +10,7 @@ import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
     func uploadFoto(currentUserId: String, photo: UIImage)
-    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postImage: [Data]?, _ postInfo: [PostAnswer]?) -> Void)
+    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postInfo: [PostAnswer]?) -> Void)
     func uploadFoto(delegate: UIViewController)
     func dismiss()
     func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
@@ -39,16 +39,15 @@ class ProfileViewModel: ProfileViewModelProtocol {
         }
     }
     
-    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postImage: [Data]?, _ postInfo: [PostAnswer]?) -> Void) {
+    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postInfo: [PostAnswer]?) -> Void) {
         var username = ""
         
         firebaseService.downloadUserInfo { value, id in
             guard let value,
             let id else {
-                completion(nil, nil, nil, nil)
+                completion(nil, nil, nil)
                 return }
             var postsAnswer = [PostAnswer]()
-            var datasArray = [Data]()
             username = value["userName"] as? String ?? ""
             let avatarURL = value["avatarImageURL"] as? String ?? ""
 //            let email = value["email"] as? String ?? ""
@@ -64,22 +63,25 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 postsAnswer.append(answer)
             }
             
-            for answer in postsAnswer {
-                let imageURL = answer.image
-                self.firebaseService.downloadImage(imageURL: imageURL) { data in
-                        guard let data else { return }
-                    datasArray.append(data)
-               }
-            }
             UserDefaults.standard.set(username, forKey: "userName")
             self.firebaseService.downloadImage(imageURL: avatarURL) { data in
                 guard let data else {
-                    completion(username, nil, datasArray, postsAnswer)
+                    completion(username, nil, postsAnswer)
                     return }
-                completion(username, data, datasArray, postsAnswer)
+                completion(username, data, postsAnswer)
             }
         }
         
+    }
+    
+    func downloadImage(imageURL: String) -> Data {
+        var dataImage = Data()
+        firebaseService.downloadImage(imageURL: imageURL) { data in
+            guard let data else {
+                return }
+            dataImage = data
+        }
+        return dataImage
     }
     
     func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String) {

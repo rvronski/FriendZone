@@ -63,31 +63,18 @@ class ProfileViewController: UIViewController {
     }
     
     private func downloadUserInfo() {
-        viewModel.downloadUserInfo { userName, avatarData, imageData, postinfo in
+        viewModel.downloadUserInfo { userName, avatarData, postinfo in
             guard let userName,
                   let avatarData,
-                  let imageData,
                   let postinfo else {return}
             DispatchQueue.main.async {
                 let image = UIImage(data: avatarData)
-                posts = Post.getPost(postinfo, imageData)
                 self.profileView.avatarImage.image = image
                 self.profileView.nameLabel.text = userName
                 self.profileView.reload()
                 
             }
         }
-//            guard let userName,
-//                  let data,
-//                  let post else {return}
-//            posts = Post.getPost(post)
-//            DispatchQueue.main.async {
-//                let image = UIImage(data: data)
-//                self.profileView.avatarImage.image = image
-//                self.profileView.nameLabel.text = userName
-//                self.profileView.reload()
-//            }
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -257,4 +244,21 @@ extension ProfileViewController: PostViewControllerDelegate {
     }
     
     
+}
+extension Post {
+    static func getPost(_ postAnswer: [PostAnswer]) -> [Post] {
+        var postArray = [Post]()
+        var count = 0
+            for post in postAnswer {
+                let author = post.userName
+                let description = post.postText
+                let likes = post.likes
+                let postID = post.postID
+                let image = post.image
+                let item = Post(author: author, description: description, image: image, likes: likes, postID: postID)
+                postArray.append(item)
+                count += 1
+            }
+           return postArray
+    }
 }
