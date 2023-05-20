@@ -41,7 +41,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
     
     func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarImage:Data?, _ postImage: [Data]?, _ postInfo: [PostAnswer]?) -> Void) {
         var username = ""
-        var avatarURL = ""
+        
         firebaseService.downloadUserInfo { value, id in
             guard let value,
             let id else {
@@ -50,8 +50,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
             var postsAnswer = [PostAnswer]()
             var datasArray = [Data]()
             username = value["userName"] as? String ?? ""
-            avatarURL = value["avatarImageURL"] as? String ?? ""
-            let email = value["email"] as? String ?? ""
+            let avatarURL = value["avatarImageURL"] as? String ?? ""
+//            let email = value["email"] as? String ?? ""
             let poste = value["posts"] as? NSDictionary ?? [:]
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
@@ -60,14 +60,17 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 let postID = post["postID"] as? String ?? ""
                 let postText = post["postText"] as? String ?? ""
                 let likes = post["likes"] as? Int ?? 0
-                self.firebaseService.downloadImage(imageURL: image) { data in
-                        guard let data else { return }
-                    datasArray.append(data)
-                    }
                 let answer = PostAnswer(userName: userName, image: image, likes: likes, postText: postText, postID: postID)
                 postsAnswer.append(answer)
             }
             
+            for answer in postsAnswer {
+                let imageURL = answer.image
+                self.firebaseService.downloadImage(imageURL: imageURL) { data in
+                        guard let data else { return }
+                    datasArray.append(data)
+               }
+            }
             UserDefaults.standard.set(username, forKey: "userName")
             self.firebaseService.downloadImage(imageURL: avatarURL) { data in
                 guard let data else {

@@ -71,6 +71,7 @@ class ProfileViewController: UIViewController {
             DispatchQueue.main.async {
                 let image = UIImage(data: avatarData)
                 posts = Post.getPost(postinfo, imageData)
+                self.profileView.avatarImage.image = image
                 self.profileView.nameLabel.text = userName
                 self.profileView.reload()
                 
