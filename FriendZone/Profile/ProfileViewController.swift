@@ -13,7 +13,8 @@ class ProfileViewController: UIViewController {
     
     var userID = UserDefaults.standard.string(forKey: "UserID")
     var imageURL = UserDefaults.standard.string(forKey: "imageURL")
-    
+    var avatarUrl = ""
+    var userName = ""
     let coreManager = CoreDataManager.shared
     let locationManager = CLLocationManager()
     private let viewModel: ProfileViewModelProtocol
@@ -58,25 +59,30 @@ class ProfileViewController: UIViewController {
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
-        downloadUserInfo()
-       
-    }
-    
-    private func downloadUserInfo() {
-        viewModel.downloadUserInfo { userName, avatarData, postinfo in
-            guard let userName,
-                  let avatarData,
-                  let postinfo else {return}
-            DispatchQueue.main.async {
-                let image = UIImage(data: avatarData)
-                self.profileView.avatarImage.image = image
-                self.profileView.nameLabel.text = userName
-                self.profileView.reload()
-                
+        downloadUserInfo {
+            self.viewModel.downloadImage(imageURL: self.avatarUrl) { data in
+                DispatchQueue.main.async {
+                    self.profileView.avatarImage.image = UIImage(data: data)
+                    self.profileView.nameLabel.text = self.userName
+                    self.profileView.reload()
+                }
             }
         }
+        
     }
     
+    private func downloadUserInfo(completion: @escaping () -> Void) {
+        self.viewModel.downloadUserInfo { userName, postinfo, avatarURL in
+            guard let userName,
+                  let postinfo,
+                  let avatarURL else {return}
+                 self.avatarUrl = avatarURL
+                 self.userName = userName
+                posts = postinfo
+               print(postinfo)
+                completion()
+        }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -245,20 +251,4 @@ extension ProfileViewController: PostViewControllerDelegate {
     
     
 }
-extension Post {
-    static func getPost(_ postAnswer: [PostAnswer]) -> [Post] {
-        var postArray = [Post]()
-        var count = 0
-            for post in postAnswer {
-                let author = post.userName
-                let description = post.postText
-                let likes = post.likes
-                let postID = post.postID
-                let image = post.image
-                let item = Post(author: author, description: description, image: image, likes: likes, postID: postID)
-                postArray.append(item)
-                count += 1
-            }
-           return postArray
-    }
-}
+
