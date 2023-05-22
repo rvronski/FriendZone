@@ -97,8 +97,8 @@ class PostViewController: UIViewController {
         let text = postTextView.text ?? ""
         let userName = UserDefaults.standard.string(forKey: "userName")
         let postID = UUID().uuidString
-        let post = Post(author: userName ?? "", description: text, image: image, likes: 0, postID: postID)
-        posts.append(post)
+//        let post = Post(author: userName ?? "", description: text, image: image, likes: 0, postID: postID)
+//        posts.append(post)
         viewModel.addposts(userName: userName!, image: image, likes: 0, postText: text, postID: postID)
         self.navigationController?.popViewController(animated: true)
     }

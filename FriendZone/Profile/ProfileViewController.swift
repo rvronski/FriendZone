@@ -15,8 +15,16 @@ class ProfileViewController: UIViewController {
     var imageURL = UserDefaults.standard.string(forKey: "imageURL")
     var avatarUrl = ""
     var userName = ""
+    var userImage = UIImage()
     let coreManager = CoreDataManager.shared
     let locationManager = CLLocationManager()
+    
+    var postAnswer: [Post] = [Post(userName: "test", postText: "test text", image: UIImage(named: "navigationLogo")! , likes: 3, postID: "1AF1AF58-43CA-4066-8E94-4816974229E3")] {
+         didSet {
+            print("post answer did set")
+        }
+    }
+
     private let viewModel: ProfileViewModelProtocol
     
     init(viewModel: ProfileViewModelProtocol) {
@@ -59,30 +67,42 @@ class ProfileViewController: UIViewController {
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
-        downloadUserInfo {
-            self.viewModel.downloadImage(imageURL: self.avatarUrl) { data in
-                DispatchQueue.main.async {
-                    self.profileView.avatarImage.image = UIImage(data: data)
-                    self.profileView.nameLabel.text = self.userName
-                    self.profileView.reload()
-                }
-            }
-        }
-        
+//        self.downloadUserInfo {
+//            print("🍎 2метод")
+//                self.viewModel.downloadImage(imageURL: self.avatarUrl) { data in
+//                    DispatchQueue.main.async {
+//                        self.profileView.nameLabel.text = self.userName
+//                        self.profileView.avatarImage.image = UIImage(data: data)
+//                        self.profileView.reload()
+//                    }
+//                }
+//
+//            }
+//        getPostImage(postID: "1AF1AF58-43CA-4066-8E94-4816974229E3") { data in
+//            print(data)
+//        }
     }
     
     private func downloadUserInfo(completion: @escaping () -> Void) {
+        print("🍎 1метод")
         self.viewModel.downloadUserInfo { userName, postinfo, avatarURL in
             guard let userName,
                   let postinfo,
                   let avatarURL else {return}
-                 self.avatarUrl = avatarURL
-                 self.userName = userName
-                posts = postinfo
-               print(postinfo)
-                completion()
+            self.avatarUrl = avatarURL
+            self.userName = userName
+//            self.postAnswer = postinfo
+            completion()
         }
     }
+    
+    func getPostImage(postID: String, completion: @escaping (Data) -> Void) {
+        self.viewModel.downloadPostImage(postID: postID) { data in
+            completion(data)
+        }
+    }
+
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -160,16 +180,13 @@ class ProfileViewController: UIViewController {
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0  {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PhotosCell", for: indexPath) as! PhotosTableViewCell
             return cell
         } else {
-            guard let cell1 = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostTableViewCell else {  let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
-                return cell
-            }
-            cell1.setup(with: posts[indexPath.row], index: indexPath.row)
+            let cell1 = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell 
+            cell1.setup(with: self.postAnswer[indexPath.row], index: indexPath.row)
             if coreManager.likes.count == 0  {
                 UserDefaults.standard.set(false, forKey: "isLike\(indexPath.row)")
                 
@@ -182,21 +199,14 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
                 cell1.likeButton.tintColor = .lightGray
                 
             }
-            
-            
-            cell1.delegat = self
+            cell1.delegate = self
             return cell1
         }
         
     }
-    
-    
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         2
     }
-    
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 1
@@ -230,7 +240,14 @@ extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
     }
 }
 
-extension ProfileViewController: CellDelegate {
+extension ProfileViewController: PostCellDelegate {
+    
+    func getPostImages(postID: String, completion: @escaping (Data) -> Void) {
+        self.viewModel.downloadPostImage(postID: postID) { data in
+            completion(data)
+        }
+    }
+    
     func reload() {
         profileView.reload()
     }
@@ -248,7 +265,5 @@ extension ProfileViewController: PostViewControllerDelegate {
     func presentImagePicker() {
         viewModel.uploadFoto(delegate: self)
     }
-    
-    
 }
 

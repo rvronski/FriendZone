@@ -6,12 +6,14 @@
 //
 
 import UIKit
-protocol CellDelegate: AnyObject {
+protocol PostCellDelegate: AnyObject {
     func reload()
+    func getPostImages(postID: String, completion: @escaping (Data) -> Void)
 }
 
 class PostTableViewCell: UITableViewCell {
-    weak var delegat: CellDelegate?
+    
+    var delegate: PostCellDelegate?
     let coreManager = CoreDataManager.shared
    
     private lazy var postImageView: UIImageView = {
@@ -75,9 +77,8 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func setup(with viewModel: Post, index: Int ) {
-        self.postImageView.image = viewModel.image
-        self.authorLabel.text = viewModel.author
-        self.descriptionLabel.text = viewModel.description
+        self.authorLabel.text = viewModel.userName
+        self.descriptionLabel.text = viewModel.postText
         self.likeButton.tag = index
         var count = [Like]()
         for like in coreManager.likes {
@@ -85,7 +86,13 @@ class PostTableViewCell: UITableViewCell {
                 count.append(like)
             }
         }
-
+        self.postImageView.image = viewModel.image
+//        delegate?.getPostImages(postID: viewModel.postID, completion: { data in
+//            DispatchQueue.main.async {
+//                self.postImageView.image = UIImage(data: data)
+//            }
+//
+//        })
         self.likesLabel.text = "Нравится: \(viewModel.likes)"
         }
 
@@ -142,7 +149,7 @@ class PostTableViewCell: UITableViewCell {
                 UserDefaults.standard.set(true, forKey: "isLike" + tag)
                 DispatchQueue.main.async {
                     self.coreManager.reloadLikes()
-                    self.delegat?.reload()
+                    self.delegate?.reload()
                    
                 }
                
@@ -152,7 +159,7 @@ class PostTableViewCell: UITableViewCell {
                 if like.tag == tag {
                     coreManager.deleteLike(like: like)
                     UserDefaults.standard.set(false, forKey: "isLike" + tag)
-                    self.delegat?.reload()
+                    self.delegate?.reload()
                 }
             }
         }

@@ -19,6 +19,7 @@ protocol FirebaseServiceProtocol {
     func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
     func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
+    func downloadAllPostImages(postID: String, completion: @escaping (Data) -> Void)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -79,7 +80,7 @@ class FirebaseService: FirebaseServiceProtocol {
     func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         let reference = Storage.storage().reference().child("avatars").child(currentUserId)
         
-        guard let imageData = photo.jpegData(compressionQuality: 0.4) else { return }
+        guard let imageData = photo.jpegData(compressionQuality: 0.2) else { return }
         
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
@@ -114,7 +115,23 @@ class FirebaseService: FirebaseServiceProtocol {
             completion(imageData)
         }
     }
-    
+    func downloadAllPostImages(postID: String, completion: @escaping (Data) -> Void) {
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        let storageReference = Storage.storage().reference().child("\(uid)postImages").child(postID)
+        let megaByte = Int64(3 * 1024 * 1024)
+        storageReference.getData(maxSize: megaByte) { data, error in
+            guard let data else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+           completion(data)
+        }
+        
+            
+        }
+
     func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void ) {
         
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
