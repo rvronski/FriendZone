@@ -14,7 +14,11 @@ public struct Post {
     public var likes: Int
     public var postID: String
 }
-var posts = [Post]()
+var posts = [Post]() {
+    didSet {
+        ProfileView().reload()
+    }
+}
 
 struct PostAnswer {
     let userName: String

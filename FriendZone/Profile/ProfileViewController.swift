@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController {
     var userName = ""
     let coreManager = CoreDataManager.shared
     let locationManager = CLLocationManager()
+    
     private let viewModel: ProfileViewModelProtocol
     
     init(viewModel: ProfileViewModelProtocol) {
@@ -72,14 +73,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func downloadUserInfo(completion: @escaping () -> Void) {
-        self.viewModel.downloadUserInfo { userName, postinfo, avatarURL in
+        self.viewModel.downloadUserInfo { userName, avatarURL in
             guard let userName,
-                  let postinfo,
                   let avatarURL else {return}
                  self.avatarUrl = avatarURL
                  self.userName = userName
-                posts = postinfo
-               print(postinfo)
                 completion()
         }
     }

@@ -10,7 +10,7 @@ import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
     func uploadFoto(currentUserId: String, photo: UIImage)
-    func downloadUserInfo(completion: @escaping (_ userName: String?, _ postInfo: [Post]?, _ avatarURL: String?) -> Void)
+    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void)
     func uploadFoto(delegate: UIViewController)
     func dismiss()
     func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
@@ -40,15 +40,14 @@ class ProfileViewModel: ProfileViewModelProtocol {
         }
     }
     
-    func downloadUserInfo(completion: @escaping (_ userName: String?, _ postInfo: [Post]?, _ avatarURL: String?) -> Void) {
+    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void) {
        
         
         firebaseService.downloadUserInfo { value, id in
             guard let value,
             let id else {
-                completion(nil, nil, nil)
+                completion(nil, nil)
                 return }
-            var postsAnswer = [Post]()
             let username = value["userName"] as? String ?? ""
             UserDefaults.standard.set(username, forKey: "userName")
             let avatarURL = value["avatarImageURL"] as? String ?? ""
@@ -63,11 +62,11 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 let likes = post["likes"] as? Int ?? 0
                 self.downloadImage(imageURL: image) { data in
                     let answer = Post(author: userName, description: postText, image: UIImage(data: data), likes: likes, postID: postID)
-                    postsAnswer.append(answer)
+                    posts.append(answer)
                 }
                 
             }
-            completion(username,postsAnswer, avatarURL)
+            completion(username, avatarURL)
         }
         
     }
