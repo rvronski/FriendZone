@@ -5,7 +5,7 @@
 //  Created by ROMAN VRONSKY on 13.05.2023.
 //
 
-import UIKit
+import Foundation
 
 protocol LoginViewModelProtocol: ViewModelProtocol {
     func viewInputDidChange(viewInput: LoginViewModel.ViewInput)

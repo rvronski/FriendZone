@@ -5,20 +5,32 @@
 //  Created by ROMAN VRONSKY on 13.05.2023.
 //
 
-import UIKit
+import Foundation
 import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
-    func uploadFoto(currentUserId: String, photo: UIImage)
+    func uploadFoto(currentUserId: String, photo: Data)
     func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void)
-    func uploadFoto(delegate: UIViewController)
+    func openGallery(delegate: UIViewController)
     func dismiss()
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
+    func pop()
+    func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
     func downloadImage(imageURL: String, completion: @escaping (Data) -> Void)
+    func viewInputDidChange(viewInput: ProfileViewModel.ViewInput)
+    func plusLike(postID: String)
+    func minusLike(postID: String, likesCount: Int)
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
     
+    
+    enum ViewInput {
+        case tapPublication
+        case tapPhoto
+        case tapPost
+    }
+    
+
     var coordinator: ProfileCoordinator?
     
     private let firebaseService: FirebaseServiceProtocol
@@ -27,7 +39,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
         self.firebaseService = checkService
     }
     
-    func uploadFoto(currentUserId: String, photo: UIImage) {
+    func uploadFoto(currentUserId: String, photo: Data) {
         firebaseService.upload(currentUserId: currentUserId, photo: photo) { (result) in
             switch result {
                 
@@ -59,9 +71,10 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 let image = post["image"] as? String ?? ""
                 let postID = post["postID"] as? String ?? ""
                 let postText = post["postText"] as? String ?? ""
-                let likes = post["likes"] as? Int ?? 0
+                let likesCount = post["likesCount"] as? Int ?? 0
+                let isLike = post["isLike"] as? Bool ?? false
                 self.downloadImage(imageURL: image) { data in
-                    let answer = Post(author: userName, description: postText, image: UIImage(data: data), likes: likes, postID: postID)
+                    let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID)
                     posts.append(answer)
                 }
                 
@@ -80,15 +93,36 @@ class ProfileViewModel: ProfileViewModelProtocol {
         
     }
     
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String) {
-        firebaseService.addposts(userName: userName, image: image, likes: likes, postText: postText, postID: postID)
+    func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String) {
+        firebaseService.addposts(userName: userName, image: image, likesCount: likesCount, postText: postText, postID: postID)
     }
     
-    func uploadFoto(delegate: UIViewController) {
+    func openGallery(delegate: UIViewController) {
         coordinator?.presentImagePicker(delegate: delegate)
     }
     func dismiss() {
         coordinator?.dismiss()
+    }
+    
+    func pop() {
+        coordinator?.pop()
+    }
+    
+    func viewInputDidChange(viewInput: ViewInput) {
+        switch viewInput {
+        case .tapPublication:
+            coordinator?.pushViewController(self, .publication(self))
+        case .tapPhoto:
+            coordinator?.pushViewController(nil, .photo)
+        case .tapPost:
+            coordinator?.pushViewController(nil, .post)
+        }
+    }
+    func plusLike(postID: String) {
+        firebaseService.plusLike(postID: postID)
+    }
+    func minusLike(postID: String, likesCount: Int) {
+        firebaseService.minusLike(postID: postID, likesCount: likesCount)
     }
 }
 

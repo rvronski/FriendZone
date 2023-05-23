@@ -157,56 +157,29 @@ class ProfileViewController: UIViewController {
     var postDragAtIndex = Int()
 }
 
-
-//extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-//    
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        posts.count
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
-//        cell.setup(model: posts[indexPath.row])
-//        
-//        return cell
-//    }
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        
-//        let itemWidth = (collectionView.frame.width - 50) / 4
-//       
-//        
-//        return CGSize(width: itemWidth, height: itemWidth)
-//        
-//    }
-//    
-//}
-
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
    
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if  section == 0  {
-            
             let headerView = CustomHeaderView()
-            
+            headerView.delegate = self
             return headerView
         }
         return nil
     }
     
-   
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
             cell.setup(with: posts[indexPath.row], index: indexPath.row)
-            if coreManager.likes.count == 0  {
-                UserDefaults.standard.set(false, forKey: "isLike\(indexPath.row)")
-            }
+//            if coreManager.likes.count == 0  {
+//                UserDefaults.standard.set(false, forKey: "isLike\(indexPath.row)")
+//            }
             
-            if UserDefaults.standard.bool(forKey: "isLike\(indexPath.row)") == true {
+        if posts[indexPath.row].isLike {
                 cell.likeButton.tintColor = .systemRed
-            } else if UserDefaults.standard.bool(forKey: "isLike\(indexPath.row)") == false {
+            } else {
                 cell.likeButton.tintColor = .lightGray
             }
             
@@ -216,35 +189,41 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
-            return posts.count
+        
+        return posts.count
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.row == 0 && indexPath.section == 0 {
-            //            let vc1 = PhotosViewController()
-            //            self.navigationController?.pushViewController(vc1, animated: true)
-//            self.viewModel.viewInputDidChange(viewInput: .tapPhotoCell)
-        }
         
+        self.viewModel.viewInputDidChange(viewInput: .tapPost)
     }
     
 }
 
 extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
+    func pushPhotoButton() {
+        self.viewModel.viewInputDidChange(viewInput: .tapPhoto)
+    }
+    
     func changeLayout() {
-        viewModel.uploadFoto(delegate: self)
+        self.viewModel.openGallery(delegate: self)
     }
     
     func pushNoteButton() {
-        let postVC = PostViewController(viewModel: self.viewModel)
-        postVC.delegate = self
-        self.navigationController?.pushViewController(postVC, animated: true)
+        viewModel.viewInputDidChange(viewInput: .tapPublication)
     }
 }
 
 extension ProfileViewController: CellDelegate {
+    func minusLike(postID: String, likesCount: Int) {
+        viewModel.minusLike(postID: postID, likesCount: likesCount)
+    }
+    
+    func plusLike(postID: String) {
+        viewModel.plusLike(postID: postID)
+    }
+    
     func reload() {
         profileView.reload()
     }
@@ -253,16 +232,19 @@ extension ProfileViewController: UINavigationControllerDelegate, UIImagePickerCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
+        guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         self.profileView.avatarImage.image = image
-        self.viewModel.uploadFoto(currentUserId: userID!, photo: image)
+        self.viewModel.uploadFoto(currentUserId: userID!, photo: imageData)
         self.viewModel.dismiss()
     }
 }
 extension ProfileViewController: PostViewControllerDelegate {
     func presentImagePicker() {
-        viewModel.uploadFoto(delegate: self)
+        viewModel.openGallery(delegate: self)
     }
-    
-    
 }
-
+extension ProfileViewController: CustomHeaderViewDelegate {
+    func tapCell() {
+        self.viewModel.viewInputDidChange(viewInput: .tapPhoto)
+    }
+}

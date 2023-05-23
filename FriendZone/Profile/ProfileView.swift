@@ -10,6 +10,7 @@ import UIKit
 protocol ProfileViewDelegate: AnyObject {
     func changeLayout()
     func pushNoteButton()
+    func pushPhotoButton()
 }
 
 final class ProfileView: UIView {
@@ -39,26 +40,7 @@ final class ProfileView: UIView {
     lazy var fotoLabel =  CustomLabel(inform: "Фото", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
     
     lazy var fotoButton = ButtonWithSystemImage(background: nil, image: "photo.stack", imageSize: 20, symbolScale: .medium, tintcolor: .black)
-    
-//   private lazy var layout: UICollectionViewFlowLayout = {
-//        let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .horizontal
-//        layout.minimumLineSpacing = 10
-//        layout.minimumInteritemSpacing = 10
-//        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-//        return layout
-//    }()
-//    
-//   private lazy var collectionView: UICollectionView = {
-//        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-//        collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.backgroundColor = .white
-//        collectionView.showsHorizontalScrollIndicator = false
-//        return collectionView
-//    }()
-//    
-//    
-    
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -98,6 +80,9 @@ final class ProfileView: UIView {
         noteButton.tapButton = { [weak self] in
             self?.delegate?.pushNoteButton()
         }
+        fotoButton.tapButton = { [weak self] in
+            self?.delegate?.pushPhotoButton()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -110,7 +95,6 @@ final class ProfileView: UIView {
     
     private func setupView() {
         self.addSubview(self.tableView)
-//        self.addSubview(self.collectionView)
         self.addSubview(self.avatarImage)
         self.addSubview(self.setStatusButton)
         self.addSubview(self.nameLabel)
@@ -179,12 +163,7 @@ final class ProfileView: UIView {
             
             self.fotoLabel.centerXAnchor.constraint(equalTo: self.fotoButton.centerXAnchor),
             self.fotoLabel.centerYAnchor.constraint(equalTo: self.historyLabel.centerYAnchor),
-            
-//            self.collectionView.topAnchor.constraint(equalTo: self.historyLabel.bottomAnchor, constant: 16),
-//            self.collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
-//            self.collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
-//            self.collectionView.heightAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3),
-            
+    
             self.tableView.topAnchor.constraint(equalTo: self.historyLabel.bottomAnchor, constant: 16),
             self.tableView.leftAnchor.constraint(equalTo: self.leftAnchor),
             self.tableView.rightAnchor.constraint(equalTo: self.rightAnchor),
@@ -195,7 +174,6 @@ final class ProfileView: UIView {
     
     func reload() {
         self.tableView.reloadData()
-//        self.collectionView.reloadData()
         self.publicationsCount.text = "\(posts.count)"
     }
     

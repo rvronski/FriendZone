@@ -8,12 +8,16 @@
 import UIKit
 protocol CellDelegate: AnyObject {
     func reload()
+    func plusLike(postID: String)
+    func minusLike(postID: String, likesCount: Int)
 }
 
 class PostTableViewCell: UITableViewCell {
     weak var delegat: CellDelegate?
     let coreManager = CoreDataManager.shared
-   
+    private var postID = ""
+    private var likesCount = 0
+    private var isLike = false
     private lazy var postImageView: UIImageView = {
         let postImageView = UIImageView()
         postImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,7 +63,7 @@ class PostTableViewCell: UITableViewCell {
         likeButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-//        likeButton.tintColor = isLike ? .systemRed : .lightGray
+        likeButton.tintColor = isLike ? .systemRed : .lightGray
         likeButton.addTarget(self, action: #selector(tapLike), for: .touchUpInside)
         return likeButton
     }()
@@ -75,20 +79,23 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func setup(with viewModel: Post, index: Int ) {
-        self.postImageView.image = viewModel.image
+        self.postImageView.image = UIImage(data: viewModel.image)
         self.authorLabel.text = viewModel.author
         self.descriptionLabel.text = viewModel.description
         self.likeButton.tag = index
+        self.postID = viewModel.postID
         var count = [Like]()
         for like in coreManager.likes {
             if like.tag == "\(index)" {
                 count.append(like)
             }
         }
-
-        self.likesLabel.text = "Нравится: \(viewModel.likes)"
-        }
-
+        self.isLike = viewModel.isLike
+        self.likesCount = viewModel.likesCount
+        self.likesLabel.text = "Нравится: \(likesCount)"
+        likeButton.tintColor = self.isLike ? .systemRed : .lightGray
+    }
+    
     
     func setupView() {
         self.contentView.addSubview(postImageView)
@@ -121,7 +128,7 @@ class PostTableViewCell: UITableViewCell {
             
             self.likesLabel.centerYAnchor.constraint(equalTo: self.likeButton.centerYAnchor),
             self.likesLabel.leadingAnchor.constraint(equalTo: self.likeButton.trailingAnchor, constant: 5),
-        
+            
         ])
     }
     
@@ -133,29 +140,47 @@ class PostTableViewCell: UITableViewCell {
     
     
     @objc private func tapLike() {
-        guard let postImage = self.postImageView.image?.pngData() else { return }
+//        guard let postImage = self.postImageView.image?.pngData() else { return }
         let authorText = self.authorLabel.text ?? ""
         let descriptionText = self.descriptionLabel.text ?? ""
         let tag = "\(self.likeButton.tag)"
-        if UserDefaults.standard.bool(forKey: "isLike\(likeButton.tag)") == false {
-            coreManager.createLike(authorText: authorText, descriptionText: descriptionText, postImage: postImage, tag: tag)  {
-                UserDefaults.standard.set(true, forKey: "isLike" + tag)
-                DispatchQueue.main.async {
-                    self.coreManager.reloadLikes()
-                    self.delegat?.reload()
-                   
-                }
-               
-            }
+        if isLike {
+            self.delegat?.minusLike(postID: self.postID, likesCount: self.likesCount)
+            self.isLike.toggle()
+            guard let indexPost = posts.firstIndex(where: {$0.postID == self.postID}) else { return }
+            var post = posts[indexPost]
+            post.isLike = false
+            post.likesCount -= 1
+            self.delegat?.reload()
         } else {
-            coreManager.likes.forEach { like in
-                if like.tag == tag {
-                    coreManager.deleteLike(like: like)
-                    UserDefaults.standard.set(false, forKey: "isLike" + tag)
-                    self.delegat?.reload()
-                }
-            }
+            self.delegat?.plusLike(postID: self.postID)
+            self.coreManager.reloadLikes()
+            guard let indexPost = posts.firstIndex(where: {$0.postID == self.postID}) else { return }
+            var post = posts[indexPost]
+            post.isLike = true
+            post.likesCount += 1
+            self.delegat?.reload()
         }
+//        if UserDefaults.standard.bool(forKey: "isLike\(likeButton.tag)") == false {
+//            coreManager.createLike(authorText: authorText, descriptionText: descriptionText, postImage: postImage, tag: tag)  {
+//                UserDefaults.standard.set(true, forKey: "isLike" + tag)
+//                DispatchQueue.main.async {
+//                    self.delegat?.plusLike(postID: self.postID)
+//                    self.coreManager.reloadLikes()
+//                    self.delegat?.reload()
+//                }
+//            }
+//
+//            self.delegat?.reload()
+//        } else {
+//            coreManager.likes.forEach { like in
+//                if like.tag == tag {
+//                    coreManager.deleteLike(like: like)
+//                    UserDefaults.standard.set(false, forKey: "isLike" + tag)
+//                    self.delegat?.reload()
+//                }
+//            }
+//        }
     }
 }
 

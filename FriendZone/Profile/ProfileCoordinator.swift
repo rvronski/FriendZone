@@ -8,6 +8,13 @@
 import UIKit
 
 class ProfileCoordinator: ModuleCoordinatable {
+    
+    enum Push {
+        case publication(ViewModelProtocol)
+        case photo
+        case post
+    }
+    
     let moduleType: Module.ModuleType
 
     private let factory: AppFactory
@@ -43,5 +50,22 @@ class ProfileCoordinator: ModuleCoordinatable {
     
     func dismiss() {
         module?.view.dismiss(animated: true)
+    }
+    
+    func pop() {
+        (module?.view as? UINavigationController)?.popViewController(animated: true)
+    }
+    
+    func pushViewController(_ viewModel: ViewModelProtocol?, _ pushTo: Push ) {
+        switch pushTo {
+        case let .publication(viewModel):
+            let publicationVC = PostViewController(viewModel: viewModel as! ProfileViewModelProtocol)
+            (module!.view as? UINavigationController)?.pushViewController(publicationVC, animated: true)
+        case .photo:
+            let photoVC = PhotosViewController()
+            (module!.view as? UINavigationController)?.pushViewController(photoVC, animated: true)
+        case .post:
+            print("post")
+        }
     }
 }

@@ -46,7 +46,7 @@ class PostViewController: UIViewController {
         setupView()
         setupGesture()
         photoButton.tapButton = { [weak self] in
-            self?.viewModel.uploadFoto(delegate: self!)
+            self?.viewModel.openGallery(delegate: self!)
         }
         publicationutton.tapButton = {[weak self] in
             self?.publication()
@@ -65,7 +65,7 @@ class PostViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             
-            self.menuView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 60),
+            self.menuView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.menuView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.menuView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.menuView.heightAnchor.constraint(equalToConstant: 40),
@@ -76,7 +76,7 @@ class PostViewController: UIViewController {
             self.publicationutton.centerYAnchor.constraint(equalTo: self.menuView.centerYAnchor),
             self.publicationutton.rightAnchor.constraint(equalTo: self.menuView.rightAnchor, constant: -20),
             
-            self.postTextView.topAnchor.constraint(equalTo: self.menuView.bottomAnchor),
+            self.postTextView.topAnchor.constraint(equalTo: self.menuView.bottomAnchor, constant: 16),
             self.postTextView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
             self.postTextView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
             self.postTextView.heightAnchor.constraint(equalTo: self.postTextView.widthAnchor, multiplier: 0.3),
@@ -94,13 +94,14 @@ class PostViewController: UIViewController {
         guard let image = imageView.image else { self.alertOk(title: "Добавьте фотографию", message: nil)
             return
         }
+        guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         let text = postTextView.text ?? ""
         let userName = UserDefaults.standard.string(forKey: "userName")
         let postID = UUID().uuidString
-        let post = Post(author: userName ?? "", description: text, image: image, likes: 0, postID: postID)
+        let post = Post(author: userName ?? "", description: text, image: imageData, likesCount: 0, isLike: false, postID: postID)
         posts.append(post)
-        viewModel.addposts(userName: userName!, image: image, likes: 0, postText: text, postID: postID)
-        self.navigationController?.popViewController(animated: true)
+        viewModel.addposts(userName: userName!, image: imageData, likesCount: 0, postText: text, postID: postID)
+        self.viewModel.pop()
     }
     @objc private func hideKeyboard() {
         self.view.endEditing(true)

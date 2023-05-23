@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
@@ -15,9 +14,11 @@ import FirebaseFirestore
 protocol FirebaseServiceProtocol {
     func checkCredentials(email: String, password: String,  completion: @escaping ((Bool, String?) -> Void))
     func signUp(email: String, password: String, userName: String, completion: @escaping ((Bool, String?) -> Void))
-    func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void)
+    func upload(currentUserId: String, photo: Data, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String)
+    func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
+    func plusLike(postID: String)
+    func minusLike(postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
 }
 
@@ -76,15 +77,13 @@ class FirebaseService: FirebaseServiceProtocol {
         })
     }
     
-    func upload(currentUserId: String, photo: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
+    func upload(currentUserId: String, photo: Data, completion: @escaping (Result<URL, Error>) -> Void) {
         let reference = Storage.storage().reference().child("avatars").child(currentUserId)
-        
-        guard let imageData = photo.jpegData(compressionQuality: 0.4) else { return }
-        
+    
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        reference.putData(imageData, metadata: metadata) { (metadata, error) in
+        reference.putData(photo, metadata: metadata) { (metadata, error) in
             guard let _ = metadata else {
                 completion(.failure(error!))
                 return
@@ -138,46 +137,48 @@ class FirebaseService: FirebaseServiceProtocol {
         
     }
     
-    func addposts(userName: String, image: UIImage?, likes: Int, postText: String?, postID: String) {
+    func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String) {
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
         let reference = Storage.storage().reference().child("\(uid)postImages").child(postID)
-        if let image {
-            
-            guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
-            let metadata = StorageMetadata()
-            metadata.contentType = "image/jpeg"
-            reference.putData(imageData, metadata: metadata) { (metadata, error) in
-                guard let _ = metadata else {
-                    
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        reference.putData(image, metadata: metadata) { (metadata, error) in
+            guard let _ = metadata else {
+                
+                return
+            }
+            reference.downloadURL { (url, error) in
+                guard let url = url else {
                     return
                 }
-                reference.downloadURL { (url, error) in
-                    guard let url = url else {
-                        return
-                    }
-                    
-                    var ref: DatabaseReference!
-                    ref = Database.database().reference()
-                    ref.child("Users").child(uid).child("posts").childByAutoId().setValue([
-                        "postID": postID,
-                        "username":  userName,
-                        "image":  url.absoluteString,
-                        "likes": likes,
-                        "postText": postText ?? ""
-                    ])
-                }
+                var ref: DatabaseReference!
+                ref = Database.database().reference()
+                ref.child("Users").child(uid).child("posts").child(postID).setValue([
+                    "postID": postID,
+                    "username":  userName,
+                    "postText": postText ?? "",
+                    "image":  url.absoluteString,
+                    "likesCount": likesCount,
+                    "isLike": false
+                ])
             }
-            
-        } else {
-            var ref: DatabaseReference!
-            ref = Database.database().reference()
-            ref.child("Users").child(uid).child("posts").childByAutoId().setValue( [
-                "postID": postID,
-                "username":  userName,
-                "image":  "",
-                "likes": likes,
-                "postText": postText ?? ""
-            ])
         }
+    }
+    
+    func plusLike(postID: String) {
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        ref.child("Users/\(uid)/posts/\(postID)/likesCount").setValue(+1)
+        ref.child("Users/\(uid)/posts/\(postID)/isLike").setValue(true)
+    }
+    
+    func minusLike(postID: String, likesCount: Int) {
+        let newLikesCount = likesCount - 1
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        ref.child("Users/\(uid)/posts/\(postID)/likesCount").setValue(newLikesCount)
+        ref.child("Users/\(uid)/posts/\(postID)/isLike").setValue(false)
     }
 }

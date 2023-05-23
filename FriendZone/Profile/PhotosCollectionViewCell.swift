@@ -24,7 +24,7 @@ class PhotosCollectionViewCell: UICollectionViewCell {
     }
     
     func setup(model: Post) {
-        self.imageView.image = model.image
+        self.imageView.image = UIImage(data: model.image)
     }
     
     private func setupView() {
