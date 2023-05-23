@@ -185,33 +185,19 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
    
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = CustomHeaderView()
-        
-        return headerView
+        if  section == 0  {
+            
+            let headerView = CustomHeaderView()
+            
+            return headerView
+        }
+        return nil
     }
     
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        let height = tableView.frame.width / 4
-//        return CGFloat(height)
-//    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+   
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if indexPath.section == 0 {
-//            let height = tableView.frame.width / 4
-//            return CGFloat(height)
-//        }
-//        return 500
-//    }
-//    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if indexPath.section == 0 {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: CustomHeaderView.identifire, for: indexPath) as! CustomHeaderView
-//            return cell
-//        } else {
+        
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
             cell.setup(with: posts[indexPath.row], index: indexPath.row)
             if coreManager.likes.count == 0  {
@@ -226,16 +212,12 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             
             cell.delegat = self
             return cell
-//        }
+      
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if section == 0 {
-//            return 1
-//        } else if section > 0 {
+       
             return posts.count
-//        }
-//        return 0
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
