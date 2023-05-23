@@ -16,8 +16,10 @@ public struct Post {
 }
 var posts = [Post]() {
     didSet {
-        ProfileView().reload()
-        CustomHeaderView().reload()
+        DispatchQueue.main.async {
+            ProfileView().reload()
+            CustomHeaderView().reload()
+        }
     }
 }
 
