@@ -67,6 +67,7 @@ final class ProfileView: UIView {
         tableView.showsVerticalScrollIndicator = false
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         tableView.dragInteractionEnabled = true
+        
         return tableView
     }()
 
@@ -201,7 +202,7 @@ final class ProfileView: UIView {
         tableView.dataSource = dataSource
         tableView.delegate = delegate
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
-        tableView.register(CustomHeaderView.self, forCellReuseIdentifier: CustomHeaderView.identifire)
+//        tableView.register(CustomHeaderView.self, forHeaderFooterViewReuseIdentifier: CustomHeaderView.identifire)
 //        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifire)
 //        collectionView.dataSource = collectionViewDataSource
 //        collectionView.delegate = collectionViewDelegate

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomHeaderView: UITableViewCell {
+class CustomHeaderView: UIView {
     
     static let identifire = "HeaderView"
     
@@ -27,7 +27,7 @@ class CustomHeaderView: UITableViewCell {
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
          collectionView.translatesAutoresizingMaskIntoConstraints = false
-         collectionView.backgroundColor = .white
+//         collectionView.backgroundColor = .white
          collectionView.showsHorizontalScrollIndicator = false
          collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifire)
         collectionView.dataSource = self
@@ -37,25 +37,27 @@ class CustomHeaderView: UITableViewCell {
     
     var label = CustomLabel(inform: "Header", size: 20, weight: .bold, color: .black)
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupView()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupView()
+      
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     private func setupView() {
-        self.contentView.addSubview(collectionView)
+        self.addSubview(collectionView)
 //        self.addSubview(label)
         
         NSLayoutConstraint.activate([
         
-            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.collectionView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-            self.collectionView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            self.collectionView.heightAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.3)
+            self.collectionView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            self.collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.collectionView.heightAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3)
             
 //            self.label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
 //            self.label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
