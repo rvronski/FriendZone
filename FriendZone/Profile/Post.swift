@@ -17,6 +17,7 @@ public struct Post {
 var posts = [Post]() {
     didSet {
         ProfileView().reload()
+        CustomHeaderView().reload()
     }
 }
 

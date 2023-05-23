@@ -86,6 +86,7 @@ class ProfileViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
         self.avatarView.isHidden = true
         profileView.reload()
+        CustomHeaderView().reload()
     }
     
     private func setupView(){
@@ -156,44 +157,77 @@ class ProfileViewController: UIViewController {
     var postDragAtIndex = Int()
 }
 
+
+//extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+//    
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        posts.count
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
+//        cell.setup(model: posts[indexPath.row])
+//        
+//        return cell
+//    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        
+//        let itemWidth = (collectionView.frame.width - 50) / 4
+//       
+//        
+//        return CGSize(width: itemWidth, height: itemWidth)
+//        
+//    }
+//    
+//}
+
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
+   
     
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CustomHeaderView.identifire) as! CustomHeaderView
+//        
+//        return headerView
+//    }
+//    
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        let height = tableView.frame.width / 4
+//        return CGFloat(height)
+//    }
+//
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
     
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        if indexPath.section == 0 {
+//            let height = tableView.frame.width / 4
+//            return CGFloat(height)
+//        }
+//        return 500
+//    }
+//    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0  {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PhotosCell", for: indexPath) as! PhotosTableViewCell
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: CustomHeaderView.identifire, for: indexPath) as! CustomHeaderView
             return cell
         } else {
-            guard let cell1 = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostTableViewCell else {  let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
-                return cell
-            }
-            cell1.setup(with: posts[indexPath.row], index: indexPath.row)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
+            cell.setup(with: posts[indexPath.row], index: indexPath.row)
             if coreManager.likes.count == 0  {
                 UserDefaults.standard.set(false, forKey: "isLike\(indexPath.row)")
-                
             }
-            
             
             if UserDefaults.standard.bool(forKey: "isLike\(indexPath.row)") == true {
-                cell1.likeButton.tintColor = .systemRed
+                cell.likeButton.tintColor = .systemRed
             } else if UserDefaults.standard.bool(forKey: "isLike\(indexPath.row)") == false {
-                cell1.likeButton.tintColor = .lightGray
-                
+                cell.likeButton.tintColor = .lightGray
             }
             
-            
-            cell1.delegat = self
-            return cell1
+            cell.delegat = self
+            return cell
         }
-        
     }
-    
-    
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        2
-    }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -203,7 +237,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         }
         return 0
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 && indexPath.section == 0 {
