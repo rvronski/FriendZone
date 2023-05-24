@@ -220,8 +220,8 @@ extension ProfileViewController: CellDelegate {
         viewModel.minusLike(postID: postID, likesCount: likesCount)
     }
     
-    func plusLike(postID: String) {
-        viewModel.plusLike(postID: postID)
+    func plusLike(postID: String, likesCount: Int) {
+        viewModel.plusLike(postID: postID, likesCount: likesCount)
     }
     
     func reload() {

@@ -8,7 +8,7 @@
 import UIKit
 protocol CellDelegate: AnyObject {
     func reload()
-    func plusLike(postID: String)
+    func plusLike(postID: String,likesCount: Int)
     func minusLike(postID: String, likesCount: Int)
 }
 
@@ -146,19 +146,20 @@ class PostTableViewCell: UITableViewCell {
         let tag = "\(self.likeButton.tag)"
         if isLike {
             self.delegat?.minusLike(postID: self.postID, likesCount: self.likesCount)
-            self.isLike.toggle()
             guard let indexPost = posts.firstIndex(where: {$0.postID == self.postID}) else { return }
-            var post = posts[indexPost]
+            var post = posts.remove(at: indexPost)
             post.isLike = false
             post.likesCount -= 1
+            posts.insert(post, at: indexPost)
             self.delegat?.reload()
         } else {
-            self.delegat?.plusLike(postID: self.postID)
+            self.delegat?.plusLike(postID: self.postID, likesCount: self.likesCount)
             self.coreManager.reloadLikes()
             guard let indexPost = posts.firstIndex(where: {$0.postID == self.postID}) else { return }
-            var post = posts[indexPost]
+            var post = posts.remove(at: indexPost)
             post.isLike = true
             post.likesCount += 1
+            posts.insert(post, at: indexPost)
             self.delegat?.reload()
         }
 //        if UserDefaults.standard.bool(forKey: "isLike\(likeButton.tag)") == false {

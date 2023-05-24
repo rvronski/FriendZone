@@ -17,7 +17,7 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
     func downloadImage(imageURL: String, completion: @escaping (Data) -> Void)
     func viewInputDidChange(viewInput: ProfileViewModel.ViewInput)
-    func plusLike(postID: String)
+    func plusLike(postID: String, likesCount: Int)
     func minusLike(postID: String, likesCount: Int)
 }
 
@@ -118,8 +118,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
             coordinator?.pushViewController(nil, .post)
         }
     }
-    func plusLike(postID: String) {
-        firebaseService.plusLike(postID: postID)
+    func plusLike(postID: String, likesCount: Int) {
+        firebaseService.plusLike(postID: postID, likesCount: likesCount)
     }
     func minusLike(postID: String, likesCount: Int) {
         firebaseService.minusLike(postID: postID, likesCount: likesCount)

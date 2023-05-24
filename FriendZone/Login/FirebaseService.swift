@@ -17,7 +17,7 @@ protocol FirebaseServiceProtocol {
     func upload(currentUserId: String, photo: Data, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
-    func plusLike(postID: String)
+    func plusLike(postID: String, likesCount: Int)
     func minusLike(postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
 }
@@ -165,11 +165,12 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
     
-    func plusLike(postID: String) {
+    func plusLike(postID: String, likesCount: Int) {
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        let newLikesCount = likesCount + 1
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users/\(uid)/posts/\(postID)/likesCount").setValue(+1)
+        ref.child("Users/\(uid)/posts/\(postID)/likesCount").setValue(newLikesCount)
         ref.child("Users/\(uid)/posts/\(postID)/isLike").setValue(true)
     }
     
