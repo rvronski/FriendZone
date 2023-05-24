@@ -13,6 +13,8 @@ protocol CellDelegate: AnyObject {
 }
 
 class PostTableViewCell: UITableViewCell {
+    
+    static let identifire = "postCell"
     weak var delegat: CellDelegate?
     let coreManager = CoreDataManager.shared
     private var postID = ""

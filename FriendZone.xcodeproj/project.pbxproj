@@ -35,6 +35,10 @@
 		4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */; };
 		455BF4F22A12630E00AA3C34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */; };
 		455BF4F62A13E69F00AA3C34 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455BF4F52A13E69F00AA3C34 /* PostViewController.swift */; };
+		45BAC5DD2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5DC2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift */; };
+		45BAC5DF2A1E3BD100D5CEAA /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */; };
+		45BAC5E12A1E673C00D5CEAA /* PhotosDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */; };
+		45BAC5E32A1E707100D5CEAA /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5E22A1E707100D5CEAA /* TransitionAnimator.swift */; };
 		45CC79072A101E2000C25EE6 /* LocalNotificationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */; };
 		45CC791B2A101EF000C25EE6 /* Coordinatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */; };
 		45CC791D2A10219C00C25EE6 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791C2A10219C00C25EE6 /* FirebaseService.swift */; };
@@ -84,6 +88,10 @@
 		4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeCoordinator.swift; sourceTree = "<group>"; };
 		455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		455BF4F52A13E69F00AA3C34 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		45BAC5DC2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAvatarCollectionViewCell.swift; sourceTree = "<group>"; };
+		45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
+		45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosDetailViewController.swift; sourceTree = "<group>"; };
+		45BAC5E22A1E707100D5CEAA /* TransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 		45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsService.swift; sourceTree = "<group>"; };
 		45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatable.swift; sourceTree = "<group>"; };
 		45CC791C2A10219C00C25EE6 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
@@ -203,11 +211,13 @@
 				45CC792B2A10278D00C25EE6 /* PostTableViewCell.swift */,
 				455BF4F52A13E69F00AA3C34 /* PostViewController.swift */,
 				45CC792D2A1027F200C25EE6 /* Post.swift */,
-				45CC79352A102CA600C25EE6 /* PhotosCollectionViewCell.swift */,
 				45CC79292A10256800C25EE6 /* AvatarView.swift */,
 				4558BF652A10025200F40377 /* ProfileViewModel.swift */,
 				4558BF6B2A1002C700F40377 /* ProfileCoordinator.swift */,
 				45CC79332A102C0A00C25EE6 /* PhotosViewController.swift */,
+				45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */,
+				45BAC5E22A1E707100D5CEAA /* TransitionAnimator.swift */,
+				45CC79352A102CA600C25EE6 /* PhotosCollectionViewCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -227,7 +237,9 @@
 			isa = PBXGroup;
 			children = (
 				45CC79212A10233600C25EE6 /* MainViewController.swift */,
+				45BAC5DC2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift */,
 				45CC79232A10234800C25EE6 /* MainViewModel.swift */,
+				45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */,
 				45CC79252A10235C00C25EE6 /* MainViewCoordinator.swift */,
 			);
 			path = Main;
@@ -366,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45BAC5DD2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift in Sources */,
 				45CC79362A102CA600C25EE6 /* PhotosCollectionViewCell.swift in Sources */,
 				4558BF462A0FE64400F40377 /* LoginViewController.swift in Sources */,
 				45CC79262A10235C00C25EE6 /* MainViewCoordinator.swift in Sources */,
@@ -395,10 +408,13 @@
 				455768D52A19179500076030 /* AppTabBarController.swift in Sources */,
 				4558BF5E2A1001D100F40377 /* Module.swift in Sources */,
 				45CC79242A10234800C25EE6 /* MainViewModel.swift in Sources */,
+				45BAC5DF2A1E3BD100D5CEAA /* Avatar.swift in Sources */,
 				455768E02A191C4C00076030 /* UIColor+Extensions.swift in Sources */,
+				45BAC5E12A1E673C00D5CEAA /* PhotosDetailViewController.swift in Sources */,
 				4558BF622A10021E00F40377 /* ProfileViewController.swift in Sources */,
 				45CC79322A102AD100C25EE6 /* LikeTableViewCell.swift in Sources */,
 				4558BF6C2A1002C700F40377 /* ProfileCoordinator.swift in Sources */,
+				45BAC5E32A1E707100D5CEAA /* TransitionAnimator.swift in Sources */,
 				4558BF602A10020300F40377 /* AppCoordinator.swift in Sources */,
 				4558BF682A10027300F40377 /* LikeViewController.swift in Sources */,
 				4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */,

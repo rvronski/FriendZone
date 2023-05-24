@@ -17,7 +17,7 @@ class PhotosViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         return layout
     }()
-    
+    var cellItem = UICollectionViewCell()
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,5 +65,26 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
         
         return CGSize(width: itemWidth, height: itemWidth)
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        guard let item = collectionView.cellForItem(at: indexPath) else {return}
+        self.cellItem = item
+        let presentViewController = PhotosDetailViewController(indexPath: indexPath)
+        let navController =  UINavigationController(rootViewController: presentViewController)
+        navController.transitioningDelegate = self
+         navController.modalPresentationStyle = .fullScreen
+         self.navigationController?.present(navController, animated: true, completion: nil)
+        
+    }
+}
+extension PhotosViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: true)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: false)
     }
 }

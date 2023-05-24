@@ -51,7 +51,6 @@ class ProfileViewController: UIViewController {
         view = profileView
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupView()
@@ -169,9 +168,16 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         return nil
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if  section == 0  {
+            return "Фотографии"
+        }
+        return nil
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifire, for: indexPath) as! PostTableViewCell
             cell.setup(with: posts[indexPath.row], index: indexPath.row)
 //            if coreManager.likes.count == 0  {
 //                UserDefaults.standard.set(false, forKey: "isLike\(indexPath.row)")

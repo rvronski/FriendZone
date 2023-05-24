@@ -12,6 +12,7 @@ class CustomImageView: UIImageView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         clipsToBounds = true
+        contentMode = .scaleToFill
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
