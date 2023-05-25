@@ -19,6 +19,7 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func viewInputDidChange(viewInput: ProfileViewModel.ViewInput)
     func plusLike(postID: String, likesCount: Int)
     func minusLike(postID: String, likesCount: Int)
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
@@ -113,7 +114,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
         case .tapPublication:
             coordinator?.pushViewController(self, .publication(self))
         case .tapPhoto:
-            coordinator?.pushViewController(nil, .photo)
+            coordinator?.pushViewController(self, .photo(self))
         case .tapPost:
             coordinator?.pushViewController(nil, .post)
         }
@@ -123,6 +124,10 @@ class ProfileViewModel: ProfileViewModelProtocol {
     }
     func minusLike(postID: String, likesCount: Int) {
         firebaseService.minusLike(postID: postID, likesCount: likesCount)
+    }
+    
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
+        coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath)
     }
 }
 

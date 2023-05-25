@@ -11,7 +11,7 @@ class ProfileCoordinator: ModuleCoordinatable {
     
     enum Push {
         case publication(ViewModelProtocol)
-        case photo
+        case photo(ViewModelProtocol)
         case post
     }
     
@@ -36,16 +36,24 @@ class ProfileCoordinator: ModuleCoordinatable {
         self.module = module
         return viewController
     }
-    func photoCellDidTap() {
-        let vc = PhotosViewController()
-        (module?.view as? UINavigationController)?.pushViewController(vc, animated: true)
-    }
+//    func photoCellDidTap() {
+//        let vc = PhotosViewController(viewModel: <#ProfileViewModelProtocol#>)
+//        (module?.view as? UINavigationController)?.pushViewController(vc, animated: true)
+//    }
     
     func presentImagePicker(delegate: UIViewController) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = delegate as? any UIImagePickerControllerDelegate & UINavigationControllerDelegate
         imagePicker.allowsEditing = true
         module?.view.present(imagePicker, animated: true)
+    }
+    
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
+        let presentViewController = PhotosDetailViewController(indexPath: indexPath)
+        let navController =  UINavigationController(rootViewController: presentViewController)
+         navController.transitioningDelegate = delegate
+         navController.modalPresentationStyle = .fullScreen
+        (module!.view as? UINavigationController)?.present(navController, animated: true, completion: nil)
     }
     
     func dismiss() {
@@ -61,8 +69,8 @@ class ProfileCoordinator: ModuleCoordinatable {
         case let .publication(viewModel):
             let publicationVC = PostViewController(viewModel: viewModel as! ProfileViewModelProtocol)
             (module!.view as? UINavigationController)?.pushViewController(publicationVC, animated: true)
-        case .photo:
-            let photoVC = PhotosViewController()
+        case let .photo(viewModel):
+            let photoVC = PhotosViewController(viewModel: viewModel as! ProfileViewModelProtocol)
             (module!.view as? UINavigationController)?.pushViewController(photoVC, animated: true)
         case .post:
             print("post")

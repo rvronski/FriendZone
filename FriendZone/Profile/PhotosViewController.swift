@@ -9,6 +9,16 @@ import UIKit
 
 class PhotosViewController: UIViewController {
     
+    private let viewModel: ProfileViewModelProtocol
+    
+    init(viewModel: ProfileViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -71,12 +81,7 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let item = collectionView.cellForItem(at: indexPath) else {return}
         self.cellItem = item
-        let presentViewController = PhotosDetailViewController(indexPath: indexPath)
-        let navController =  UINavigationController(rootViewController: presentViewController)
-        navController.transitioningDelegate = self
-         navController.modalPresentationStyle = .fullScreen
-         self.navigationController?.present(navController, animated: true, completion: nil)
-        
+        viewModel.presentPhoto(delegate: self, indexPath: indexPath)
     }
 }
 extension PhotosViewController: UIViewControllerTransitioningDelegate {

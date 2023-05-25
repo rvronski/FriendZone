@@ -42,20 +42,18 @@ class PhotosDetailViewController: UIViewController {
         return collectionView
     }()
 
-    private lazy var closeButton = ButtonWithSystemImage(background: nil, image: "arrow.backward.to.line", imageSize: 14, symbolScale: .small, tintcolor: .buttonColor)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        closeButton.tapButton = { [weak self] in
-            self?.navigationController?.dismiss(animated: true)
-        }
-       
-        //performBatchUpdates() { _ in
-//            self.collectionView.scrollToItem(at: self.indexPath, at: .centeredHorizontally, animated: false)
-//        }
+        setupNavigationBar()
     }
     
+    private func setupNavigationBar() {
+        
+        let leftButton = UIBarButtonItem(barButtonSystemItem: .reply, target: self, action: #selector(popVC))
+        leftButton.tintColor = .buttonColor
+        navigationItem.leftBarButtonItem = leftButton
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         collectionView.performBatchUpdates(nil) { _ in  self.collectionView.scrollToItem(at: self.indexPath, at: .right, animated: false)
@@ -64,12 +62,9 @@ class PhotosDetailViewController: UIViewController {
     private func setupView() {
         self.view.backgroundColor = .white
         self.view.addSubview(collectionView)
-        self.view.addSubview(closeButton)
+
         NSLayoutConstraint.activate([
         
-            self.closeButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            self.closeButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
-            
             self.collectionView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             self.collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
@@ -77,7 +72,9 @@ class PhotosDetailViewController: UIViewController {
             
         ])
     }
-
+ @objc private func popVC() {
+     self.navigationController?.dismiss(animated: true)
+    }
 }
 extension PhotosDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -86,7 +83,6 @@ extension PhotosDetailViewController: UICollectionViewDataSource, UICollectionVi
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
-//            collectionView.scrollToItem(at: self.indexPath, at: .centeredHorizontally, animated: false)
             cell.setup(model: posts[indexPath.row])
             return cell
         }
