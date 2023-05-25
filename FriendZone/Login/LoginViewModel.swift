@@ -22,8 +22,8 @@ class LoginViewModel: LoginViewModelProtocol {
     
     private let firebaseService: FirebaseServiceProtocol
 
-    init(checkService: FirebaseServiceProtocol) {
-        self.firebaseService = checkService
+    init(firebaseService: FirebaseServiceProtocol) {
+        self.firebaseService = firebaseService
     }
     var coordinator: AppCoordinator?
     

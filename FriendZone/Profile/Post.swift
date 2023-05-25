@@ -23,4 +23,4 @@ var posts = [Post]() {
         }
     }
 }
-
+var allPosts = [Post]()

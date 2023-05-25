@@ -72,7 +72,8 @@ class ProfileViewController: UIViewController {
     }
     
     private func downloadUserInfo(completion: @escaping () -> Void) {
-        self.viewModel.downloadUserInfo { userName, avatarURL in
+        guard let userID else {return}
+        self.viewModel.downloadUserInfo(userID: userID) { userName, avatarURL in
             guard let userName,
                   let avatarURL else {return}
                  self.avatarUrl = avatarURL

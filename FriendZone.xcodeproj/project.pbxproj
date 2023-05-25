@@ -39,6 +39,7 @@
 		45BAC5DF2A1E3BD100D5CEAA /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */; };
 		45BAC5E12A1E673C00D5CEAA /* PhotosDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */; };
 		45BAC5E32A1E707100D5CEAA /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5E22A1E707100D5CEAA /* TransitionAnimator.swift */; };
+		45BAC5E52A1FE8BA00D5CEAA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5E42A1FE8B900D5CEAA /* User.swift */; };
 		45CC79072A101E2000C25EE6 /* LocalNotificationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */; };
 		45CC791B2A101EF000C25EE6 /* Coordinatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */; };
 		45CC791D2A10219C00C25EE6 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC791C2A10219C00C25EE6 /* FirebaseService.swift */; };
@@ -92,6 +93,7 @@
 		45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosDetailViewController.swift; sourceTree = "<group>"; };
 		45BAC5E22A1E707100D5CEAA /* TransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
+		45BAC5E42A1FE8B900D5CEAA /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		45CC79062A101E2000C25EE6 /* LocalNotificationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsService.swift; sourceTree = "<group>"; };
 		45CC791A2A101EEF00C25EE6 /* Coordinatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatable.swift; sourceTree = "<group>"; };
 		45CC791C2A10219C00C25EE6 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				45CC792B2A10278D00C25EE6 /* PostTableViewCell.swift */,
 				455BF4F52A13E69F00AA3C34 /* PostViewController.swift */,
 				45CC792D2A1027F200C25EE6 /* Post.swift */,
+				45BAC5E42A1FE8B900D5CEAA /* User.swift */,
 				45CC79292A10256800C25EE6 /* AvatarView.swift */,
 				4558BF652A10025200F40377 /* ProfileViewModel.swift */,
 				4558BF6B2A1002C700F40377 /* ProfileCoordinator.swift */,
@@ -410,6 +413,7 @@
 				45CC79242A10234800C25EE6 /* MainViewModel.swift in Sources */,
 				45BAC5DF2A1E3BD100D5CEAA /* Avatar.swift in Sources */,
 				455768E02A191C4C00076030 /* UIColor+Extensions.swift in Sources */,
+				45BAC5E52A1FE8BA00D5CEAA /* User.swift in Sources */,
 				45BAC5E12A1E673C00D5CEAA /* PhotosDetailViewController.swift in Sources */,
 				4558BF622A10021E00F40377 /* ProfileViewController.swift in Sources */,
 				45CC79322A102AD100C25EE6 /* LikeTableViewCell.swift in Sources */,

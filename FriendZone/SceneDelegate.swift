@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         self.window = UIWindow(windowScene: windowScene)
         
-        let factory = AppFactory(checkService: FirebaseService())
+        let factory = AppFactory(firebaseService: FirebaseService())
         let navigationController = UINavigationController.init()
         let appCoordinator = AppCoordinator(factory: factory, navigationController: navigationController)
         self.appcoordinator = appCoordinator

@@ -36,10 +36,6 @@ class ProfileCoordinator: ModuleCoordinatable {
         self.module = module
         return viewController
     }
-//    func photoCellDidTap() {
-//        let vc = PhotosViewController(viewModel: <#ProfileViewModelProtocol#>)
-//        (module?.view as? UINavigationController)?.pushViewController(vc, animated: true)
-//    }
     
     func presentImagePicker(delegate: UIViewController) {
         let imagePicker = UIImagePickerController()

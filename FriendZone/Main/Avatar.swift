@@ -11,4 +11,4 @@ struct Avatar {
     public var image: UIImage
     public var name: String
 }
-var avatarArray: [Avatar] = [Avatar(image: UIImage(named: "IMG_1824")!, name: "Roman"), Avatar(image: UIImage(named: "IMG_1824")!, name: "Nil"), Avatar(image: UIImage(named: "IMG_1824")!, name: "Alex"), Avatar(image: UIImage(named: "IMG_1824")!, name: "Alex"), Avatar(image: UIImage(named: "IMG_1824")!, name: "Alex"), Avatar(image: UIImage(named: "IMG_1824")!, name: "Alex")]
+var avatarArray = [Avatar]()

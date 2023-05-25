@@ -15,11 +15,12 @@ protocol FirebaseServiceProtocol {
     func checkCredentials(email: String, password: String,  completion: @escaping ((Bool, String?) -> Void))
     func signUp(email: String, password: String, userName: String, completion: @escaping ((Bool, String?) -> Void))
     func upload(currentUserId: String, photo: Data, completion: @escaping (Result<URL, Error>) -> Void)
-    func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void )
+    func downloadUserInfo(userID: String ,completion: @escaping (NSDictionary?, [String]?) -> Void )
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
     func plusLike(postID: String, likesCount: Int)
     func minusLike(postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
+    func downloadAllUsers(completion: @escaping (NSDictionary?, [String]?) -> Void)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -114,13 +115,12 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
     
-    func downloadUserInfo(completion: @escaping (NSDictionary?, [String]?) -> Void ) {
+    func downloadUserInfo(userID: String ,completion: @escaping (NSDictionary?, [String]?) -> Void ) {
         
-        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
         var postStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users").child(uid).observeSingleEvent(of: .value, with: { snapshot in
+        ref.child("Users").child(userID).observeSingleEvent(of: .value, with: { snapshot in
             
             let value = snapshot.value as? NSDictionary
             for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
@@ -135,6 +135,37 @@ class FirebaseService: FirebaseServiceProtocol {
             completion(nil, nil)
         }
         
+    }
+    
+    func downloadAllUsers(completion: @escaping (NSDictionary?, [String]?) -> Void) {
+        var usersStringIDs = [String]()
+        var ref: DatabaseReference!
+        ref = Database.database().reference().child("Users")
+        ref.observe(.value) { snapshot in
+            let value = snapshot.value as? NSDictionary
+            for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
+//                for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
+                    usersStringIDs.append(meterSnapshot.key)
+                }
+            completion(value, usersStringIDs)
+//            print("🍎 Value = \(value)")
+//            print("🍎 \(usersStringIDs)")
+        }
+        
+        //observeSingleEvent(of: .value, with: { snapshot in
+            
+//            let value = snapshot.value as? NSDictionary
+//            for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
+//                for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
+//                    usersStringIDs.append(readingSnapshot.key)
+//                }
+//            }
+//            completion(value, usersStringIDs)
+//
+//        }) { error in
+//            print(error.localizedDescription)
+//            completion(nil, nil)
+//        }
     }
     
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String) {

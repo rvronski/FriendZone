@@ -9,6 +9,16 @@ import UIKit
 
 class MainViewController: UIViewController {
     
+    private let viewModel: MainViewModelProtocol
+    
+    init(viewModel: MainViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     private lazy var layout: UICollectionViewFlowLayout = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -45,6 +55,16 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        viewModel.downloadAllUsers { 
+            for user in users {
+                let userID = user.userID
+                self.viewModel.downloadUserInfo(userID: userID) { userName, avatarData in
+                    guard let userName,
+                          let avatarData else {return}
+                    avatarArray.append(Avatar(image: UIImage(data: avatarData)!, name: userName))
+                }
+            }
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

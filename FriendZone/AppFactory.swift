@@ -9,23 +9,23 @@ import UIKit
 
 class AppFactory {
     
-    private let checkService: FirebaseServiceProtocol
+    private let firebaseService: FirebaseServiceProtocol
     
-    init(checkService: FirebaseServiceProtocol) {
-        self.checkService = checkService
+    init(firebaseService: FirebaseServiceProtocol) {
+        self.firebaseService = firebaseService
     }
     func makeModule(ofType moduleType: Module.ModuleType) -> Module {
         switch moduleType {
         case .login:
-            let viewModel = LoginViewModel(checkService: checkService)
+            let viewModel = LoginViewModel(firebaseService: firebaseService)
             let view = UINavigationController(rootViewController: LoginViewController(viewModel: viewModel))
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
         case .main:
-            let viewModel = MainViewModel()
-            let view = UINavigationController(rootViewController: MainViewController())
+            let viewModel = MainViewModel(firebaseService: firebaseService)
+            let view = UINavigationController(rootViewController: MainViewController(viewModel: viewModel))
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
         case .profile:
-            let viewModel = ProfileViewModel(checkService: checkService)
+            let viewModel = ProfileViewModel(firebaseService: firebaseService)
             let view = UINavigationController(rootViewController: ProfileViewController(viewModel: viewModel))
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
         case .like:

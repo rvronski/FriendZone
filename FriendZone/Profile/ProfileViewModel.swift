@@ -10,7 +10,7 @@ import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
     func uploadFoto(currentUserId: String, photo: Data)
-    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void)
+    func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void)
     func openGallery(delegate: UIViewController)
     func dismiss()
     func pop()
@@ -36,8 +36,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
     
     private let firebaseService: FirebaseServiceProtocol
 
-    init(checkService: FirebaseServiceProtocol) {
-        self.firebaseService = checkService
+    init(firebaseService: FirebaseServiceProtocol) {
+        self.firebaseService = firebaseService
     }
     
     func uploadFoto(currentUserId: String, photo: Data) {
@@ -53,10 +53,10 @@ class ProfileViewModel: ProfileViewModelProtocol {
         }
     }
     
-    func downloadUserInfo(completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void) {
+    func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void) {
        
         
-        firebaseService.downloadUserInfo { value, id in
+        firebaseService.downloadUserInfo(userID: userID) { value, id in
             guard let value,
             let id else {
                 completion(nil, nil)
