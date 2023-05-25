@@ -17,7 +17,7 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        0.4
+        0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -44,7 +44,6 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         presentedView.transform = CGAffineTransform(scaleX: 0.05, y: 0.05)
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
-            presentedView.transform = CGAffineTransform(scaleX: 2, y: 2)
             presentedView.transform = CGAffineTransform(scaleX: 1, y: 1)
             presentedView.frame = finalFrame
         } completion: { finished in
@@ -64,7 +63,6 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let startCellCenter = CGPoint(x: startCellFrame.midX, y: startCellFrame.midY)
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
-//            dismissedView.backgroundColor = .clear
             dismissedView.transform = CGAffineTransform(scaleX: 0.05, y: 0.05)
             dismissedView.center = startCellCenter
             

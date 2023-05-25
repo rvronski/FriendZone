@@ -23,9 +23,9 @@ class PhotosDetailViewController: UIViewController {
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return layout
     }()
     
@@ -37,6 +37,8 @@ class PhotosDetailViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isPagingEnabled = true
+       
         return collectionView
     }()
 
@@ -46,25 +48,32 @@ class PhotosDetailViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         closeButton.tapButton = { [weak self] in
-            self?.view.backgroundColor = .clear
             self?.navigationController?.dismiss(animated: true)
-            
         }
-
+       
+        //performBatchUpdates() { _ in
+//            self.collectionView.scrollToItem(at: self.indexPath, at: .centeredHorizontally, animated: false)
+//        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.performBatchUpdates(nil) { _ in  self.collectionView.scrollToItem(at: self.indexPath, at: .right, animated: false)
+        }
     }
     private func setupView() {
         self.view.backgroundColor = .white
         self.view.addSubview(collectionView)
-        self.collectionView.addSubview(closeButton)
+        self.view.addSubview(closeButton)
         NSLayoutConstraint.activate([
         
             self.closeButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            self.closeButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
+            self.closeButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
             
-            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.collectionView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             self.collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.collectionView.heightAnchor.constraint(equalTo: self.collectionView.widthAnchor),
             
         ])
     }
@@ -77,15 +86,15 @@ extension PhotosDetailViewController: UICollectionViewDataSource, UICollectionVi
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
-            cell.setup(model: posts[self.indexPath.row])
+//            collectionView.scrollToItem(at: self.indexPath, at: .centeredHorizontally, animated: false)
+            cell.setup(model: posts[indexPath.row])
             return cell
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             
-            let itemWidth = (collectionView.frame.width - 20)
-            
+            let itemWidth = (collectionView.frame.width)
             return CGSize(width: itemWidth, height: itemWidth)
-            
         }
+
 }
