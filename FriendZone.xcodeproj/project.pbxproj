@@ -35,6 +35,7 @@
 		4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */; };
 		455BF4F22A12630E00AA3C34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */; };
 		455BF4F62A13E69F00AA3C34 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455BF4F52A13E69F00AA3C34 /* PostViewController.swift */; };
+		458584AD2A211ECC0021486A /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458584AC2A211ECC0021486A /* UserProfileViewController.swift */; };
 		45BAC5DD2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5DC2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift */; };
 		45BAC5DF2A1E3BD100D5CEAA /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */; };
 		45BAC5E12A1E673C00D5CEAA /* PhotosDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */; };
@@ -89,6 +90,7 @@
 		4558BF6D2A1002F300F40377 /* LikeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeCoordinator.swift; sourceTree = "<group>"; };
 		455BF4F12A12630D00AA3C34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		455BF4F52A13E69F00AA3C34 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		458584AC2A211ECC0021486A /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		45BAC5DC2A1E36CF00D5CEAA /* MainAvatarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAvatarCollectionViewCell.swift; sourceTree = "<group>"; };
 		45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		45BAC5E02A1E673C00D5CEAA /* PhotosDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosDetailViewController.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				45CC79232A10234800C25EE6 /* MainViewModel.swift */,
 				45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */,
 				45CC79252A10235C00C25EE6 /* MainViewCoordinator.swift */,
+				458584AC2A211ECC0021486A /* UserProfileViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				455768E22A191D2B00076030 /* UIViewController+Alert.swift in Sources */,
 				455768DA2A19189200076030 /* TextFields+TextView.swift in Sources */,
 				4558BF4C2A0FE64400F40377 /* FriendZone.xcdatamodeld in Sources */,
+				458584AD2A211ECC0021486A /* UserProfileViewController.swift in Sources */,
 				45CC79282A10253D00C25EE6 /* ProfileView.swift in Sources */,
 				45CC79072A101E2000C25EE6 /* LocalNotificationsService.swift in Sources */,
 				45CC792A2A10256800C25EE6 /* AvatarView.swift in Sources */,

@@ -30,7 +30,7 @@ class MainAvatarCollectionViewCell: UICollectionViewCell {
     }
     
     func setup(model: Avatar) {
-        self.avatarImage.image = model.image
+        self.avatarImage.image = UIImage(data: model.image)
         self.nameLabel.text = model.name
 //        self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
     }

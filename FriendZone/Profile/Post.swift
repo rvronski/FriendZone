@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct Post {
+public struct Post: Equatable {
     public var author: String
     public var description: String?
     public var image: Data
@@ -24,3 +24,4 @@ var posts = [Post]() {
     }
 }
 var allPosts = [Post]()
+    

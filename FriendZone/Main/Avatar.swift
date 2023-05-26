@@ -7,8 +7,9 @@
 
 import UIKit
 
-struct Avatar {
-    public var image: UIImage
+struct Avatar: Equatable {
+    public var image: Data
     public var name: String
+    public var userID: String
 }
 var avatarArray = [Avatar]()

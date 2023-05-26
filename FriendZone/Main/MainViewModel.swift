@@ -26,7 +26,7 @@ class MainViewModel: MainViewModelProtocol {
         firebaseService.downloadAllUsers { value, usersID in
             guard let value,
                   let usersID else {return}
-            
+            print("downloadAllUsers")
             for userID in usersID {
             let userId = value[userID] as? NSDictionary ?? [:]
             let username = userId["userName"] as? String ?? ""
@@ -41,7 +41,7 @@ class MainViewModel: MainViewModelProtocol {
     }
     
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarImageData: Data?) -> Void) {
-       
+        print("downloadUserInfo")
         firebaseService.downloadUserInfo(userID: userID) { value, id in
             guard let value,
             let id else {
@@ -60,8 +60,12 @@ class MainViewModel: MainViewModelProtocol {
                 let isLike = post["isLike"] as? Bool ?? false
                 self.firebaseService.downloadImage(imageURL: image) { data in
                     guard let data else {return}
-                    let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID)
-                    allPosts.append(answer)
+                     let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID)
+                    if allPosts.contains(where: {$0 == answer}) {
+                        print("contains")
+                    } else {
+                        allPosts.append(answer)
+                    }
                 }
             }
             self.firebaseService.downloadImage(imageURL: avatarURL) { data in

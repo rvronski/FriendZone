@@ -144,28 +144,13 @@ class FirebaseService: FirebaseServiceProtocol {
         ref.observe(.value) { snapshot in
             let value = snapshot.value as? NSDictionary
             for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
-//                for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
                     usersStringIDs.append(meterSnapshot.key)
                 }
             completion(value, usersStringIDs)
-//            print("🍎 Value = \(value)")
-//            print("🍎 \(usersStringIDs)")
+         
         }
         
-        //observeSingleEvent(of: .value, with: { snapshot in
-            
-//            let value = snapshot.value as? NSDictionary
-//            for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
-//                for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
-//                    usersStringIDs.append(readingSnapshot.key)
-//                }
-//            }
-//            completion(value, usersStringIDs)
-//
-//        }) { error in
-//            print(error.localizedDescription)
-//            completion(nil, nil)
-//        }
+      
     }
     
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String) {

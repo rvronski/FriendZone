@@ -96,9 +96,6 @@ class ProfileViewController: UIViewController {
         self.view.bringSubviewToFront(avatarView)
         
         NSLayoutConstraint.activate([
-            
-            
-            
             self.avatarView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.avatarView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.avatarView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
@@ -111,8 +108,6 @@ class ProfileViewController: UIViewController {
     private var avatarHeightConstraint: NSLayoutConstraint?
     
     var isAvatarIncreased = false
-    
-    
     
     func changeLayoutAvatar() {
         let closeButton = avatarView.closeButton

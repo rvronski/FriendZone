@@ -9,6 +9,7 @@ import UIKit
 
 class MainViewController: UIViewController {
     
+    
     private let viewModel: MainViewModelProtocol
     
     init(viewModel: MainViewModelProtocol) {
@@ -61,7 +62,19 @@ class MainViewController: UIViewController {
                 self.viewModel.downloadUserInfo(userID: userID) { userName, avatarData in
                     guard let userName,
                           let avatarData else {return}
-                    avatarArray.append(Avatar(image: UIImage(data: avatarData)!, name: userName))
+                    let avatar = Avatar(image: avatarData, name: userName, userID: userID)
+                    if avatarArray.contains(where: {$0.userID == avatar.userID}) {
+                        let index = avatarArray.firstIndex(where: {$0.userID == avatar.userID})
+                        let avtar = avatarArray[index!]
+                        if avtar.image == avatar.image, avtar.name == avatar.name {
+                            print("contains Avatar")
+                        } else {
+                            avatarArray.remove(at: index!)
+                            avatarArray.insert(avatar, at: index!)
+                        }
+                    } else {
+                        avatarArray.append(avatar)
+                    }
                 }
             }
         }
@@ -116,21 +129,21 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 }
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        posts.count
+        allPosts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifire, for: indexPath) as! PostTableViewCell
         
-        cell.setup(with: posts[indexPath.row], index: indexPath.row)
+        cell.setup(with: allPosts[indexPath.row], index: indexPath.row)
         
-    if posts[indexPath.row].isLike {
+    if allPosts[indexPath.row].isLike {
             cell.likeButton.tintColor = .systemRed
         } else {
             cell.likeButton.tintColor = .lightGray
         }
         
-//        cell.delegat = self
+        cell.delegat = self
         return cell
   
     }
@@ -138,6 +151,18 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 }
 extension MainViewController: MainAvatarCollectionDelegate {
     func reload() {
-//        self.collectionView.reloadData()
+        self.collectionView.reloadData()
+        self.tableView.reloadData()
     }
+}
+extension  MainViewController: CellDelegate {
+    func plusLike(postID: String, likesCount: Int) {
+        //
+    }
+    
+    func minusLike(postID: String, likesCount: Int) {
+//
+    }
+    
+    
 }
