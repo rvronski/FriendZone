@@ -123,9 +123,15 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         let itemWidth = (collectionView.frame.width - 50) / 4.2
         
         return CGSize(width: itemWidth, height: itemWidth)
-        
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let user = avatarArray[indexPath.row]
+        let userID = user.userID
+        let viewController = UserProfileViewController(userID: userID)
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
 }
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -75,7 +75,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 let likesCount = post["likesCount"] as? Int ?? 0
                 let isLike = post["isLike"] as? Bool ?? false
                 self.downloadImage(imageURL: image) { data in
-                    let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID)
+                    let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
                     posts.append(answer)
                 }
                 

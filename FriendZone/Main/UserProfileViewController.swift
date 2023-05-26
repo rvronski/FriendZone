@@ -9,6 +9,17 @@ import UIKit
 
 class UserProfileViewController: UIViewController {
     
+    var userID: String
+    
+    init(userID: String) {
+        self.userID = userID
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     lazy var nameLabel = CustomLabel(inform: "", size: 18, weight: .bold, color: .createColor(light: .black, dark: .white))
 
     lazy var publicationsButton = CustomButton(buttonText: "Публикации", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
@@ -33,7 +44,9 @@ class UserProfileViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         tableView.dragInteractionEnabled = true
-    
+        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifire)
+        tableView.delegate = self
+        tableView.dataSource = self
         return tableView
     }()
 
@@ -51,6 +64,7 @@ class UserProfileViewController: UIViewController {
     }()
     
     weak var delegate: ProfileViewDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupView()
@@ -58,12 +72,35 @@ class UserProfileViewController: UIViewController {
         self.gestureAvatar()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
+        for post in allPosts {
+            if post.userID == self.userID {
+                if userPosts.contains(post) {
+                    continue
+                } else {
+                    self.userPosts.append(post)
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        if avatarArray.contains(where: {$0.userID == self.userID}) {
+            guard let avatar = avatarArray.first(where: {$0.userID == self.userID}) else {return}
+            self.avatarImage.image = UIImage(data: avatar.image)
+            self.nameLabel.text = avatar.name
+        }
+        print(self.userPosts.count)
+        self.publicationsCount.text = "\(self.userPosts.count)"
+        self.tableView.reloadData()
     }
         
     private func setupView() {
+        self.view.backgroundColor = .white
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.avatarImage)
         self.view.addSubview(self.nameLabel)
@@ -143,6 +180,15 @@ class UserProfileViewController: UIViewController {
 }
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        if  section == 0  {
+//            let headerView = CustomHeaderView()
+////            headerView.delegate = self
+//            return headerView
+//        }
+//        return nil
+//    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.userPosts.count
     }
@@ -152,6 +198,4 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
         cell.setup(with: userPosts[indexPath.row], index: indexPath.row)
         return cell
     }
-    
-    
 }

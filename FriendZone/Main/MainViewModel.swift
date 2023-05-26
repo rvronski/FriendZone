@@ -60,7 +60,7 @@ class MainViewModel: MainViewModelProtocol {
                 let isLike = post["isLike"] as? Bool ?? false
                 self.firebaseService.downloadImage(imageURL: image) { data in
                     guard let data else {return}
-                     let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID)
+                     let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
                     if allPosts.contains(where: {$0 == answer}) {
                         print("contains")
                     } else {

@@ -97,8 +97,9 @@ class PostViewController: UIViewController {
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         let text = postTextView.text ?? ""
         let userName = UserDefaults.standard.string(forKey: "userName")
+        guard let userID = UserDefaults.standard.string(forKey: "UserID") else { return }
         let postID = UUID().uuidString
-        let post = Post(author: userName ?? "", description: text, image: imageData, likesCount: 0, isLike: false, postID: postID)
+        let post = Post(author: userName ?? "", description: text, image: imageData, likesCount: 0, isLike: false, postID: postID, userID: userID)
         posts.append(post)
         viewModel.addposts(userName: userName!, image: imageData, likesCount: 0, postText: text, postID: postID)
         self.viewModel.pop()

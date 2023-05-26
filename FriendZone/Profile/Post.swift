@@ -14,6 +14,8 @@ public struct Post: Equatable {
     public var likesCount: Int
     public var isLike: Bool
     public var postID: String
+    public var userID: String
+    
 }
 var posts = [Post]() {
     didSet {
