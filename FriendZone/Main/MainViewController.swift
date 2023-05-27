@@ -80,6 +80,7 @@ class MainViewController: UIViewController {
                         } else {
                             avatarArray.remove(at: index!)
                             avatarArray.insert(avatar, at: index!)
+                            self.collectionView.reloadData()
                         }
                     } else {
                         avatarArray.append(avatar)
@@ -199,13 +200,14 @@ extension MainViewController: MainAvatarCollectionDelegate {
     }
 }
 extension  MainViewController: CellDelegate {
-    func plusLike(postID: String, likesCount: Int) {
-        //
+    func minusLike(userID: String, postID: String, likesCount: Int) {
+        viewModel.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
     
-    func minusLike(postID: String, likesCount: Int) {
-//
+    func plusLike(userID: String, postID: String, likesCount: Int) {
+        viewModel.plusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
+    
     
     
 }

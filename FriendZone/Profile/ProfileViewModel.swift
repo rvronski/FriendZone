@@ -18,8 +18,8 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
     func downloadImage(imageURL: String, completion: @escaping (Data) -> Void)
     func viewInputDidChange(viewInput: ProfileViewModel.ViewInput)
-    func plusLike(postID: String, likesCount: Int)
-    func minusLike(postID: String, likesCount: Int)
+    func plusLike(userID: String, postID: String, likesCount: Int)
+    func minusLike(userID: String, postID: String, likesCount: Int)
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
 }
 
@@ -137,11 +137,11 @@ class ProfileViewModel: ProfileViewModelProtocol {
             coordinator?.pushViewController(nil, .post)
         }
     }
-    func plusLike(postID: String, likesCount: Int) {
-        firebaseService.plusLike(postID: postID, likesCount: likesCount)
+    func plusLike(userID: String, postID: String, likesCount: Int) {
+        firebaseService.plusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
-    func minusLike(postID: String, likesCount: Int) {
-        firebaseService.minusLike(postID: postID, likesCount: likesCount)
+    func minusLike(userID: String, postID: String, likesCount: Int) {
+        firebaseService.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
     
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {

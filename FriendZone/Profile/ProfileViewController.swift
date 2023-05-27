@@ -263,12 +263,12 @@ extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
 }
 
 extension ProfileViewController: CellDelegate {
-    func minusLike(postID: String, likesCount: Int) {
-        viewModel.minusLike(postID: postID, likesCount: likesCount)
+    func minusLike(userID: String, postID: String, likesCount: Int) {
+        viewModel.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
     
-    func plusLike(postID: String, likesCount: Int) {
-        viewModel.plusLike(postID: postID, likesCount: likesCount)
+    func plusLike(userID: String, postID: String, likesCount: Int) {
+        viewModel.plusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
     
     func reload() {

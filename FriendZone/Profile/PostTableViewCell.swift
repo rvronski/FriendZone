@@ -8,8 +8,8 @@
 import UIKit
 protocol CellDelegate: AnyObject {
     func reload()
-    func plusLike(postID: String,likesCount: Int)
-    func minusLike(postID: String, likesCount: Int)
+    func plusLike(userID: String, postID: String,likesCount: Int)
+    func minusLike(userID: String, postID: String, likesCount: Int)
 }
 
 class PostTableViewCell: UITableViewCell {
@@ -19,6 +19,7 @@ class PostTableViewCell: UITableViewCell {
     let coreManager = CoreDataManager.shared
     private var postID = ""
     private var likesCount = 0
+    private var userID = ""
     private var isLike = false
     private lazy var postImageView: UIImageView = {
         let postImageView = UIImageView()
@@ -94,6 +95,7 @@ class PostTableViewCell: UITableViewCell {
         }
         self.isLike = viewModel.isLike
         self.likesCount = viewModel.likesCount
+        self.userID = viewModel.userID
         self.likesLabel.text = "Нравится: \(likesCount)"
         likeButton.tintColor = self.isLike ? .systemRed : .lightGray
     }
@@ -142,59 +144,67 @@ class PostTableViewCell: UITableViewCell {
     
     
     @objc private func tapLike() {
-//        let authorText = self.authorLabel.text ?? ""
-//        let descriptionText = self.descriptionLabel.text ?? ""
-//        let tag = "\(self.likeButton.tag)"
+        //        let authorText = self.authorLabel.text ?? ""
+        //        let descriptionText = self.descriptionLabel.text ?? ""
+        //        let tag = "\(self.likeButton.tag)"
         if isLike {
-            self.delegat?.minusLike(postID: self.postID, likesCount: self.likesCount)
-            guard let indexPost = posts.firstIndex(where: {$0.postID == self.postID}) else { return }
-            guard let indexInAllPosts = allPosts.firstIndex(where: {$0.postID == self.postID}) else { return }
-            var post = posts.remove(at: indexPost)
-            var postInAllPosts = allPosts.remove(at: indexInAllPosts)
-            post.isLike = false
-            post.likesCount -= 1
-            posts.insert(post, at: indexPost)
-            postInAllPosts.isLike = false
-            postInAllPosts.likesCount -= 1
-            allPosts.insert(postInAllPosts, at: indexInAllPosts)
+            self.delegat?.minusLike(userID: self.userID, postID: self.postID, likesCount: self.likesCount)
+            if posts.contains(where: {$0.postID == self.postID}) {
+                let indexPost = posts.firstIndex(where: {$0.postID == self.postID})
+                var post = posts.remove(at: indexPost!)
+                post.isLike = false
+                post.likesCount -= 1
+                posts.insert(post, at: indexPost!)
+            }
+            if allPosts.contains(where: {$0.postID == self.postID}) {
+                let indexInAllPosts = allPosts.firstIndex(where: {$0.postID == self.postID})
+                var postInAllPosts = allPosts.remove(at: indexInAllPosts!)
+                postInAllPosts.isLike = false
+                postInAllPosts.likesCount -= 1
+                allPosts.insert(postInAllPosts, at: indexInAllPosts!)
+            }
             self.delegat?.reload()
         } else {
-            self.delegat?.plusLike(postID: self.postID, likesCount: self.likesCount)
+            self.delegat?.plusLike(userID: self.userID, postID: self.postID, likesCount: self.likesCount)
             self.coreManager.reloadLikes()
-            guard let indexPost = posts.firstIndex(where: {$0.postID == self.postID}) else { return }
-            guard let indexInAllPosts = allPosts.firstIndex(where: {$0.postID == self.postID}) else { return }
-            var post = posts.remove(at: indexPost)
-            var postInAllPosts = allPosts.remove(at: indexInAllPosts)
-            post.isLike = true
-            post.likesCount += 1
-            posts.insert(post, at: indexPost)
-            postInAllPosts.isLike = true
-            postInAllPosts.likesCount += 1
-            allPosts.insert(postInAllPosts, at: indexInAllPosts)
-            self.delegat?.reload()
+            if posts.contains(where: {$0.postID == self.postID}) {
+                let indexPost = posts.firstIndex(where: {$0.postID == self.postID})
+                var post = posts.remove(at: indexPost!)
+                post.isLike = true
+                post.likesCount += 1
+                posts.insert(post, at: indexPost!)
+            }
+            if allPosts.contains(where: {$0.postID == self.postID}) {
+                let indexInAllPosts = allPosts.firstIndex(where: {$0.postID == self.postID})
+                var postInAllPosts = allPosts.remove(at: indexInAllPosts!)
+                postInAllPosts.isLike = true
+                postInAllPosts.likesCount += 1
+                allPosts.insert(postInAllPosts, at: indexInAllPosts!)
+            }
+                self.delegat?.reload()
+            
+            //        if UserDefaults.standard.bool(forKey: "isLike\(likeButton.tag)") == false {
+            //            coreManager.createLike(authorText: authorText, descriptionText: descriptionText, postImage: postImage, tag: tag)  {
+            //                UserDefaults.standard.set(true, forKey: "isLike" + tag)
+            //                DispatchQueue.main.async {
+            //                    self.delegat?.plusLike(postID: self.postID)
+            //                    self.coreManager.reloadLikes()
+            //                    self.delegat?.reload()
+            //                }
+            //            }
+            //
+            //            self.delegat?.reload()
+            //        } else {
+            //            coreManager.likes.forEach { like in
+            //                if like.tag == tag {
+            //                    coreManager.deleteLike(like: like)
+            //                    UserDefaults.standard.set(false, forKey: "isLike" + tag)
+            //                    self.delegat?.reload()
+            //                }
+            //            }
+            //        }
         }
-//        if UserDefaults.standard.bool(forKey: "isLike\(likeButton.tag)") == false {
-//            coreManager.createLike(authorText: authorText, descriptionText: descriptionText, postImage: postImage, tag: tag)  {
-//                UserDefaults.standard.set(true, forKey: "isLike" + tag)
-//                DispatchQueue.main.async {
-//                    self.delegat?.plusLike(postID: self.postID)
-//                    self.coreManager.reloadLikes()
-//                    self.delegat?.reload()
-//                }
-//            }
-//
-//            self.delegat?.reload()
-//        } else {
-//            coreManager.likes.forEach { like in
-//                if like.tag == tag {
-//                    coreManager.deleteLike(like: like)
-//                    UserDefaults.standard.set(false, forKey: "isLike" + tag)
-//                    self.delegat?.reload()
-//                }
-//            }
-//        }
     }
 }
-
 
 

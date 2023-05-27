@@ -17,8 +17,8 @@ protocol FirebaseServiceProtocol {
     func upload(currentUserId: String, photo: Data, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadUserInfo(userID: String ,completion: @escaping (NSDictionary?, [String]?) -> Void )
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
-    func plusLike(postID: String, likesCount: Int)
-    func minusLike(postID: String, likesCount: Int)
+    func plusLike(userID: String, postID: String, likesCount: Int)
+    func minusLike(userID: String, postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
     func downloadAllUsers(completion: @escaping (NSDictionary?, [String]?) -> Void)
 }
@@ -181,21 +181,20 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
     
-    func plusLike(postID: String, likesCount: Int) {
-        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+    func plusLike(userID: String, postID: String, likesCount: Int) {
+        
         let newLikesCount = likesCount + 1
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users/\(uid)/posts/\(postID)/likesCount").setValue(newLikesCount)
-        ref.child("Users/\(uid)/posts/\(postID)/isLike").setValue(true)
+        ref.child("Users/\(userID)/posts/\(postID)/likesCount").setValue(newLikesCount)
+        ref.child("Users/\(userID)/posts/\(postID)/isLike").setValue(true)
     }
     
-    func minusLike(postID: String, likesCount: Int) {
+    func minusLike(userID: String, postID: String, likesCount: Int) {
         let newLikesCount = likesCount - 1
-        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users/\(uid)/posts/\(postID)/likesCount").setValue(newLikesCount)
-        ref.child("Users/\(uid)/posts/\(postID)/isLike").setValue(false)
+        ref.child("Users/\(userID)/posts/\(postID)/likesCount").setValue(newLikesCount)
+        ref.child("Users/\(userID)/posts/\(postID)/isLike").setValue(false)
     }
 }

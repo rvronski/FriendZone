@@ -11,6 +11,8 @@ protocol MainViewModelProtocol: ViewModelProtocol {
     var onStateDidChange: ((MainViewModel.State) -> Void)? { get set }
     func downloadAllUsers(completion: @escaping () -> Void)
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarImageData: Data?) -> Void)
+    func plusLike(userID: String, postID: String, likesCount: Int)
+    func minusLike(userID: String, postID: String, likesCount: Int)
 }
 
 class MainViewModel: MainViewModelProtocol {
@@ -73,9 +75,18 @@ class MainViewModel: MainViewModelProtocol {
                 self.firebaseService.downloadImage(imageURL: image) { data in
                     guard let data else {return}
                      let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
-                    if allPosts.contains(where: {$0 == answer}) {
-                        self.state = .initial
-                        print("contains")
+                    if allPosts.contains(where: {$0.postID == answer.postID}) {
+                        let index = allPosts.firstIndex(where: {$0.postID == answer.postID})
+                        let post = allPosts[index!]
+                        if allPosts.contains(post) {
+                            self.state = .initial
+                            print("contains")
+                        } else {
+                            allPosts.remove(at: index!)
+                            allPosts.insert(post, at: index!)
+                            self.state = .reloadData
+                        }
+                        
                     } else {
                         allPosts.append(answer)
                         self.state = .reloadData
@@ -96,4 +107,12 @@ class MainViewModel: MainViewModelProtocol {
         }
         
     }
+    
+    func plusLike(userID: String, postID: String, likesCount: Int) {
+        firebaseService.plusLike(userID: userID, postID: postID, likesCount: likesCount)
+    }
+    func minusLike(userID: String, postID: String, likesCount: Int) {
+        firebaseService.minusLike(userID: userID, postID: postID, likesCount: likesCount)
+    }
+    
 }
