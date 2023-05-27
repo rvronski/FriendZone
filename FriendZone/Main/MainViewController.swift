@@ -21,6 +21,12 @@ class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     private lazy var layout: UICollectionViewFlowLayout = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -58,6 +64,8 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         bindViewModel()
+        self.activityIndicator.isHidden = false
+        self.activityIndicator.startAnimating()
         viewModel.downloadAllUsers { 
             for user in users {
                 let userID = user.userID
@@ -95,6 +103,8 @@ class MainViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                     self.tableView.reloadData()
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
                 }
             }
         }
@@ -111,6 +121,7 @@ class MainViewController: UIViewController {
         self.view.backgroundColor = .white
         self.view.addSubview(self.collectionView)
         self.view.addSubview(self.tableView)
+        self.view.addSubview(self.activityIndicator)
         
         NSLayoutConstraint.activate([
         
@@ -124,6 +135,10 @@ class MainViewController: UIViewController {
             self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
         
+            self.activityIndicator.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: -16),
+            self.activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+            
+            
         ])
     }
     
