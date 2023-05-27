@@ -8,11 +8,25 @@
 import Foundation
 
 protocol MainViewModelProtocol: ViewModelProtocol {
+    var onStateDidChange: ((MainViewModel.State) -> Void)? { get set }
     func downloadAllUsers(completion: @escaping () -> Void)
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarImageData: Data?) -> Void)
 }
 
 class MainViewModel: MainViewModelProtocol {
+    
+    enum State {
+        case initial
+        case reloadData
+    }
+    
+    var onStateDidChange: ((State) -> Void)?
+
+    private(set) var state: State = .initial {
+        didSet {
+            onStateDidChange?(state)
+        }
+    }
     
     var coordinator: MainViewCoordinator?
     
@@ -30,9 +44,8 @@ class MainViewModel: MainViewModelProtocol {
             for userID in usersID {
             let userId = value[userID] as? NSDictionary ?? [:]
             let username = userId["userName"] as? String ?? ""
-            let avatarURL = userId["avatarImageURL"] as? String ?? ""
+            let avatarURL = userId["avatarImageURL"] as? String
             let email = userId["email"] as? String ?? ""
-            let post = userId["posts"] as? NSDictionary ?? [:]
             let user = User(userName: username, userID: userID, avatarImage: avatarURL, email: email)
                 users.append(user)
           }
@@ -48,7 +61,6 @@ class MainViewModel: MainViewModelProtocol {
                 completion(nil, nil)
                 return }
             let username = value["userName"] as? String ?? ""
-            let avatarURL = value["avatarImageURL"] as? String ?? ""
             let poste = value["posts"] as? NSDictionary ?? [:]
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
@@ -62,11 +74,17 @@ class MainViewModel: MainViewModelProtocol {
                     guard let data else {return}
                      let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
                     if allPosts.contains(where: {$0 == answer}) {
+                        self.state = .initial
                         print("contains")
                     } else {
                         allPosts.append(answer)
+                        self.state = .reloadData
                     }
                 }
+            }
+            guard let avatarURL = value["avatarImageURL"] as? String else {
+                completion(username, nil)
+                return
             }
             self.firebaseService.downloadImage(imageURL: avatarURL) { data in
                 guard let data else {

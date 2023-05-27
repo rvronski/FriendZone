@@ -9,6 +9,7 @@ import Foundation
 import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
+    var onStateDidChange: ((ProfileViewModel.State) -> Void)? { get set }
     func uploadFoto(currentUserId: String, photo: Data)
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void)
     func openGallery(delegate: UIViewController)
@@ -24,13 +25,24 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
 
 class ProfileViewModel: ProfileViewModelProtocol {
     
-    
     enum ViewInput {
         case tapPublication
         case tapPhoto
         case tapPost
     }
     
+    enum State {
+        case initial
+        case reloadData
+    }
+    
+    var onStateDidChange: ((State) -> Void)?
+
+    private(set) var state: State = .initial {
+        didSet {
+            onStateDidChange?(state)
+        }
+    }
 
     var coordinator: ProfileCoordinator?
     
@@ -63,9 +75,14 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 return }
             let username = value["userName"] as? String ?? ""
             UserDefaults.standard.set(username, forKey: "userName")
-            let avatarURL = value["avatarImageURL"] as? String ?? ""
+            guard let avatarURL = value["avatarImageURL"] as? String else {
+                completion(username, nil)
+                return
+            }
             UserDefaults.standard.set(avatarURL, forKey: "imageURL")
-            let poste = value["posts"] as? NSDictionary ?? [:]
+            guard let poste = value["posts"] as? NSDictionary else {
+                completion(username, avatarURL)
+                return}
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
                 let userName = post["username"] as? String ?? ""
@@ -77,6 +94,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 self.downloadImage(imageURL: image) { data in
                     let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
                     posts.append(answer)
+                    self.state = .reloadData
                 }
                 
             }

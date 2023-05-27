@@ -17,13 +17,13 @@ public struct Post: Equatable {
     public var userID: String
     
 }
-var posts = [Post]() {
-    didSet {
-        DispatchQueue.main.async {
-            ProfileView().reload()
-            CustomHeaderView().reload()
-        }
-    }
-}
-var allPosts = [Post]()
+public var posts = [Post]() // {
+//    didSet {
+//        DispatchQueue.main.async {
+//            ProfileView().reload()
+//            CustomHeaderView().reload()
+//        }
+//    }
+//}
+public var allPosts = [Post]()
     

@@ -63,18 +63,18 @@ private lazy var logoImage = CustomImageView()
         return emailTextField
     }()
     
-    private lazy var passwordTextField: UITextField = {
-        let passwordTextField = UITextField()
-        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        passwordTextField.placeholder = "Придумайте пароль"
-        passwordTextField.isSecureTextEntry = true
-        let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
-        passwordTextField.leftView = paddingView
-        passwordTextField.leftViewMode = .always
-        //        passwordTextField.textInputMode =
-        //        passwordTextField.becomeFirstResponder()
-        return passwordTextField
-    }()
+    private lazy var passwordTextField = ShowHideTextField() //UITextField = {
+//        let passwordTextField = UITextField()
+//        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+//        passwordTextField.placeholder = "Придумайте пароль"
+//        passwordTextField.isSecureTextEntry = true
+//        let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
+//        passwordTextField.leftView = paddingView
+//        passwordTextField.leftViewMode = .always
+//        //        passwordTextField.textInputMode =
+//        //        passwordTextField.becomeFirstResponder()
+//        return passwordTextField
+//    }()
     
     private lazy var registrationButton = CustomButton(buttonText: "Зарегистрироваться", textColor: .white, background: .buttonColor, fontSize: 15, fontWeight: .bold)
     
@@ -125,8 +125,10 @@ private lazy var logoImage = CustomImageView()
         self.scrollView.addSubview(self.userNameTextField)
         self.scrollView.addSubview(self.OutButton)
         self.logoImage.image = UIImage(named: "navigationLogo")
+        self.passwordTextField.placeholder = "Придумайте пароль"
+        
         NSLayoutConstraint.activate([
-            
+       
             self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor),

@@ -13,7 +13,7 @@ class ProfileViewController: UIViewController {
     
     var userID = UserDefaults.standard.string(forKey: "UserID")
     var imageURL = UserDefaults.standard.string(forKey: "imageURL")
-    var avatarUrl = ""
+    var avatarUrl: String?
     var userName = ""
     let coreManager = CoreDataManager.shared
     let locationManager = CLLocationManager()
@@ -29,6 +29,11 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
     
     lazy var avatarView: AvatarView = {
         let avatarView = AvatarView()
@@ -55,15 +60,28 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         self.setupView()
         self.setupGesture()
+        bindViewModel()
         self.tabBarController?.tabBar.isHidden = false
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
+        self.activityIndicator.isHidden = false
+        self.activityIndicator.startAnimating()
         downloadUserInfo {
-            self.viewModel.downloadImage(imageURL: self.avatarUrl) { data in
+            guard (self.avatarUrl != nil) else {
+                DispatchQueue.main.async {
+                    self.profileView.nameLabel.text = self.userName
+                    self.profileView.reload()
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
+                return }
+            self.viewModel.downloadImage(imageURL: self.avatarUrl!) { data in
                 DispatchQueue.main.async {
                     self.profileView.avatarImage.image = UIImage(data: data)
                     self.profileView.nameLabel.text = self.userName
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
                     self.profileView.reload()
                 }
             }
@@ -74,13 +92,35 @@ class ProfileViewController: UIViewController {
     private func downloadUserInfo(completion: @escaping () -> Void) {
         guard let userID else {return}
         self.viewModel.downloadUserInfo(userID: userID) { userName, avatarURL in
-            guard let userName,
-                  let avatarURL else {return}
-                 self.avatarUrl = avatarURL
-                 self.userName = userName
+            guard let userName else {
+                completion()
+                return }
+            self.userName = userName
+            guard let avatarURL else {
+                completion()
+                return }
+            self.avatarUrl = avatarURL
                 completion()
         }
     }
+    
+    func bindViewModel() {
+        viewModel.onStateDidChange = { [weak self] state in
+            guard let self = self else {
+                return
+            }
+            switch state {
+            case .initial:
+                break
+            case .reloadData:
+                DispatchQueue.main.async {
+                    self.profileView.reload()
+                    CustomHeaderView().reload()
+                }
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -94,6 +134,7 @@ class ProfileViewController: UIViewController {
         self.view.backgroundColor = .systemBackground
         self.view.addSubview(avatarView)
         self.view.bringSubviewToFront(avatarView)
+        self.view.addSubview(self.activityIndicator)
         
         NSLayoutConstraint.activate([
             self.avatarView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
@@ -101,6 +142,10 @@ class ProfileViewController: UIViewController {
             self.avatarView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
             self.avatarView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.avatarView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            
+            self.activityIndicator.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: -16),
+            self.activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+            
             
         ] )
     }

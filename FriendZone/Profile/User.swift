@@ -10,7 +10,7 @@ import Foundation
 public struct User {
     public var userName: String
     public var userID: String
-    public var avatarImage: String
+    public var avatarImage: String?
     public var email: String
 }
 var users = [User]() {

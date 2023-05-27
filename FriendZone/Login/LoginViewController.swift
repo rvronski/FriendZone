@@ -94,8 +94,6 @@ class LoginViewController: UIViewController {
         button.tapButton = { [weak self] in
             self?.didTapButton()
         }
-        UserDefaults.standard.set(nil, forKey: "imageURL")
-        UserDefaults.standard.set(nil, forKey: "UserID")
     }
     
     private func removeObserver() {

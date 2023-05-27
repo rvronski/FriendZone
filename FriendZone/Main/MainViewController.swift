@@ -20,6 +20,7 @@ class MainViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     private lazy var layout: UICollectionViewFlowLayout = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -56,12 +57,12 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        bindViewModel()
         viewModel.downloadAllUsers { 
             for user in users {
                 let userID = user.userID
                 self.viewModel.downloadUserInfo(userID: userID) { userName, avatarData in
-                    guard let userName,
-                          let avatarData else {return}
+                    guard let userName else {return}
                     let avatar = Avatar(image: avatarData, name: userName, userID: userID)
                     if avatarArray.contains(where: {$0.userID == avatar.userID}) {
                         let index = avatarArray.firstIndex(where: {$0.userID == avatar.userID})
@@ -78,9 +79,30 @@ class MainViewController: UIViewController {
                 }
             }
         }
+        
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    
+
+    func bindViewModel() {
+        viewModel.onStateDidChange = { [weak self] state in
+            guard let self = self else {
+                return
+            }
+            switch state {
+            case .initial:
+                break
+            case .reloadData:
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.collectionView.reloadData()
         self.tableView.reloadData()
 

@@ -18,7 +18,7 @@ class RegTextField: UITextField {
         textAlignment = .left
         keyboardType = typeKeyBoard
         isSecureTextEntry = isSecureText
-        let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
+        let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
         leftView = paddingView
         leftViewMode = .always
     }
@@ -50,7 +50,7 @@ class ShowHideTextField: UITextField {
         isSecureTextEntry = true
         rightViewMode = .always
         rightView = rightButton
-        let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
+        let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
         leftView = paddingView
         leftViewMode = .always
         

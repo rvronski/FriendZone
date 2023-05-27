@@ -30,19 +30,24 @@ class MainAvatarCollectionViewCell: UICollectionViewCell {
     }
     
     func setup(model: Avatar) {
-        self.avatarImage.image = UIImage(data: model.image)
         self.nameLabel.text = model.name
-//        self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
+        let data = UIImage(named: "navigationLogo")?.pngData()
+        self.avatarImage.image = UIImage(data: model.image ?? data!)
+        self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
     }
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
         self.avatarImage.layer.cornerRadius = self.avatarImage.frame.width/2
+        layoutIfNeeded()
     }
-    
+//
     private func setupView() {
         self.contentView.addSubview(avatarImage)
         self.contentView.addSubview(nameLabel)
+        self.avatarImage.layer.borderColor = UIColor.buttonColor.cgColor
+        self.avatarImage.layer.borderWidth = 0.3
         
         NSLayoutConstraint.activate([
         

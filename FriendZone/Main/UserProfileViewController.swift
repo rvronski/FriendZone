@@ -34,15 +34,17 @@ class UserProfileViewController: UIViewController {
     
     lazy var followersCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
     
+    lazy var fotoLabel = CustomLabel(inform: "Фотографии", size: 20, weight: .bold, color: .createColor(light: .black, dark: .white))
+    
     private var userPosts = [Post]()
 
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
+        let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 1
         tableView.showsVerticalScrollIndicator = false
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.dragInteractionEnabled = true
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifire)
         tableView.delegate = self
@@ -50,6 +52,25 @@ class UserProfileViewController: UIViewController {
         return tableView
     }()
 
+    private lazy var layout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        return layout
+    }()
+    
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifire)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        return collectionView
+    }()
+    
     lazy var avatarImage: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .orange
@@ -91,7 +112,8 @@ class UserProfileViewController: UIViewController {
         }
         if avatarArray.contains(where: {$0.userID == self.userID}) {
             guard let avatar = avatarArray.first(where: {$0.userID == self.userID}) else {return}
-            self.avatarImage.image = UIImage(data: avatar.image)
+            let data = UIImage(named: "navigationLogo")!.pngData()
+            self.avatarImage.image = UIImage(data: avatar.image ?? data!)
             self.nameLabel.text = avatar.name
         }
         print(self.userPosts.count)
@@ -101,7 +123,9 @@ class UserProfileViewController: UIViewController {
         
     private func setupView() {
         self.view.backgroundColor = .white
+        self.view.addSubview(self.collectionView)
         self.view.addSubview(self.tableView)
+        self.view.addSubview(self.fotoLabel)
         self.view.addSubview(self.avatarImage)
         self.view.addSubview(self.nameLabel)
         self.view.addSubview(self.followButton)
@@ -140,8 +164,15 @@ class UserProfileViewController: UIViewController {
             self.publicationsCount.bottomAnchor.constraint(equalTo: self.publicationsButton.topAnchor, constant: -5),
             self.publicationsCount.centerXAnchor.constraint(equalTo: self.publicationsButton.centerXAnchor),
             
+            self.fotoLabel.topAnchor.constraint(equalTo: self.avatarImage.bottomAnchor, constant: 20),
+            self.fotoLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
             
-            self.tableView.topAnchor.constraint(equalTo: self.avatarImage.bottomAnchor, constant: 20),
+            self.collectionView.topAnchor.constraint(equalTo: self.fotoLabel.bottomAnchor, constant: 10),
+            self.collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            self.collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            self.collectionView.heightAnchor.constraint(equalTo: self.collectionView.widthAnchor, multiplier: 0.25),
+            
+            self.tableView.topAnchor.constraint(equalTo: self.collectionView.bottomAnchor),
             self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
@@ -197,5 +228,27 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifire, for: indexPath) as! PostTableViewCell
         cell.setup(with: userPosts[indexPath.row], index: indexPath.row)
         return cell
+    }
+}
+extension UserProfileViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        self.userPosts.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
+        cell.setup(model: self.userPosts[indexPath.row])
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let itemWidth = (collectionView.frame.width - 50) / 4
+        let itewHeight = itemWidth * 0.8
+        return CGSize(width: itemWidth, height: itewHeight)
+        
     }
 }
