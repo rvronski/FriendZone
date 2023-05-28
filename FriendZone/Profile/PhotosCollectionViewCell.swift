@@ -29,11 +29,6 @@ class PhotosCollectionViewCell: UICollectionViewCell {
     
     private func setupView() {
         self.contentView.layer.cornerRadius = 10
-//        self.contentView.layer.shadowOffset = CGSize(width: 2, height: 2)
-//        self.contentView.layer.shadowRadius = 5
-//        self.contentView.layer.shadowColor = UIColor.gray.cgColor
-//        self.contentView.layer.shadowOpacity = 0.2
-//        self.contentView.backgroundColor = .white
         self.contentView.addSubview(imageView)
        
         
@@ -48,7 +43,4 @@ class PhotosCollectionViewCell: UICollectionViewCell {
         
         ])
     }
-    
-   
-    
 }

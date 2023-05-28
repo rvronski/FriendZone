@@ -181,6 +181,10 @@ class LoginViewController: UIViewController {
             self.faceIDButton.isEnabled = true
         }
         
+        if UserDefaults.standard.string(forKey: "UserID") != nil {
+            self.faceIDAuth()
+        }
+        
         navigationController?.setNavigationBarHidden(true, animated: false)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.didShowKeyboard(_:)),

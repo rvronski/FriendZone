@@ -38,8 +38,8 @@ final class AppCoordinator: Coordinatable {
             let viewControllerToPush = RegisterViewController(viewModel: viewModel as! LoginViewModelProtocol)
             (module!.view as? UINavigationController)?.pushViewController(viewControllerToPush, animated: true)
         case .tabBar:
-            let profileCoordinator = ProfileCoordinator(moduleType: .profile, factory: factory, navigationController: UINavigationController())
-            let mainViewCoordinator = MainViewCoordinator(factory: factory, moduleType: .main)
+            let profileCoordinator = ProfileCoordinator(moduleType: .profile, factory: factory, navigationController: navigationController)
+            let mainViewCoordinator = MainViewCoordinator(moduleType: .main, factory: factory, navigationController: navigationController)
             let likeCoordinator = LikeCoordinator(factory: factory, moduleType: .like)
             let tabBarController = AppTabBarController(viewControllers:
                                                         [profileCoordinator.start(),

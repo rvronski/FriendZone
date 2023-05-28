@@ -18,11 +18,12 @@ class MainViewCoordinator: ModuleCoordinatable {
     var module: Module?
     private let factory: AppFactory
     private(set) var moduleType: Module.ModuleType
-    
     private(set) var coordinators: [Coordinatable] = []
-    init(factory:AppFactory, moduleType: Module.ModuleType){
-        self.factory = factory
+    private var navigationController: UINavigationController
+    init(moduleType: Module.ModuleType, factory: AppFactory, navigationController: UINavigationController) {
         self.moduleType = moduleType
+        self.factory = factory
+        self.navigationController = navigationController
     }
     
     func start() -> UIViewController {
@@ -34,8 +35,8 @@ class MainViewCoordinator: ModuleCoordinatable {
         return viewController
     }
     
-    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
-        let presentViewController = UserDetailPhotoViewController(indexPath: indexPath)
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath, postArray: [Post]) {
+        let presentViewController = UserDetailPhotoViewController(indexPath: indexPath, userPhoto: postArray)
         let navController =  UINavigationController(rootViewController: presentViewController)
         navController.transitioningDelegate = delegate
         navController.modalPresentationStyle = .fullScreen

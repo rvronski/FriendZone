@@ -181,7 +181,6 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    
     private func setupGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = false

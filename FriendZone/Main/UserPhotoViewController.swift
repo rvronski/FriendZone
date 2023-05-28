@@ -62,12 +62,12 @@ class UserPhotoViewController: UIViewController {
 }
 extension UserPhotoViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        posts.count
+        self.userPosts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
-        cell.setup(model: posts[indexPath.row])
+        cell.setup(model: self.userPosts[indexPath.row])
         return cell
     }
     
@@ -83,7 +83,7 @@ extension UserPhotoViewController: UICollectionViewDataSource, UICollectionViewD
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let item = collectionView.cellForItem(at: indexPath) else {return}
         self.cellItem = item
-        viewModel.presentPhoto(delegate: self, indexPath: indexPath)
+        viewModel.presentPhoto(delegate: self, indexPath: indexPath, userPost:  self.userPosts)
     }
 }
 extension UserPhotoViewController: UIViewControllerTransitioningDelegate {

@@ -91,7 +91,6 @@ class UserProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupView()
-        self.setupGesture()
         self.gestureAvatar()
     }
     
@@ -125,8 +124,6 @@ class UserProfileViewController: UIViewController {
         
     private func setupView() {
         self.view.backgroundColor = .white
-        self.view.addSubview(self.collectionView)
-        self.view.addSubview(self.tableView)
         self.view.addSubview(self.fotoLabel)
         self.view.addSubview(self.avatarImage)
         self.view.addSubview(self.nameLabel)
@@ -136,7 +133,8 @@ class UserProfileViewController: UIViewController {
         self.view.addSubview(self.followersCount)
         self.view.addSubview(self.publicationsButton)
         self.view.addSubview(self.publicationsCount)
-       
+        self.view.addSubview(self.tableView)
+        self.view.addSubview(self.collectionView)
         NSLayoutConstraint.activate([
             
             self.avatarImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -187,28 +185,12 @@ class UserProfileViewController: UIViewController {
         self.publicationsCount.text = "\(posts.count)"
     }
     
-    func configureTableView(dataSource: UITableViewDataSource,
-                            delegate: UITableViewDelegate) {
-        tableView.dataSource = dataSource
-        tableView.delegate = delegate
-        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifire)
-
-    }
-    
     private func gestureAvatar() {
         let gestureAvatar = UITapGestureRecognizer(target: self, action: #selector(tapAvatar))
         self.avatarImage.addGestureRecognizer(gestureAvatar)
     }
     @objc func tapAvatar() {
         self.delegate?.changeLayout()
-    }
-    private func setupGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        self.view.addGestureRecognizer(tapGesture)
-    }
-    @objc private func hideKeyboard() {
-        self.view.endEditing(true)
-        
     }
 }
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -222,6 +204,11 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
         cell.setup(with: userPosts[indexPath.row], index: indexPath.row)
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print("table cell tap \(indexPath.row)")
+    }
+    
 }
 extension UserProfileViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     

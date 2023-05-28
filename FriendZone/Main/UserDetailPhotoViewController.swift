@@ -9,10 +9,12 @@ import UIKit
 
 class UserDetailPhotoViewController: UIViewController {
 
-    var indexPath: IndexPath
+   private let indexPath: IndexPath
+   private let userPhoto: [Post]
     
-    init(indexPath: IndexPath) {
+    init(indexPath: IndexPath, userPhoto: [Post]) {
         self.indexPath = indexPath
+        self.userPhoto = userPhoto
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -78,12 +80,12 @@ class UserDetailPhotoViewController: UIViewController {
 }
 extension UserDetailPhotoViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            posts.count
+            self.userPhoto.count
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifire, for: indexPath) as! PhotosCollectionViewCell
-            cell.setup(model: posts[indexPath.row])
+            cell.setup(model: self.userPhoto[indexPath.row])
             return cell
         }
         

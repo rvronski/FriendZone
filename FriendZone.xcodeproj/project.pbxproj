@@ -587,6 +587,7 @@
 				DEVELOPMENT_TEAM = JZPU7337NX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FriendZone/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Разрешить приложению использовать FaceID для авторизиции? ";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -618,6 +619,7 @@
 				DEVELOPMENT_TEAM = JZPU7337NX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FriendZone/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Разрешить приложению использовать FaceID для авторизиции? ";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

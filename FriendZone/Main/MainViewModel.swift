@@ -14,7 +14,7 @@ protocol MainViewModelProtocol: ViewModelProtocol {
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarImageData: Data?) -> Void)
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
-    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath, userPost: [Post])
 }
 
 class MainViewModel: MainViewModelProtocol {
@@ -122,8 +122,8 @@ class MainViewModel: MainViewModelProtocol {
     func minusLike(userID: String, postID: String, likesCount: Int) {
         firebaseService.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
-    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
-        coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath)
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath, userPost: [Post]) {
+        coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath, postArray: userPost)
     }
     
     func viewInputDidChange(viewInput: ViewInput, userID: String?, postArray: [Post]?) {
