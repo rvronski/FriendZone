@@ -39,10 +39,17 @@ class ProfileEditViewController: UIViewController {
         setupNavigationBar()
     }
     
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let userName = UserDefaults.standard.string(forKey: "UserName") else {return}
+        self.nameTF.text = userName
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.avatarImage.layer.cornerRadius = self.avatarImage.frame.height/2
+        self.nameTF.layer.cornerRadius = 10
+        self.lastNameTF.layer.cornerRadius = 10
+        
     }
     
     private func setupNavigationBar() {
@@ -59,7 +66,7 @@ class ProfileEditViewController: UIViewController {
         self.view.addSubview(self.nameTF)
         self.view.addSubview(self.lastNameTF)
         self.avatarImage.image = UIImage(data: self.avatarDataImage)
-        
+       
         NSLayoutConstraint.activate([
         
             self.avatarImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -100,7 +107,8 @@ class ProfileEditViewController: UIViewController {
         
         let name = nameTF.text
         let lastName = lastNameTF.text
-        let newName = (name ?? "") + " " + (lastName ?? "")
+        let newName = (name ?? "") + "" + (lastName ?? "")
+        UserDefaults.standard.set(newName, forKey: "UserName")
         self.viewModel.uploadFoto(currentUserId: userID, photo: imageData)
         self.viewModel.changeName(newName: newName)
         self.viewModel.pop()

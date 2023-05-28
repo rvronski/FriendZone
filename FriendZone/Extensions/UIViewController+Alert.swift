@@ -45,5 +45,24 @@ extension UIViewController {
         
         present(alertController, animated: true, completion: nil)
     }
+    
+    func presenActionSheet(title1: String, title2: String, completionOne: @escaping () -> Void, completionTwo: @escaping () -> Void) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let oneAction = UIAlertAction(title: title1, style: .default) { _ in
+            completionOne()
+        }
+        let twoAction = UIAlertAction(title: title2, style: .default) { _ in
+            completionTwo()
+        }
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        alertController.addAction(oneAction)
+        alertController.addAction(twoAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
+        
+    }
 }
 

@@ -39,17 +39,17 @@ class ProfileViewModel: ProfileViewModelProtocol {
     }
     
     var onStateDidChange: ((State) -> Void)?
-
+    
     private(set) var state: State = .initial {
         didSet {
             onStateDidChange?(state)
         }
     }
-
+    
     var coordinator: ProfileCoordinator?
     
     private let firebaseService: FirebaseServiceProtocol
-
+    
     init(firebaseService: FirebaseServiceProtocol) {
         self.firebaseService = firebaseService
     }
@@ -60,7 +60,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 
             case .success(let url):
                 UserDefaults.standard.set(url.absoluteString, forKey: "imageURL")
-               
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -68,11 +68,11 @@ class ProfileViewModel: ProfileViewModelProtocol {
     }
     
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void) {
-       
+        
         
         firebaseService.downloadUserInfo(userID: userID) { value, id in
             guard let value,
-            let id else {
+                  let id else {
                 completion(nil, nil)
                 return }
             let username = value["userName"] as? String ?? ""
@@ -95,16 +95,26 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 let isLike = post["isLike"] as? Bool ?? false
                 self.downloadImage(imageURL: image) { data in
                     let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
-                    posts.append(answer)
-                    self.state = .reloadData
+                    if posts.contains(where: {$0.postID == answer.postID}) {
+                        let index = posts.firstIndex(where: {$0.postID == answer.postID})
+                        let post = posts[index!]
+                        if posts.contains(post) {
+                            self.state = .initial
+                            print("contains")
+                        } else {
+                            posts.remove(at: index!)
+                            posts.insert(post, at: index!)
+                            self.state = .reloadData
+                        }
+                    } else {
+                        posts.append(answer)
+                        self.state = .reloadData
+                    }
                 }
-                
             }
             completion(username, avatarURL)
         }
-        
     }
-    
     func downloadImage(imageURL: String, completion: @escaping (Data) -> Void) {
         firebaseService.downloadImage(imageURL: imageURL) { data in
             guard let data else {
@@ -156,4 +166,3 @@ class ProfileViewModel: ProfileViewModelProtocol {
         firebaseService.changeName(newName: newName)
     }
 }
-

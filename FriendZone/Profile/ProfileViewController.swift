@@ -97,6 +97,7 @@ class ProfileViewController: UIViewController {
                 completion()
                 return }
             self.userName = userName
+            UserDefaults.standard.set(userName, forKey: "UserName")
             guard let avatarURL else {
                 completion()
                 return }
@@ -249,6 +250,10 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
+    func changeLayout() {
+        //
+    }
+    
     func pushEditButton() {
         let image = profileView.avatarImage.image
         guard let data = image?.jpegData(compressionQuality: 0.4) else {return}
@@ -259,8 +264,15 @@ extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
         self.viewModel.viewInputDidChange(viewInput: .tapPhoto)
     }
     
-    func changeLayout() {
-        self.viewModel.openGallery(delegate: self)
+    func tapAvatar() {
+        
+        self.presenActionSheet(title1: "Поменять аватар", title2: "Посмотреть аватар") { [weak self] in
+            self?.viewModel.openGallery(delegate: self!)
+        } completionTwo: { [weak self] in
+            print("tap")
+        }
+
+            
     }
     
     func pushNoteButton() {

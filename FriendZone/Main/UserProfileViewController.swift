@@ -190,7 +190,7 @@ class UserProfileViewController: UIViewController {
         self.avatarImage.addGestureRecognizer(gestureAvatar)
     }
     @objc func tapAvatar() {
-        self.delegate?.changeLayout()
+        self.delegate?.tapAvatar()
     }
 }
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {

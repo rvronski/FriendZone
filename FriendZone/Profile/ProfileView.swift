@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ProfileViewDelegate: AnyObject {
-    func changeLayout()
+    func tapAvatar()
     func pushNoteButton()
     func pushPhotoButton()
     func pushEditButton()
@@ -196,7 +196,7 @@ final class ProfileView: UIView {
         self.avatarImage.addGestureRecognizer(gestureAvatar)
     }
     @objc func tapAvatar() {
-        self.delegate?.changeLayout()
+        self.delegate?.tapAvatar()
     }
     private func setupGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
