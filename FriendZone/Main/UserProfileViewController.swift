@@ -10,9 +10,11 @@ import UIKit
 class UserProfileViewController: UIViewController {
     
     var userID: String
+    private let viewModel: MainViewModelProtocol
     
-    init(userID: String) {
+    init(userID: String, viewModel: MainViewModelProtocol) {
         self.userID = userID
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -211,15 +213,6 @@ class UserProfileViewController: UIViewController {
 }
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        if  section == 0  {
-//            let headerView = CustomHeaderView()
-////            headerView.delegate = self
-//            return headerView
-//        }
-//        return nil
-//    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.userPosts.count
     }
@@ -250,5 +243,10 @@ extension UserProfileViewController: UICollectionViewDataSource, UICollectionVie
         let itewHeight = itemWidth * 0.8
         return CGSize(width: itemWidth, height: itewHeight)
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        viewModel.viewInputDidChange(viewInput: .tapPhoto, userID: nil, postArray: self.userPosts)
     }
 }

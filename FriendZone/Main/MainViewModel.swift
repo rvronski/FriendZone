@@ -5,17 +5,25 @@
 //  Created by ROMAN VRONSKY on 14.05.2023.
 //
 
-import Foundation
+import UIKit
 
 protocol MainViewModelProtocol: ViewModelProtocol {
     var onStateDidChange: ((MainViewModel.State) -> Void)? { get set }
+    func viewInputDidChange(viewInput: MainViewModel.ViewInput, userID: String?, postArray: [Post]?)
     func downloadAllUsers(completion: @escaping () -> Void)
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarImageData: Data?) -> Void)
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
 }
 
 class MainViewModel: MainViewModelProtocol {
+    
+    enum ViewInput {
+        case tapUser
+        case tapPhoto
+        case tapPost
+    }
     
     enum State {
         case initial
@@ -114,5 +122,18 @@ class MainViewModel: MainViewModelProtocol {
     func minusLike(userID: String, postID: String, likesCount: Int) {
         firebaseService.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
+    func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
+        coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath)
+    }
     
+    func viewInputDidChange(viewInput: ViewInput, userID: String?, postArray: [Post]?) {
+        switch viewInput {
+        case .tapUser:
+            coordinator?.pushViewController(userID, nil, self, .user(userID!, self))
+        case .tapPhoto:
+            coordinator?.pushViewController(nil, postArray, self, .photo(postArray!, self))
+        case .tapPost:
+            coordinator?.pushViewController(nil, nil, nil, .post)
+        }
+    }
 }

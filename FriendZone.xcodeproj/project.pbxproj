@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4505C0862A23754C00BF12E9 /* UserPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4505C0852A23754C00BF12E9 /* UserPhotoViewController.swift */; };
+		4505C0882A23762500BF12E9 /* UserDetailPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4505C0872A23762500BF12E9 /* UserDetailPhotoViewController.swift */; };
 		453469282A1C1B2500B48985 /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453469272A1C1B2500B48985 /* CustomHeaderView.swift */; };
 		455768D52A19179500076030 /* AppTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768D42A19179500076030 /* AppTabBarController.swift */; };
 		455768D72A19182800076030 /* ImageView+Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455768D62A19182800076030 /* ImageView+Labels.swift */; };
@@ -60,6 +62,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4505C0852A23754C00BF12E9 /* UserPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPhotoViewController.swift; sourceTree = "<group>"; };
+		4505C0872A23762500BF12E9 /* UserDetailPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailPhotoViewController.swift; sourceTree = "<group>"; };
 		453469272A1C1B2500B48985 /* CustomHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderView.swift; sourceTree = "<group>"; };
 		455768D42A19179500076030 /* AppTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBarController.swift; sourceTree = "<group>"; };
 		455768D62A19182800076030 /* ImageView+Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageView+Labels.swift"; sourceTree = "<group>"; };
@@ -247,6 +251,8 @@
 				45BAC5DE2A1E3BD100D5CEAA /* Avatar.swift */,
 				45CC79252A10235C00C25EE6 /* MainViewCoordinator.swift */,
 				458584AC2A211ECC0021486A /* UserProfileViewController.swift */,
+				4505C0852A23754C00BF12E9 /* UserPhotoViewController.swift */,
+				4505C0872A23762500BF12E9 /* UserDetailPhotoViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -394,6 +400,7 @@
 				45CC79342A102C0A00C25EE6 /* PhotosViewController.swift in Sources */,
 				45CC791F2A10227D00C25EE6 /* LocalAuthorizationService.swift in Sources */,
 				4558BF422A0FE64400F40377 /* AppDelegate.swift in Sources */,
+				4505C0882A23762500BF12E9 /* UserDetailPhotoViewController.swift in Sources */,
 				45CC791B2A101EF000C25EE6 /* Coordinatable.swift in Sources */,
 				4558BF442A0FE64400F40377 /* SceneDelegate.swift in Sources */,
 				45CC792E2A1027F200C25EE6 /* Post.swift in Sources */,
@@ -428,6 +435,7 @@
 				4558BF6E2A1002F300F40377 /* LikeCoordinator.swift in Sources */,
 				4558BF642A10023900F40377 /* LoginViewModel.swift in Sources */,
 				4558BF6A2A10028900F40377 /* LikeViewModel.swift in Sources */,
+				4505C0862A23754C00BF12E9 /* UserPhotoViewController.swift in Sources */,
 				453469282A1C1B2500B48985 /* CustomHeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

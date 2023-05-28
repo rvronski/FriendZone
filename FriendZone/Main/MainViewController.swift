@@ -167,8 +167,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         collectionView.deselectItem(at: indexPath, animated: true)
         let user = avatarArray[indexPath.row]
         let userID = user.userID
-        let viewController = UserProfileViewController(userID: userID)
-        self.navigationController?.pushViewController(viewController, animated: true)
+        viewModel.viewInputDidChange(viewInput: .tapUser, userID: userID, postArray: nil)
     }
 }
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
