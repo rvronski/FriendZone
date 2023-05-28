@@ -13,6 +13,7 @@ class ProfileCoordinator: ModuleCoordinatable {
         case publication(ViewModelProtocol)
         case photo(ViewModelProtocol)
         case post
+        case edit(ViewModelProtocol, Data)
     }
     
     let moduleType: Module.ModuleType
@@ -70,6 +71,9 @@ class ProfileCoordinator: ModuleCoordinatable {
             (module!.view as? UINavigationController)?.pushViewController(photoVC, animated: true)
         case .post:
             print("post")
+        case let .edit(viewModel, data):
+            let editVC = ProfileEditViewController(viewModel: viewModel as! ProfileViewModelProtocol, avatarDataImage: data)
+            (module!.view as? UINavigationController)?.pushViewController(editVC, animated: true)
         }
     }
 }

@@ -11,6 +11,7 @@ protocol ProfileViewDelegate: AnyObject {
     func changeLayout()
     func pushNoteButton()
     func pushPhotoButton()
+    func pushEditButton()
 }
 
 final class ProfileView: UIView {
@@ -66,7 +67,7 @@ final class ProfileView: UIView {
         return imageView
     }()
     
-    lazy var setStatusButton = CustomButton(buttonText: "Редактировать", textColor: .white, background: .buttonColor, fontSize: 15, fontWeight: .bold)
+    lazy var editButton = CustomButton(buttonText: "Редактировать", textColor: .white, background: .buttonColor, fontSize: 15, fontWeight: .bold)
     
     weak var delegate: ProfileViewDelegate?
    
@@ -82,6 +83,9 @@ final class ProfileView: UIView {
         fotoButton.tapButton = { [weak self] in
             self?.delegate?.pushPhotoButton()
         }
+        editButton.tapButton = { [weak self] in
+            self?.delegate?.pushEditButton()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -95,7 +99,7 @@ final class ProfileView: UIView {
     private func setupView() {
         self.addSubview(self.tableView)
         self.addSubview(self.avatarImage)
-        self.addSubview(self.setStatusButton)
+        self.addSubview(self.editButton)
         self.addSubview(self.nameLabel)
         self.addSubview(self.followButton)
         self.addSubview(self.followCount)
@@ -140,13 +144,13 @@ final class ProfileView: UIView {
             self.publicationsCount.bottomAnchor.constraint(equalTo: self.publicationsButton.topAnchor, constant: -5),
             self.publicationsCount.centerXAnchor.constraint(equalTo: self.publicationsButton.centerXAnchor),
             
-            self.setStatusButton.topAnchor.constraint(equalTo: self.avatarImage.bottomAnchor, constant: 16),
-            self.setStatusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.setStatusButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.setStatusButton.heightAnchor.constraint(equalToConstant: 40),
+            self.editButton.topAnchor.constraint(equalTo: self.avatarImage.bottomAnchor, constant: 16),
+            self.editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.editButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.editButton.heightAnchor.constraint(equalToConstant: 40),
             
             self.historyButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.historyButton.topAnchor.constraint(equalTo: self.setStatusButton.bottomAnchor, constant: 16),
+            self.historyButton.topAnchor.constraint(equalTo: self.editButton.bottomAnchor, constant: 16),
             
             self.historyLabel.centerXAnchor.constraint(equalTo: self.historyButton.centerXAnchor),
             self.historyLabel.topAnchor.constraint(equalTo: self.historyButton.bottomAnchor,constant: 5),

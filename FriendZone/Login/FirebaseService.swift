@@ -21,6 +21,7 @@ protocol FirebaseServiceProtocol {
     func minusLike(userID: String, postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
     func downloadAllUsers(completion: @escaping (NSDictionary?, [String]?) -> Void)
+    func changeName(newName: String)
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -120,7 +121,7 @@ class FirebaseService: FirebaseServiceProtocol {
         var postStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users").child(userID).observeSingleEvent(of: .value, with: { snapshot in
+        ref.child("Users").child(userID).observe(.value) { snapshot in
             
             let value = snapshot.value as? NSDictionary
             for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
@@ -129,11 +130,11 @@ class FirebaseService: FirebaseServiceProtocol {
                 }
             }
             completion(value, postStringIDs)
-            
-        }) { error in
-            print(error.localizedDescription)
-            completion(nil, nil)
         }
+//        } { error in
+//            print(error.localizedDescription)
+//            completion(nil, nil)
+//        }
         
     }
     
@@ -147,10 +148,7 @@ class FirebaseService: FirebaseServiceProtocol {
                     usersStringIDs.append(meterSnapshot.key)
                 }
             completion(value, usersStringIDs)
-         
         }
-        
-      
     }
     
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String) {
@@ -182,7 +180,6 @@ class FirebaseService: FirebaseServiceProtocol {
     }
     
     func plusLike(userID: String, postID: String, likesCount: Int) {
-        
         let newLikesCount = likesCount + 1
         var ref: DatabaseReference!
         ref = Database.database().reference()
@@ -196,5 +193,12 @@ class FirebaseService: FirebaseServiceProtocol {
         ref = Database.database().reference()
         ref.child("Users/\(userID)/posts/\(postID)/likesCount").setValue(newLikesCount)
         ref.child("Users/\(userID)/posts/\(postID)/isLike").setValue(false)
+    }
+    
+    func changeName(newName: String) {
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        ref.child("Users/\(uid)/userName").setValue(newName)
     }
 }

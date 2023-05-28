@@ -21,6 +21,7 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
+    func changeName(newName: String)
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
@@ -29,6 +30,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
         case tapPublication
         case tapPhoto
         case tapPost
+        case tapEdit(Data)
     }
     
     enum State {
@@ -135,6 +137,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
             coordinator?.pushViewController(self, .photo(self))
         case .tapPost:
             coordinator?.pushViewController(nil, .post)
+        case let .tapEdit(data):
+            coordinator?.pushViewController(self, .edit(self, data))
         }
     }
     func plusLike(userID: String, postID: String, likesCount: Int) {
@@ -146,6 +150,10 @@ class ProfileViewModel: ProfileViewModelProtocol {
     
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
         coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath)
+    }
+    
+    func changeName(newName: String) {
+        firebaseService.changeName(newName: newName)
     }
 }
 

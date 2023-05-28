@@ -61,6 +61,7 @@ class ProfileViewController: UIViewController {
         self.setupView()
         self.setupGesture()
         bindViewModel()
+        
         self.tabBarController?.tabBar.isHidden = false
         //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
@@ -248,6 +249,12 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
+    func pushEditButton() {
+        let image = profileView.avatarImage.image
+        guard let data = image?.jpegData(compressionQuality: 0.4) else {return}
+        self.viewModel.viewInputDidChange(viewInput: .tapEdit(data))
+    }
+    
     func pushPhotoButton() {
         self.viewModel.viewInputDidChange(viewInput: .tapPhoto)
     }
