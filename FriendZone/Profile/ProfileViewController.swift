@@ -321,12 +321,12 @@ extension ProfileViewController: CustomHeaderViewDelegate {
         self.viewModel.viewInputDidChange(viewInput: .tapPhoto)
     }
 }
-extension ProfileViewController: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: true)
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: false)
-    }
-}
+//extension ProfileViewController: UIViewControllerTransitioningDelegate {
+//    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: true)
+//    }
+//    
+//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: false)
+//    }
+//}

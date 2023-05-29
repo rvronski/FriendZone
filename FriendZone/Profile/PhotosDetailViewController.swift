@@ -20,6 +20,10 @@ class PhotosDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var newY:CGFloat = 0
+    var oldY:CGFloat = 0
+    var oldX: CGFloat = 0
+    
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -38,6 +42,7 @@ class PhotosDetailViewController: UIViewController {
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
+        collectionView.dragInteractionEnabled = true
        
         return collectionView
     }()
@@ -59,6 +64,52 @@ class PhotosDetailViewController: UIViewController {
         collectionView.performBatchUpdates(nil) { _ in  self.collectionView.scrollToItem(at: self.indexPath, at: .right, animated: false)
         }
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        guard  let touch = touches.first else {return}
+        oldY = collectionView.frame.origin.y
+        oldX = collectionView.frame.origin.x
+        let location = touch.location(in: self.collectionView)
+        if collectionView.bounds.contains(location) {
+           //
+        }
+        
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else {
+            return
+        }
+        print("touch")
+        let location = touch.location(in: view)
+        print(location.x)
+       
+        collectionView.frame.origin.x = location.x - (collectionView.frame.size.width / 2)
+        collectionView.frame.origin.y = location.y - (collectionView.frame.size.height / 2)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        newY = collectionView.frame.origin.y
+        
+        let location = newY - oldY
+        if location > 0 {
+            if location > 500 {
+                self.navigationController?.dismiss(animated: true)
+            } else {
+                collectionView.frame.origin.y = oldY
+                collectionView.frame.origin.x = oldX
+            }
+        } else if location < 0  {
+            if location < 500 {
+                self.navigationController?.dismiss(animated: true)
+            } else {
+                collectionView.frame.origin.y = oldY
+                collectionView.frame.origin.x = oldX
+            }
+        }
+       
+    }
+    
+    
     private func setupView() {
         self.view.backgroundColor = .white
         self.view.addSubview(collectionView)
