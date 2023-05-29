@@ -164,6 +164,9 @@ class LoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if currentReachabilityStatus == .notReachable {
+            self.alertOk(title: "Проверьте интернет соединение", message: nil)
+        }
         localAuth.isFaceIdSupported()
         let config = UIImage.SymbolConfiguration(textStyle: .largeTitle)
         switch localAuth.biometricType {
@@ -181,10 +184,10 @@ class LoginViewController: UIViewController {
             self.faceIDButton.isEnabled = true
         }
         
-        if UserDefaults.standard.string(forKey: "UserID") != nil {
-            self.faceIDAuth()
-        }
-        
+//        if UserDefaults.standard.string(forKey: "UserID") != nil {
+//            self.faceIDAuth()
+//        }
+//        
         navigationController?.setNavigationBarHidden(true, animated: false)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.didShowKeyboard(_:)),

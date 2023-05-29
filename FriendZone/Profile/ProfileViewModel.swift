@@ -21,7 +21,8 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
-    func changeName(newName: String)
+    func changeName(userName: String, lastName: String)
+    func removeObservers()
 }
 
 class ProfileViewModel: ProfileViewModelProtocol {
@@ -76,7 +77,9 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 completion(nil, nil)
                 return }
             let username = value["userName"] as? String ?? ""
-            UserDefaults.standard.set(username, forKey: "userName")
+            let lastName = value["lastName"] as? String ?? ""
+            UserDefaults.standard.set(username, forKey: "UserName")
+            UserDefaults.standard.set(lastName, forKey: "LastName")
             guard let avatarURL = value["avatarImageURL"] as? String else {
                 completion(username, nil)
                 return
@@ -87,7 +90,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
                 return}
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
-                let userName = post["username"] as? String ?? ""
+                let userName = username + " " + lastName
                 let image = post["image"] as? String ?? ""
                 let postID = post["postID"] as? String ?? ""
                 let postText = post["postText"] as? String ?? ""
@@ -98,12 +101,12 @@ class ProfileViewModel: ProfileViewModelProtocol {
                     if posts.contains(where: {$0.postID == answer.postID}) {
                         let index = posts.firstIndex(where: {$0.postID == answer.postID})
                         let post = posts[index!]
-                        if posts.contains(post) {
+                        if post == answer {
                             self.state = .initial
                             print("contains")
                         } else {
                             posts.remove(at: index!)
-                            posts.insert(post, at: index!)
+                            posts.insert(answer, at: index!)
                             self.state = .reloadData
                         }
                     } else {
@@ -112,7 +115,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
                     }
                 }
             }
-            completion(username, avatarURL)
+            let userName = username + " " + lastName
+            completion(userName, avatarURL)
         }
     }
     func downloadImage(imageURL: String, completion: @escaping (Data) -> Void) {
@@ -162,7 +166,10 @@ class ProfileViewModel: ProfileViewModelProtocol {
         coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath)
     }
     
-    func changeName(newName: String) {
-        firebaseService.changeName(newName: newName)
+    func changeName(userName: String, lastName: String) {
+        firebaseService.changeName(userName: userName, lastName: lastName)
+    }
+    func removeObservers() {
+        firebaseService.removeObservers()
     }
 }

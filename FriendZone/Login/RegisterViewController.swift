@@ -98,6 +98,9 @@ private lazy var logoImage = CustomImageView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if currentReachabilityStatus == .notReachable {
+            self.alertOk(title: "Проверьте интернет соединение", message: nil)
+        }
         navigationController?.setNavigationBarHidden(true, animated: false)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.didShowKeyboard(_:)),

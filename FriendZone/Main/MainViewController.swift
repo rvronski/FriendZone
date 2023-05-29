@@ -64,12 +64,22 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         bindViewModel()
+        if currentReachabilityStatus == .notReachable {
+            self.alertOk(title: "Проверьте интернет соединение", message: nil)
+            return
+        }
         self.activityIndicator.isHidden = false
         self.activityIndicator.startAnimating()
         viewModel.downloadAllUsers { 
             for user in users {
                 let userID = user.userID
                 self.viewModel.downloadUserInfo(userID: userID) { userName, avatarData in
+                    if self.currentReachabilityStatus == .notReachable {
+                        self.alertOk(title: "Проверьте интернет соединение", message: nil)
+                        self.activityIndicator.isHidden = true
+                        self.activityIndicator.stopAnimating()
+                        return
+                    }
                     guard let userName else {return}
                     let avatar = Avatar(image: avatarData, name: userName, userID: userID)
                     if avatarArray.contains(where: {$0.userID == avatar.userID}) {
@@ -91,7 +101,6 @@ class MainViewController: UIViewController {
         
     }
     
-
     func bindViewModel() {
         viewModel.onStateDidChange = { [weak self] state in
             guard let self = self else {
@@ -111,12 +120,22 @@ class MainViewController: UIViewController {
         }
     }
 
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if currentReachabilityStatus == .notReachable {
+            self.alertOk(title: "Проверьте интернет соединение", message: nil)
+            self.activityIndicator.isHidden = true
+            self.activityIndicator.stopAnimating()
+            return
+        }
         self.collectionView.reloadData()
         self.tableView.reloadData()
 
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.removeObservers()
     }
     private func setupView() {
         self.view.backgroundColor = .white

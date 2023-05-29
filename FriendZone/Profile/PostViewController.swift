@@ -49,6 +49,10 @@ class PostViewController: UIViewController {
             self?.viewModel.openGallery(delegate: self!)
         }
         publicationutton.tapButton = {[weak self] in
+            if self?.currentReachabilityStatus == .notReachable {
+                self?.alertOk(title: "Проверьте интернет соединение", message: nil)
+                return
+            }
             self?.publication()
         }
     }
@@ -96,12 +100,14 @@ class PostViewController: UIViewController {
         }
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         let text = postTextView.text ?? ""
-        let userName = UserDefaults.standard.string(forKey: "userName")
+        let userName = UserDefaults.standard.string(forKey: "UserName") ?? ""
+        let lastName = UserDefaults.standard.string(forKey: "LastName") ?? ""
+        let name = userName + "" + lastName
         guard let userID = UserDefaults.standard.string(forKey: "UserID") else { return }
         let postID = UUID().uuidString
-        let post = Post(author: userName ?? "", description: text, image: imageData, likesCount: 0, isLike: false, postID: postID, userID: userID)
+        let post = Post(author: name, description: text, image: imageData, likesCount: 0, isLike: false, postID: postID, userID: userID)
         posts.append(post)
-        viewModel.addposts(userName: userName!, image: imageData, likesCount: 0, postText: text, postID: postID)
+        viewModel.addposts(userName: name, image: imageData, likesCount: 0, postText: text, postID: postID)
         self.viewModel.pop()
     }
     @objc private func hideKeyboard() {

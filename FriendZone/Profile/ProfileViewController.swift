@@ -35,13 +35,7 @@ class ProfileViewController: UIViewController {
         return indicator
     }()
     
-    lazy var avatarView: AvatarView = {
-        let avatarView = AvatarView()
-        avatarView.translatesAutoresizingMaskIntoConstraints = false
-        avatarView.delegate = self
-        return avatarView
-    }()
-    
+   
     lazy var profileView: ProfileView = {
         let profileView = ProfileView()
         profileView.avatarImage.image = UIImage(named: "navigationLogo")
@@ -69,6 +63,12 @@ class ProfileViewController: UIViewController {
         self.activityIndicator.isHidden = false
         self.activityIndicator.startAnimating()
         downloadUserInfo {
+            if self.currentReachabilityStatus == .notReachable {
+                self.alertOk(title: "Проверьте интернет соединение", message: nil)
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
+                return
+            }
             guard (self.avatarUrl != nil) else {
                 DispatchQueue.main.async {
                     self.profileView.nameLabel.text = self.userName
@@ -97,7 +97,6 @@ class ProfileViewController: UIViewController {
                 completion()
                 return }
             self.userName = userName
-            UserDefaults.standard.set(userName, forKey: "UserName")
             guard let avatarURL else {
                 completion()
                 return }
@@ -125,26 +124,27 @@ class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        self.avatarView.isHidden = true
+        if currentReachabilityStatus == .notReachable {
+            self.alertOk(title: "Проверьте интернет соединение", message: nil)
+            self.activityIndicator.isHidden = true
+            self.activityIndicator.stopAnimating()
+            return
+        }
+        
         profileView.reload()
         CustomHeaderView().reload()
+        let userName = UserDefaults.standard.string(forKey: "UserName") ?? ""
+        let lastName = UserDefaults.standard.string(forKey: "LastName") ?? ""
+        profileView.nameLabel.text = userName + " " + lastName
     }
     
     private func setupView(){
         
         self.view.backgroundColor = .systemBackground
-        self.view.addSubview(avatarView)
-        self.view.bringSubviewToFront(avatarView)
         self.view.addSubview(self.activityIndicator)
         
         NSLayoutConstraint.activate([
-            self.avatarView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            self.avatarView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            self.avatarView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
-            self.avatarView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.avatarView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            
+    
             self.activityIndicator.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: -16),
             self.activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
             
@@ -157,32 +157,35 @@ class ProfileViewController: UIViewController {
     var isAvatarIncreased = false
     
     func changeLayoutAvatar() {
-        let closeButton = avatarView.closeButton
-        let avatarImage = self.avatarView.avatarImageView
-        let widthScreen = UIScreen.main.bounds.width
-        let widthAvatar = avatarImage.bounds.width
-        let width = widthScreen / widthAvatar
-        
-        UIView.animateKeyframes(withDuration: 1, delay: 0, options: .calculationModeCubic) {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) { [self] in
-                self.avatarView.isHidden = false
-                self.avatarView.bringSubviewToFront(avatarImage)
-                self.avatarView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-                avatarImage.transform = self.isAvatarIncreased ? .identity : CGAffineTransform(scaleX: width, y: width)
-                avatarImage.layer.borderWidth = self.isAvatarIncreased ? 3 : 0
-                avatarImage.center = self.isAvatarIncreased ? CGPoint(x: 63.166666666666664, y: 63.166666666666664) : CGPoint(x: self.avatarView.bounds.midX, y: self.avatarView.bounds.midY)
-                avatarImage.layer.cornerRadius = self.isAvatarIncreased ? avatarImage.frame.height/2 : 0
-                closeButton.isHidden = self.isAvatarIncreased ? true : false
-            }
-            
-        } completion: { _ in
-            self.isAvatarIncreased.toggle()
-            if self.isAvatarIncreased == false {
-                self.avatarView.isHidden = true
-            }
-        }
+//        let closeButton = avatarView.closeButton
+//        let avatarImage = self.avatarView.avatarImageView
+//        let widthScreen = UIScreen.main.bounds.width
+//        let widthAvatar = avatarImage.bounds.width
+//        let width = widthScreen / widthAvatar
+//
+//        UIView.animateKeyframes(withDuration: 1, delay: 0, options: .calculationModeCubic) {
+//            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) { [self] in
+//                self.avatarView.isHidden = false
+//                self.avatarView.bringSubviewToFront(avatarImage)
+//                self.avatarView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+//                avatarImage.transform = self.isAvatarIncreased ? .identity : CGAffineTransform(scaleX: width, y: width)
+//                avatarImage.layer.borderWidth = self.isAvatarIncreased ? 3 : 0
+//                avatarImage.center = self.isAvatarIncreased ? CGPoint(x: 63.166666666666664, y: 63.166666666666664) : CGPoint(x: self.avatarView.bounds.midX, y: self.avatarView.bounds.midY)
+//                avatarImage.layer.cornerRadius = self.isAvatarIncreased ? avatarImage.frame.height/2 : 0
+//                closeButton.isHidden = self.isAvatarIncreased ? true : false
+//            }
+//
+//        } completion: { _ in
+//            self.isAvatarIncreased.toggle()
+//            if self.isAvatarIncreased == false {
+//                self.avatarView.isHidden = true
+//            }
+//        }
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.removeObservers()
+    }
     private func setupGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -249,7 +252,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
 }
 
-extension ProfileViewController: AvatarViewDelegate, ProfileViewDelegate {
+extension ProfileViewController: ProfileViewDelegate {
     func changeLayout() {
         //
     }
@@ -298,6 +301,11 @@ extension ProfileViewController: UINavigationControllerDelegate, UIImagePickerCo
         
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
+        if currentReachabilityStatus == .notReachable {
+            self.viewModel.dismiss()
+            self.alertOk(title: "Проверьте интернет соединение", message: nil)
+            
+        }
         self.profileView.avatarImage.image = image
         self.viewModel.uploadFoto(currentUserId: userID!, photo: imageData)
         self.viewModel.dismiss()
@@ -311,5 +319,14 @@ extension ProfileViewController: PostViewControllerDelegate {
 extension ProfileViewController: CustomHeaderViewDelegate {
     func tapCell() {
         self.viewModel.viewInputDidChange(viewInput: .tapPhoto)
+    }
+}
+extension ProfileViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: true)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return TransitionAnimator(presentationStartItem: self.cellItem, isPresenting: false)
     }
 }

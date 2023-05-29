@@ -25,7 +25,7 @@ class LoginViewModel: LoginViewModelProtocol {
     init(firebaseService: FirebaseServiceProtocol) {
         self.firebaseService = firebaseService
     }
-    var coordinator: AppCoordinator?
+   weak var coordinator: AppCoordinator?
     
     func authorization(email: String, password: String, completion: @escaping () -> Void) {
         firebaseService.checkCredentials(email: email, password: password) { [weak self] result, uid  in

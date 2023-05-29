@@ -15,6 +15,8 @@ protocol MainViewModelProtocol: ViewModelProtocol {
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath, userPost: [Post])
+    func removeObservers()
+       
 }
 
 class MainViewModel: MainViewModelProtocol {
@@ -54,9 +56,11 @@ class MainViewModel: MainViewModelProtocol {
             for userID in usersID {
             let userId = value[userID] as? NSDictionary ?? [:]
             let username = userId["userName"] as? String ?? ""
+            let lastName = userId["lastName"] as? String ?? ""
+            let name = username + " " + lastName
             let avatarURL = userId["avatarImageURL"] as? String
             let email = userId["email"] as? String ?? ""
-            let user = User(userName: username, userID: userID, avatarImage: avatarURL, email: email)
+            let user = User(userName: name, userID: userID, avatarImage: avatarURL, email: email)
                 users.append(user)
           }
             completion()
@@ -71,6 +75,8 @@ class MainViewModel: MainViewModelProtocol {
                 completion(nil, nil)
                 return }
             let username = value["userName"] as? String ?? ""
+            let lastName = value["lastName"] as? String ?? ""
+            let name = username + " " + lastName
             let poste = value["posts"] as? NSDictionary ?? [:]
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
@@ -82,16 +88,16 @@ class MainViewModel: MainViewModelProtocol {
                 let isLike = post["isLike"] as? Bool ?? false
                 self.firebaseService.downloadImage(imageURL: image) { data in
                     guard let data else {return}
-                     let answer = Post(author: userName, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
+                     let answer = Post(author: name, description: postText, image: data, likesCount: likesCount, isLike: isLike, postID: postID, userID: userID)
                     if allPosts.contains(where: {$0.postID == answer.postID}) {
                         let index = allPosts.firstIndex(where: {$0.postID == answer.postID})
                         let post = allPosts[index!]
-                        if allPosts.contains(post) {
+                        if post == answer {
                             self.state = .initial
                             print("contains")
                         } else {
                             allPosts.remove(at: index!)
-                            allPosts.insert(post, at: index!)
+                            allPosts.insert(answer, at: index!)
                             self.state = .reloadData
                         }
                         
@@ -102,14 +108,14 @@ class MainViewModel: MainViewModelProtocol {
                 }
             }
             guard let avatarURL = value["avatarImageURL"] as? String else {
-                completion(username, nil)
+                completion(name, nil)
                 return
             }
             self.firebaseService.downloadImage(imageURL: avatarURL) { data in
                 guard let data else {
-                    completion(username, nil)
+                    completion(name, nil)
                     return}
-                completion(username, data)
+                completion(name, data)
             }
             
         }
@@ -135,5 +141,8 @@ class MainViewModel: MainViewModelProtocol {
         case .tapPost:
             coordinator?.pushViewController(nil, nil, nil, .post)
         }
+    }
+    func removeObservers() {
+        firebaseService.removeObservers()
     }
 }

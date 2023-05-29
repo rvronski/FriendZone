@@ -21,7 +21,8 @@ protocol FirebaseServiceProtocol {
     func minusLike(userID: String, postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
     func downloadAllUsers(completion: @escaping (NSDictionary?, [String]?) -> Void)
-    func changeName(newName: String)
+    func changeName(userName: String, lastName: String)
+    func removeObservers()
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -88,6 +89,7 @@ class FirebaseService: FirebaseServiceProtocol {
         reference.putData(photo, metadata: metadata) { (metadata, error) in
             guard let _ = metadata else {
                 completion(.failure(error!))
+                print("Ошибка = \(String(describing: error))")
                 return
             }
             reference.downloadURL { (url, error) in
@@ -121,20 +123,19 @@ class FirebaseService: FirebaseServiceProtocol {
         var postStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users").child(userID).observe(.value) { snapshot in
+        let handle = ref.child("Users").child(userID).observe(DataEventType.value, with: { snapshot in
+            guard let value = snapshot.value, snapshot.exists() else {
+                print("Error with getting data")
+                return
+            }
             
-            let value = snapshot.value as? NSDictionary
             for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
                 for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
                     postStringIDs.append(readingSnapshot.key)
                 }
             }
-            completion(value, postStringIDs)
-        }
-//        } { error in
-//            print(error.localizedDescription)
-//            completion(nil, nil)
-//        }
+            completion(value as? NSDictionary, postStringIDs)
+        })
         
     }
     
@@ -195,10 +196,20 @@ class FirebaseService: FirebaseServiceProtocol {
         ref.child("Users/\(userID)/posts/\(postID)/isLike").setValue(false)
     }
     
-    func changeName(newName: String) {
+    func changeName(userName: String, lastName: String) {
         guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users/\(uid)/userName").setValue(newName)
+        ref.child("Users/\(uid)/userName").setValue(userName)
+        ref.child("Users/\(uid)/lastName").setValue(lastName)
     }
+    
+    func removeObservers() {
+//        var ref: DatabaseReference!
+//        ref = Database.database().reference()
+//        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+//        ref.child("Users").child(uid).removeAllObservers()
+//        ref.child("Users").removeAllObservers()
+    }
+    
 }
