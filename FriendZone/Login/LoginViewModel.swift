@@ -29,7 +29,9 @@ class LoginViewModel: LoginViewModelProtocol {
     
     func authorization(email: String, password: String, completion: @escaping () -> Void) {
         firebaseService.checkCredentials(email: email, password: password) { [weak self] result, uid  in
-            guard let uid else { return }
+            guard let uid else {
+                completion()
+                return }
             if result {
                 self?.viewInputDidChange(viewInput: .tapLogin)
                 UserDefaults.standard.set(uid, forKey: "UserID")
@@ -41,7 +43,7 @@ class LoginViewModel: LoginViewModelProtocol {
     func registration(email: String, password: String, userName: String, completion: @escaping () -> Void) {
         firebaseService.signUp(email: email, password: password, userName: userName) { [weak self] result, uid  in
             guard let uid else {return}
-            if result {
+            if result == true {
                 self?.viewInputDidChange(viewInput: .tapLogin)
                 UserDefaults.standard.set(uid, forKey: "UserID")
             } else {

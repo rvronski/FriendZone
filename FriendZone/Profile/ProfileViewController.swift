@@ -11,8 +11,7 @@ import UniformTypeIdentifiers
 
 class ProfileViewController: UIViewController {
     
-    var userID = UserDefaults.standard.string(forKey: "UserID")
-    var imageURL = UserDefaults.standard.string(forKey: "imageURL")
+    let userID = UserDefaults.standard.string(forKey: "UserID")
     var avatarUrl: String?
     var userName = ""
     let coreManager = CoreDataManager.shared
@@ -55,9 +54,8 @@ class ProfileViewController: UIViewController {
         self.setupView()
         self.setupGesture()
         bindViewModel()
-        
+        setupNavigationBar()
         self.tabBarController?.tabBar.isHidden = false
-        //        UserDefaults.standard.set(false, forKey: "isLike")
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self
         self.activityIndicator.isHidden = false
@@ -91,8 +89,8 @@ class ProfileViewController: UIViewController {
     }
     
     private func downloadUserInfo(completion: @escaping () -> Void) {
-        guard let userID else {return}
-        self.viewModel.downloadUserInfo(userID: userID) { userName, avatarURL in
+        guard  (userID != nil) else {return}
+        self.viewModel.downloadUserInfo(userID: userID!) { userName, avatarURL in
             guard let userName else {
                 completion()
                 return }
@@ -140,6 +138,12 @@ class ProfileViewController: UIViewController {
         profileView.nameLabel.text = userName + " " + lastName
     }
     
+    private func setupNavigationBar() {
+        let rightButton = UIBarButtonItem(title: nil, image: UIImage(systemName: "rectangle.portrait.and.arrow.right"), target: self, action: #selector(popToLogin))
+        rightButton.tintColor = .buttonColor
+        navigationItem.rightBarButtonItem = rightButton
+    }
+    
     private func setupView(){
         
         self.view.backgroundColor = .systemBackground
@@ -173,9 +177,14 @@ class ProfileViewController: UIViewController {
         self.view.endEditing(true)
         
     }
-    var string = ""
-    var image: UIImage?
-    var postDragAtIndex = Int()
+    @objc private func popToLogin() {
+        self.alertOkCancel(title: "Выйти из профиля?", message: nil) { [weak self] in
+            UserDefaults.standard.set(nil, forKey: "UserID")
+            UserDefaults.standard.set(nil, forKey: "UserName")
+            UserDefaults.standard.set(nil, forKey: "LastName")
+            self?.viewModel.popToLogin()
+        }
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {

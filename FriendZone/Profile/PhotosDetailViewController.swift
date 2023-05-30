@@ -48,7 +48,7 @@ class PhotosDetailViewController: UIViewController {
         setupView()
         setupNavigationBar()
     }
-    
+   
     private func setupNavigationBar() {
         
         let leftButton = UIBarButtonItem(barButtonSystemItem: .reply, target: self, action: #selector(popVC))

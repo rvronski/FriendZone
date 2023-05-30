@@ -86,6 +86,7 @@ final class ProfileView: UIView {
         editButton.tapButton = { [weak self] in
             self?.delegate?.pushEditButton()
         }
+        
     }
     
     required init?(coder: NSCoder) {
@@ -114,9 +115,8 @@ final class ProfileView: UIView {
         self.addSubview(self.fotoLabel)
         self.addSubview(self.fotoButton)
        
-        
         NSLayoutConstraint.activate([
-            
+        
             self.avatarImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
             self.avatarImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.avatarImage.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.2415),

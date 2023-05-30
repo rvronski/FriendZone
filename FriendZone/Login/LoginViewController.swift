@@ -15,12 +15,12 @@ class LoginViewController: UIViewController {
     enum LoginErrors: Error {
         case noLogin
         case userNotFound
-        
+
     }
     
     private let localAuth = LocalAuthorizationService()
     private let viewModel: LoginViewModelProtocol
-    
+    private let isFirstTime = UserDefaults.standard.bool(forKey: "isFirstTime")
     init(viewModel: LoginViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -54,15 +54,7 @@ class LoginViewController: UIViewController {
         signUpButton.addTarget(self, action: #selector(didPushSignUpButton), for: .touchUpInside)
         return signUpButton
     }()
-    
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.color = .darkGray
-//        activityIndicator.isHidden = true
-        return activityIndicator
-    }()
-    
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.spacing = 0
@@ -111,16 +103,11 @@ class LoginViewController: UIViewController {
         self.scrollView.addSubview(self.stackView)
         self.scrollView.addSubview(self.signUpButton)
         self.stackView.addArrangedSubview(loginTextField)
-        self.stackView.addArrangedSubview(activityIndicator)
         self.stackView.addArrangedSubview(passwordTextField)
         self.scrollView.addSubview(self.button)
         self.scrollView.addSubview(self.logoImage)
         self.scrollView.addSubview(self.faceIDButton)
-        self.passwordTextField.bringSubviewToFront(activityIndicator)
        
-        loginTextField.text = "rv@gmail.com"
-        passwordTextField.text = "qwerty"
-        
         NSLayoutConstraint.activate([
             self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -147,23 +134,16 @@ class LoginViewController: UIViewController {
             self.signUpButton.widthAnchor.constraint(equalToConstant: 100),
             self.signUpButton.heightAnchor.constraint(equalToConstant: 20),
             
-            self.activityIndicator.centerYAnchor.constraint(equalTo: self.passwordTextField.centerYAnchor),
-            self.activityIndicator.centerXAnchor.constraint(equalTo: self.passwordTextField.centerXAnchor),
-            
             self.faceIDButton.topAnchor.constraint(equalTo: self.signUpButton.bottomAnchor,constant: 16),
             self.faceIDButton.centerXAnchor.constraint(equalTo: self.signUpButton.centerXAnchor),
-           
-//
         ])
     }
- 
-//    func showRegistrationVC() {
-//        let regVC = RegisterViewController(viewModel: LoginViewModel())
-//        self.window?.rootViewController?.present(regVC, animated: true)
-//    }
-    
+     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        guard isFirstTime == true else { viewModel.viewInputDidChange(viewInput: .tapSignUp)
+            return
+        }
         if currentReachabilityStatus == .notReachable {
             self.alertOk(title: "Проверьте интернет соединение", message: nil)
         }
@@ -184,10 +164,10 @@ class LoginViewController: UIViewController {
             self.faceIDButton.isEnabled = true
         }
         
-//        if UserDefaults.standard.string(forKey: "UserID") != nil {
-//            self.faceIDAuth()
-//        }
-//        
+        if UserDefaults.standard.string(forKey: "UserID") != nil {
+            self.faceIDAuth()
+        }
+        
         navigationController?.setNavigationBarHidden(true, animated: false)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.didShowKeyboard(_:)),
@@ -198,13 +178,7 @@ class LoginViewController: UIViewController {
                                                name: UIResponder.keyboardDidHideNotification,
                                                object: nil)
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.loginTextField.becomeFirstResponder()
-    }
-    
-    
+        
     @objc func didTapButton()  {
         guard let email = loginTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
@@ -223,8 +197,6 @@ class LoginViewController: UIViewController {
         }
         
     }
-    
-    
     
     @objc func didShowKeyboard(_ notification: Notification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
@@ -254,6 +226,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func faceIDAuth() {
+        guard UserDefaults.standard.string(forKey: "UserID") != nil else {
+            self.alertOk(title: "Зарегестрируйтесь в приложении", message: nil)
+            return
+        }
        let authLocal = LocalAuthorizationService()
         authLocal.authorizeIfPossible { success, error  in
             if let error = error {

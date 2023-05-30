@@ -25,8 +25,8 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data)
     func changeName(userName: String, lastName: String)
     func removeObservers()
+    func popToLogin()
 }
-
 class ProfileViewModel: ProfileViewModelProtocol {
     
     enum ViewInput {
@@ -185,5 +185,8 @@ class ProfileViewModel: ProfileViewModelProtocol {
     }
     func removeObservers() {
         firebaseService.removeObservers()
+    }
+    func popToLogin() {
+        coordinator?.popToLogin()
     }
 }

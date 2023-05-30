@@ -221,6 +221,10 @@ private lazy var logoImage = CustomImageView()
             self.alertOk(title: "Неверный формат email", message: "Проверьте email адрес")
             return
         }
+        
+        guard password.count >= 6 else {self.alertOk(title: "Ненадежный пароль", message: "Придумайте пароль минимум из 6 символов")
+            return
+        }
         viewModel.registration(email: email, password: password, userName: userName) { [weak self] in
             self?.alertOk(title: "Ошибка создания аккаунта", message: nil)
         }

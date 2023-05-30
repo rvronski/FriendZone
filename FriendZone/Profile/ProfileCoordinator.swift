@@ -86,4 +86,9 @@ class ProfileCoordinator: ModuleCoordinatable {
             (module!.view as? UINavigationController)?.pushViewController(editVC, animated: true)
         }
     }
+    
+    func popToLogin() {
+        module?.view.navigationController?.popToRootViewController(animated: true)
+    }
+    
 }

@@ -53,30 +53,22 @@ class FirebaseService: FirebaseServiceProtocol {
                 completion(false, nil)
                 return
             }
-            
             if let result = result {
                 print("UID:", result.user.uid)
                 let ref = Database.database().reference().child("Users")
                 ref.child(result.user.uid).updateChildValues(["userName": userName,
                                                               "email": email,
                                                               "admin": false])
+                UserDefaults.standard.set(true, forKey: "isFirstTime")
+                UserDefaults.standard.set(result.user.uid, forKey: "UserID")
                 let db = Firestore.firestore()
                 db.collection("Users").addDocument(data: [
                     "firstname": userName,
                     "email": email,
                     "avatarURL": "",
                     "uid": result.user.uid ])
-                UserDefaults.standard.set(result.user.uid, forKey: "UserID")
                 completion(true, result.user.uid)
-                //
-                //                Auth.auth().currentUser?.sendEmailVerification { error in
-                //                    if let error = error {
-                //                        print("error sendEmailVerification", error)
-                //                        completion(2)
-                //                    } else {
-                //                        completion(3)
-                //                    }
-                //                }
+               
             }
         })
     }
@@ -124,7 +116,7 @@ class FirebaseService: FirebaseServiceProtocol {
         var postStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        let handle = ref.child("Users").child(userID).observe(DataEventType.value, with: { snapshot in
+        ref.child("Users").child(userID).observe(DataEventType.value, with: { snapshot in
             guard let value = snapshot.value, snapshot.exists() else {
                 print("Error with getting data")
                 return
