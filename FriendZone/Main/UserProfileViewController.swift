@@ -202,8 +202,17 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifire, for: indexPath) as! PostTableViewCell
-        cell.setup(with: userPosts[indexPath.row], index: indexPath.row)
-        return cell
+        cell.setup(with: userPosts[indexPath.row], index: indexPath.row, editButtonIsHidden: true)
+        
+        if userPosts[indexPath.row].isLike {
+                cell.likeButton.tintColor = .systemRed
+            } else {
+                cell.likeButton.tintColor = .lightGray
+            }
+//            cell.delegat = self
+        
+            return cell
+        
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -247,3 +256,19 @@ extension UserProfileViewController: UIViewControllerTransitioningDelegate {
         return AvatarTransitionAnimator(presentationStartView: self.avatarImage, isPresenting: false)
     }
 }
+//extension UserProfileViewController: CellDelegate {
+//    func editPost(index: Int) {
+//    }
+//
+//    func minusLike(userID: String, postID: String, likesCount: Int) {
+//        viewModel.minusLike(userID: userID, postID: postID, likesCount: likesCount)
+//    }
+//
+//    func plusLike(userID: String, postID: String, likesCount: Int) {
+//        viewModel.plusLike(userID: userID, postID: postID, likesCount: likesCount)
+//    }
+//
+//    func reloadData() {
+//        self.tableView.reloadData()
+//    }
+//}

@@ -17,6 +17,7 @@ protocol FirebaseServiceProtocol {
     func upload(currentUserId: String, photo: Data, completion: @escaping (Result<URL, Error>) -> Void)
     func downloadUserInfo(userID: String ,completion: @escaping (NSDictionary?, [String]?) -> Void )
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String)
+    func deletePost(postID: String, completion: @escaping (Bool?) -> Void)
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
@@ -177,6 +178,21 @@ class FirebaseService: FirebaseServiceProtocol {
                     "isLike": false
                 ])
             }
+        }
+    }
+    
+    func deletePost(postID: String, completion: @escaping (Bool?) -> Void) {
+        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
+        let reference = Storage.storage().reference().child("\(uid)postImages/\(postID)")
+        reference.delete { error in
+            if error != nil {
+              completion(false)
+          } else {
+              var ref: DatabaseReference!
+              ref = Database.database().reference()
+              ref.child("Users").child(uid).child("posts").child(postID).removeValue()
+            completion(true)
+          }
         }
     }
     

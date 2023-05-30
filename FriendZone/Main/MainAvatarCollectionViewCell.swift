@@ -39,8 +39,8 @@ class MainAvatarCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.avatarImage.layer.cornerRadius = self.avatarImage.frame.width/2
-        layoutIfNeeded()
+        self.avatarImage.layer.cornerRadius = self.contentView.frame.width/2
+       
     }
 //
     private func setupView() {

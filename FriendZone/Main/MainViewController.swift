@@ -177,7 +177,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let itemWidth = (collectionView.frame.width - 50) / 4.2
+        let itemWidth = (collectionView.frame.width - 50) / 4
         
         return CGSize(width: itemWidth, height: itemWidth)
     }
@@ -197,7 +197,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifire, for: indexPath) as! PostTableViewCell
         
-        cell.setup(with: allPosts[indexPath.row], index: indexPath.row)
+        cell.setup(with: allPosts[indexPath.row], index: indexPath.row, editButtonIsHidden: true)
         
     if allPosts[indexPath.row].isLike {
             cell.likeButton.tintColor = .systemRed
@@ -218,6 +218,8 @@ extension MainViewController: MainAvatarCollectionDelegate {
     }
 }
 extension  MainViewController: CellDelegate {
+    func editPost(index: Int) {}
+    
     func minusLike(userID: String, postID: String, likesCount: Int) {
         viewModel.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }

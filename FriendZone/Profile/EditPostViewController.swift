@@ -1,19 +1,20 @@
 //
-//  PostViewController.swift
+//  EditPostViewController.swift
 //  FriendZone
 //
-//  Created by ROMAN VRONSKY on 16.05.2023.
+//  Created by ROMAN VRONSKY on 30.05.2023.
 //
 
 import UIKit
 
+class EditPostViewController: UIViewController {
 
-class PostViewController: UIViewController {
-    
     private let viewModel: ProfileViewModelProtocol
+    private let post: Post
     
-    init(viewModel: ProfileViewModelProtocol) {
+    init(viewModel: ProfileViewModelProtocol, post: Post) {
         self.viewModel = viewModel
+        self.post = post
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder: NSCoder) {
@@ -23,8 +24,9 @@ class PostViewController: UIViewController {
     private lazy var postTextView = TextView(frame: .zero, textContainer: nil)
     
     private lazy var photoButton = ButtonWithSystemImage(background: nil, image: "photo", imageSize: 20, symbolScale: .medium, tintcolor: .black)
+    private lazy var deleteButton = ButtonWithSystemImage(background: nil, image: "trash", imageSize: 20, symbolScale: .medium, tintcolor: .black)
     
-    private lazy var publicationutton = CustomButton(buttonText: "Опубликовать", textColor: .buttonColor, background: nil, fontSize: 15, fontWeight: .bold)
+    private lazy var publicationutton = CustomButton(buttonText: "Отредактировать", textColor: .buttonColor, background: nil, fontSize: 15, fontWeight: .bold)
     
     private lazy var menuView: UIView = {
         let view = UIView()
@@ -50,6 +52,23 @@ class PostViewController: UIViewController {
             }
             self?.publication()
         }
+        deleteButton.tapButton = { [weak self] in
+            self?.alertOkCancel(title: "Удалить пост?", message: nil, completionHandler: {
+                let postID = self?.post.postID
+                self?.viewModel.deletePost(postID: postID!, completion: { result in
+                    if result == false {
+                        self?.alertOk(title: "Ошибка", message: "Невозможно удалить пост")
+                        return
+                    } else {
+                        posts.removeAll(where: {$0 == self?.post})
+                        allPosts.removeAll(where: {$0 == self?.post})
+                        self?.viewModel.pop()
+                    }
+                })
+            })
+            
+        }
+        
     }
     
    
@@ -61,6 +80,9 @@ class PostViewController: UIViewController {
         self.view.addSubview(imageView)
         self.menuView.addSubview(photoButton)
         self.menuView.addSubview(publicationutton)
+        self.menuView.addSubview(deleteButton)
+        self.postTextView.text = post.description
+        self.imageView.image = UIImage(data: post.image)
         
         NSLayoutConstraint.activate([
             
@@ -71,6 +93,9 @@ class PostViewController: UIViewController {
            
             self.photoButton.centerYAnchor.constraint(equalTo: self.menuView.centerYAnchor),
             self.photoButton.leftAnchor.constraint(equalTo: self.menuView.leftAnchor, constant: 20),
+            
+            self.deleteButton.centerYAnchor.constraint(equalTo: self.photoButton.centerYAnchor),
+            self.deleteButton.leftAnchor.constraint(equalTo: self.photoButton.rightAnchor, constant: 16),
             
             self.publicationutton.centerYAnchor.constraint(equalTo: self.menuView.centerYAnchor),
             self.publicationutton.rightAnchor.constraint(equalTo: self.menuView.rightAnchor, constant: -20),
@@ -99,9 +124,17 @@ class PostViewController: UIViewController {
         let lastName = UserDefaults.standard.string(forKey: "LastName") ?? ""
         let name = userName + " " + lastName
         guard let userID = UserDefaults.standard.string(forKey: "UserID") else { return }
-        let postID = UUID().uuidString
-        let post = Post(author: name, description: text, image: imageData, likesCount: 0, isLike: false, postID: postID, userID: userID)
-        posts.append(post)
+        let postID = self.post.postID
+        let isLike = self.post.isLike
+        let newPost = Post(author: name, description: text, image: imageData, likesCount: 0, isLike: isLike, postID: postID, userID: userID)
+        let index = posts.firstIndex(where: {$0.postID == self.post.postID})
+        posts.remove(at: index!)
+        posts.insert(newPost, at: index!)
+        if !allPosts.isEmpty {
+            let indexInAllPosts = allPosts.firstIndex(where: {$0.postID == self.post.postID})
+            allPosts.remove(at: indexInAllPosts!)
+            allPosts.insert(newPost, at: indexInAllPosts!)
+        }
         viewModel.addposts(userName: name, image: imageData, likesCount: 0, postText: text, postID: postID)
         self.viewModel.pop()
     }
@@ -113,14 +146,12 @@ class PostViewController: UIViewController {
         self.view.addGestureRecognizer(tapGesture)
     }
 }
-extension PostViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+extension EditPostViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
-//        self.profileView.avatarImage.image = image
-//        self.viewModel.uploadFoto(currentUserId: userID!, photo: image)
-       
         self.imageView.image = image
         self.viewModel.dismiss()
     }
 }
+

@@ -12,7 +12,7 @@ class ProfileCoordinator: ModuleCoordinatable {
     enum Push {
         case publication(ViewModelProtocol)
         case photo(ViewModelProtocol)
-        case post
+        case editPost(ViewModelProtocol, Post)
         case edit(ViewModelProtocol, Data)
     }
     
@@ -78,8 +78,9 @@ class ProfileCoordinator: ModuleCoordinatable {
         case let .photo(viewModel):
             let photoVC = PhotosViewController(viewModel: viewModel as! ProfileViewModelProtocol)
             (module!.view as? UINavigationController)?.pushViewController(photoVC, animated: true)
-        case .post:
-            print("post")
+        case let .editPost(viewModel, post):
+            let editPostVC = EditPostViewController(viewModel: viewModel as! ProfileViewModelProtocol, post: post)
+            (module!.view as? UINavigationController)?.pushViewController(editPostVC, animated: true)
         case let .edit(viewModel, data):
             let editVC = ProfileEditViewController(viewModel: viewModel as! ProfileViewModelProtocol, avatarDataImage: data)
             (module!.view as? UINavigationController)?.pushViewController(editVC, animated: true)

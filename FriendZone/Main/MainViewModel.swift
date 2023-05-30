@@ -74,6 +74,7 @@ class MainViewModel: MainViewModelProtocol {
             guard let value,
             let id else {
                 completion(nil, nil)
+                self.state = .initial
                 return }
             let username = value["userName"] as? String ?? ""
             let lastName = value["lastName"] as? String ?? ""
@@ -94,7 +95,6 @@ class MainViewModel: MainViewModelProtocol {
                         let post = allPosts[index!]
                         if post == answer {
                             self.state = .initial
-                            print("contains")
                         } else {
                             allPosts.remove(at: index!)
                             allPosts.insert(answer, at: index!)
@@ -114,8 +114,10 @@ class MainViewModel: MainViewModelProtocol {
             self.firebaseService.downloadImage(imageURL: avatarURL) { data in
                 guard let data else {
                     completion(name, nil)
+                    self.state = .initial
                     return}
                 completion(name, data)
+                self.state = .reloadData
             }
             
         }

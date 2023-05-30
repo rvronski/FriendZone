@@ -158,32 +158,7 @@ class ProfileViewController: UIViewController {
     
     var isAvatarIncreased = false
     
-    func changeLayoutAvatar() {
-//        let closeButton = avatarView.closeButton
-//        let avatarImage = self.avatarView.avatarImageView
-//        let widthScreen = UIScreen.main.bounds.width
-//        let widthAvatar = avatarImage.bounds.width
-//        let width = widthScreen / widthAvatar
-//
-//        UIView.animateKeyframes(withDuration: 1, delay: 0, options: .calculationModeCubic) {
-//            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) { [self] in
-//                self.avatarView.isHidden = false
-//                self.avatarView.bringSubviewToFront(avatarImage)
-//                self.avatarView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-//                avatarImage.transform = self.isAvatarIncreased ? .identity : CGAffineTransform(scaleX: width, y: width)
-//                avatarImage.layer.borderWidth = self.isAvatarIncreased ? 3 : 0
-//                avatarImage.center = self.isAvatarIncreased ? CGPoint(x: 63.166666666666664, y: 63.166666666666664) : CGPoint(x: self.avatarView.bounds.midX, y: self.avatarView.bounds.midY)
-//                avatarImage.layer.cornerRadius = self.isAvatarIncreased ? avatarImage.frame.height/2 : 0
-//                closeButton.isHidden = self.isAvatarIncreased ? true : false
-//            }
-//
-//        } completion: { _ in
-//            self.isAvatarIncreased.toggle()
-//            if self.isAvatarIncreased == false {
-//                self.avatarView.isHidden = true
-//            }
-//        }
-    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         viewModel.removeObservers()
@@ -225,11 +200,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifire, for: indexPath) as! PostTableViewCell
-            cell.setup(with: posts[indexPath.row], index: indexPath.row)
-//            if coreManager.likes.count == 0  {
-//                UserDefaults.standard.set(false, forKey: "isLike\(indexPath.row)")
-//            }
-            
+            cell.setup(with: posts[indexPath.row], index: indexPath.row, editButtonIsHidden: false)
+           
         if posts[indexPath.row].isLike {
                 cell.likeButton.tintColor = .systemRed
             } else {
@@ -245,19 +217,9 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         
         return posts.count
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        self.viewModel.viewInputDidChange(viewInput: .tapPost)
-    }
-    
 }
 
 extension ProfileViewController: ProfileViewDelegate {
-    func changeLayout() {
-        //
-    }
     
     func pushEditButton() {
         let image = profileView.avatarImage.image
@@ -285,6 +247,12 @@ extension ProfileViewController: ProfileViewDelegate {
 }
 
 extension ProfileViewController: CellDelegate {
+    func editPost(index: Int) {
+        let post = posts[index]
+        viewModel.viewInputDidChange(viewInput: .tapEditPost(post))
+        
+    }
+    
     func minusLike(userID: String, postID: String, likesCount: Int) {
         viewModel.minusLike(userID: userID, postID: postID, likesCount: likesCount)
     }
@@ -312,11 +280,7 @@ extension ProfileViewController: UINavigationControllerDelegate, UIImagePickerCo
         self.viewModel.dismiss()
     }
 }
-extension ProfileViewController: PostViewControllerDelegate {
-    func presentImagePicker() {
-        viewModel.openGallery(delegate: self)
-    }
-}
+
 extension ProfileViewController: CustomHeaderViewDelegate {
     func tapCell() {
         self.viewModel.viewInputDidChange(viewInput: .tapPhoto)

@@ -10,6 +10,7 @@ protocol CellDelegate: AnyObject {
     func reload()
     func plusLike(userID: String, postID: String,likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
+    func editPost(index: Int)
 }
 
 class PostTableViewCell: UITableViewCell {
@@ -71,6 +72,8 @@ class PostTableViewCell: UITableViewCell {
         return likeButton
     }()
     
+    lazy var editPostButton = ButtonWithSystemImage(background: nil, image: "rectangle.and.pencil.and.ellipsis", imageSize: 15, symbolScale: .medium, tintcolor: .systemGray)
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupView()
@@ -81,7 +84,7 @@ class PostTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setup(with viewModel: Post, index: Int ) {
+    func setup(with viewModel: Post, index: Int, editButtonIsHidden: Bool) {
         self.postImageView.image = UIImage(data: viewModel.image)
         self.authorLabel.text = viewModel.author
         self.descriptionLabel.text = viewModel.description
@@ -98,6 +101,10 @@ class PostTableViewCell: UITableViewCell {
         self.userID = viewModel.userID
         self.likesLabel.text = "Нравится: \(likesCount)"
         likeButton.tintColor = self.isLike ? .systemRed : .lightGray
+        self.editPostButton.isHidden = editButtonIsHidden
+        self.editPostButton.tapButton = {
+            self.delegat?.editPost(index: index)
+        }
     }
     
     
@@ -107,10 +114,14 @@ class PostTableViewCell: UITableViewCell {
         self.contentView.addSubview(authorLabel)
         self.contentView.addSubview(likesLabel)
         self.contentView.addSubview(likeButton)
+        self.contentView.addSubview(editPostButton)
         
         NSLayoutConstraint.activate([
             self.authorLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
             self.authorLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
+            
+            self.editPostButton.centerYAnchor.constraint(equalTo: self.authorLabel.centerYAnchor),
+            self.editPostButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -16),
             
             self.postImageView.topAnchor.constraint(equalTo: self.authorLabel.bottomAnchor, constant: 16),
             
