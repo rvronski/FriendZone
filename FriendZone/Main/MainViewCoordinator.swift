@@ -43,6 +43,14 @@ class MainViewCoordinator: ModuleCoordinatable {
         (module!.view as? UINavigationController)?.present(navController, animated: true, completion: nil)
     }
     
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data) {
+        let presentViewController = AvatarViewController(avatarData: data)
+        let navController = UINavigationController(rootViewController: presentViewController)
+        navController.transitioningDelegate = delegate
+        navController.modalPresentationStyle = .fullScreen
+       (module!.view as? UINavigationController)?.present(navController, animated: true, completion: nil)
+    }
+    
     func pushViewController(_ userID: String?, _ postArray: [Post]?, _ viewModel: ViewModelProtocol?, _ pushTo: Push ) {
         switch pushTo {
         case let .user(userID, viewModel):

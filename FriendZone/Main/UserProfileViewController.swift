@@ -190,7 +190,8 @@ class UserProfileViewController: UIViewController {
         self.avatarImage.addGestureRecognizer(gestureAvatar)
     }
     @objc func tapAvatar() {
-        self.delegate?.tapAvatar()
+        let data = self.avatarImage.image?.pngData()
+        self.viewModel.presentAvatar(delegate: self, data: data!)
     }
 }
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -235,5 +236,14 @@ extension UserProfileViewController: UICollectionViewDataSource, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         viewModel.viewInputDidChange(viewInput: .tapPhoto, userID: nil, postArray: self.userPosts)
+    }
+}
+extension UserProfileViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return AvatarTransitionAnimator(presentationStartView: self.avatarImage, isPresenting: true)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return AvatarTransitionAnimator(presentationStartView: self.avatarImage, isPresenting: false)
     }
 }

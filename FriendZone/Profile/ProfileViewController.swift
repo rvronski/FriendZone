@@ -272,10 +272,9 @@ extension ProfileViewController: ProfileViewDelegate {
         self.presenActionSheet(title1: "Поменять аватар", title2: "Посмотреть аватар") { [weak self] in
             self?.viewModel.openGallery(delegate: self!)
         } completionTwo: { [weak self] in
-            print("tap")
+            let data = self?.profileView.avatarImage.image?.pngData()
+            self?.viewModel.presentAvatar(delegate: self!, data: data!)
         }
-
-            
     }
     
     func pushNoteButton() {

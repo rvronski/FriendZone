@@ -19,7 +19,7 @@ class PhotosDetailViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    var viewTranslation = CGPoint(x: 0, y: 0)
+    
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -47,7 +47,6 @@ class PhotosDetailViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupNavigationBar()
-        gestureCollectionView()
     }
     
     private func setupNavigationBar() {
@@ -78,50 +77,6 @@ class PhotosDetailViewController: UIViewController {
         ])
     }
     
-    private func gestureCollectionView() {
-        let swipeGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDismiss))
-//        swipeGesture.direction = .up
-        self.collectionView.addGestureRecognizer(swipeGesture)
-    }
-    
-    private func removeGestureCollectionView() {
-        let swipeGesture = UIPanGestureRecognizer()
-        //        swipeGesture.direction = .up
-        self.collectionView.removeGestureRecognizer(swipeGesture)
-    }
-    @objc private func handleDismiss(sender: UIPanGestureRecognizer) {
-        switch sender.state {
-        case .changed:
-            viewTranslation = sender.translation(in: self.collectionView)
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1,options: .curveEaseOut) {
-                self.collectionView.transform = CGAffineTransform(translationX: self.viewTranslation.x, y: self.viewTranslation.y)
-                print(self.viewTranslation)
-            }
-        case .ended:
-            if viewTranslation.y > -150 {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1,options: .curveEaseOut) {
-                    self.collectionView.transform = .identity
-                }
-            } else {
-                self.popVC()
-            }
-
-        default:
-//            self.collectionView.dragInteractionEnabled = false
-            self.collectionView.scrollToItem(at: self.indexPath.dropLast(), at: .right, animated: true)
-        }
-        
-//        case .changed:
-//            viewTranslation = sender.location(in: collectionView)
-//        case .ended:
-//            <#code#>
-//        case .cancelled:
-//            <#code#>
-//        case .failed:
-//            <#code#>
-//        @unknown default:
-//            <#code#>
-        }
     
  @objc private func popVC() {
      self.navigationController?.dismiss(animated: true)

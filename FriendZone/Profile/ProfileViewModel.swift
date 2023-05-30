@@ -21,6 +21,7 @@ protocol ProfileViewModelProtocol: ViewModelProtocol {
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath)
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data)
     func changeName(userName: String, lastName: String)
     func removeObservers()
 }
@@ -164,6 +165,10 @@ class ProfileViewModel: ProfileViewModelProtocol {
     
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
         coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath)
+    }
+    
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data) {
+        coordinator?.presentAvatar(delegate: delegate, data: data)
     }
     
     func changeName(userName: String, lastName: String) {

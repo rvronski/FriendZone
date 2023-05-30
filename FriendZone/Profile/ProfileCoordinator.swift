@@ -51,10 +51,15 @@ class ProfileCoordinator: ModuleCoordinatable {
          navController.transitioningDelegate = delegate
          navController.modalPresentationStyle = .fullScreen
         (module!.view as? UINavigationController)?.present(navController, animated: true, completion: nil)
+        
     }
     
-    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
-        
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data) {
+        let presentViewController = AvatarViewController(avatarData: data)
+        let navController = UINavigationController(rootViewController: presentViewController)
+        navController.transitioningDelegate = delegate
+        navController.modalPresentationStyle = .fullScreen
+       (module!.view as? UINavigationController)?.present(navController, animated: true, completion: nil)
     }
     
     func dismiss() {

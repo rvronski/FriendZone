@@ -15,6 +15,7 @@ protocol MainViewModelProtocol: ViewModelProtocol {
     func plusLike(userID: String, postID: String, likesCount: Int)
     func minusLike(userID: String, postID: String, likesCount: Int)
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath, userPost: [Post])
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data)
     func removeObservers()
        
 }
@@ -80,7 +81,6 @@ class MainViewModel: MainViewModelProtocol {
             let poste = value["posts"] as? NSDictionary ?? [:]
             for i in id {
                 let post = poste[i] as? NSDictionary ?? [:]
-                let userName = post["username"] as? String ?? ""
                 let image = post["image"] as? String ?? ""
                 let postID = post["postID"] as? String ?? ""
                 let postText = post["postText"] as? String ?? ""
@@ -130,6 +130,10 @@ class MainViewModel: MainViewModelProtocol {
     }
     func presentPhoto(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath, userPost: [Post]) {
         coordinator?.presentPhoto(delegate: delegate, indexPath: indexPath, postArray: userPost)
+    }
+    
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, data: Data) {
+        coordinator?.presentAvatar(delegate: delegate, data: data)
     }
     
     func viewInputDidChange(viewInput: ViewInput, userID: String?, postArray: [Post]?) {
