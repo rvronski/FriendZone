@@ -30,7 +30,7 @@ class AvatarViewController: UIViewController {
     }
     
     private func setupView()  {
-        self.view.backgroundColor = .white.withAlphaComponent(0.5)
+        self.view.backgroundColor = .white.withAlphaComponent(0.4)
         self.view.addSubview(avatarView)
         avatarView.image = UIImage(data: avatarData)
         

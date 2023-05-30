@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LikeCoordinator: ModuleCoordinatable {
+class AddPostCoordinator: ModuleCoordinatable {
     var module: Module?
     private let factory: AppFactory
    private(set) var moduleType: Module.ModuleType

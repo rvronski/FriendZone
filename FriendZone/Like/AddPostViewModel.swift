@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol LikeViewModelProtocol: ViewModelProtocol {
+protocol AddPostViewModelProtocol: ViewModelProtocol {
     
 }
 
-class LikeViewModel: LikeViewModelProtocol {
+class AddPostViewModel: AddPostViewModelProtocol {
     
     var coordinator: LikeCoordinator?
     

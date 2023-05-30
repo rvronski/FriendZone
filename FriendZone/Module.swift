@@ -15,7 +15,7 @@ struct Module {
         case login
         case main
         case profile
-        case like
+        case addPost
         
     }
     
@@ -33,8 +33,8 @@ extension Module.ModuleType {
             return UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
         case .profile:
             return UITabBarItem(title: "Профиль", image: UIImage(systemName: "person"), tag: 1)
-        case .like:
-            return UITabBarItem(title: "Нравится", image: UIImage(systemName: "heart.fill"), tag: 2)
+        case .addPost:
+            return UITabBarItem(title: nil, image: UIImage(systemName: "plus"), tag: 2)
        
         }
     }
