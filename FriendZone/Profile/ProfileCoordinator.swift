@@ -53,6 +53,10 @@ class ProfileCoordinator: ModuleCoordinatable {
         (module!.view as? UINavigationController)?.present(navController, animated: true, completion: nil)
     }
     
+    func presentAvatar(delegate: UIViewControllerTransitioningDelegate, indexPath: IndexPath) {
+        
+    }
+    
     func dismiss() {
         module?.view.dismiss(animated: true)
     }
