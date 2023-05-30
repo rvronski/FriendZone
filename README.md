@@ -1,7 +1,5 @@
 # FriendZone
-<<<<<<< HEAD
-/Users/romanvronsky/Desktop/Simulator Screen Shot - iPhone 14 Pro Max - 2023-05-31 at 02.00.34.png
-=======
+
 FriendZone это социальная сеть, которая напоминает Instagram. Оно позволяет пользователям делиться своими фотографиями, а также просматривать контент других пользователей. 
 ![Экран загрузки](https://github.com/rvronski/FriendZone/blob/main/Simulator%20Screen%20Shot%20-%20iPhone%2014%20Pro%20Max%20-%202023-05-31%20at%2002.10.24.png)
 Основные функции приложения включают в себя:
