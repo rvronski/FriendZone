@@ -9,7 +9,7 @@ import Foundation
 import FirebaseDatabase
 import FirebaseCore
 protocol ProfileViewModelProtocol: ViewModelProtocol {
-    var onStateDidChange: ((ProfileViewModel.State) -> Void)? { get set }
+   static var onStateDidChange: ((ProfileViewModel.State) -> Void)? { get set }
     func uploadFoto(currentUserId: String, photo: Data)
     func downloadUserInfo(userID: String, completion: @escaping (_ userName: String?, _ avatarURL: String?) -> Void)
     func openGallery(delegate: UIViewController)
@@ -38,13 +38,14 @@ class ProfileViewModel: ProfileViewModelProtocol {
     enum State {
         case initial
         case reloadData
+        case addPost
     }
     
-    var onStateDidChange: ((State) -> Void)?
+   static var onStateDidChange: ((State) -> Void)?
     
-    private(set) var state: State = .initial {
+    static var state: State = .initial {
         didSet {
-            onStateDidChange?(state)
+            ProfileViewModel.onStateDidChange?(ProfileViewModel.state)
         }
     }
     
@@ -103,16 +104,16 @@ class ProfileViewModel: ProfileViewModelProtocol {
                         let index = posts.firstIndex(where: {$0.postID == answer.postID})
                         let post = posts[index!]
                         if post == answer {
-                            self.state = .initial
+                            ProfileViewModel.state = .initial
                             print("contains")
                         } else {
                             posts.remove(at: index!)
                             posts.insert(answer, at: index!)
-                            self.state = .reloadData
+                            ProfileViewModel.state = .reloadData
                         }
                     } else {
                         posts.append(answer)
-                        self.state = .reloadData
+                        ProfileViewModel.state = .reloadData
                     }
                 }
             }

@@ -13,7 +13,7 @@ protocol AddPostViewModelProtocol: ViewModelProtocol {
 
 class AddPostViewModel: AddPostViewModelProtocol {
     
-    var coordinator: LikeCoordinator?
+    var coordinator: AddPostViewModelProtocol?
     
 }
 

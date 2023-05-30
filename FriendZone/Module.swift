@@ -34,7 +34,7 @@ extension Module.ModuleType {
         case .profile:
             return UITabBarItem(title: "Профиль", image: UIImage(systemName: "person"), tag: 1)
         case .addPost:
-            return UITabBarItem(title: nil, image: UIImage(systemName: "plus"), tag: 2)
+            return UITabBarItem(title: nil, image: UIImage(systemName: "plus"), selectedImage:  UIImage(systemName:"plus.circle.fill"))
        
         }
     }

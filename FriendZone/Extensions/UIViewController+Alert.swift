@@ -64,5 +64,20 @@ extension UIViewController {
         present(alertController, animated: true)
         
     }
+    
+    func presenActionSheetForAddPost(completion: @escaping () -> Void) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let oneAction = UIAlertAction(title: "Добавить пост", style: .default) { _ in
+            completion()
+        }
+       
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(oneAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
+        
+    }
 }
 

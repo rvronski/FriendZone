@@ -39,15 +39,16 @@ final class AppCoordinator: Coordinatable {
             (module!.view as? UINavigationController)?.pushViewController(viewControllerToPush, animated: true)
         case .tabBar:
             let profileCoordinator = ProfileCoordinator(moduleType: .profile, factory: factory, navigationController: navigationController)
+            let addPostCoordinator = AddPostCoordinator(factory: factory, moduleType: .addPost)
             let mainViewCoordinator = MainViewCoordinator(moduleType: .main, factory: factory, navigationController: navigationController)
-            let likeCoordinator = LikeCoordinator(factory: factory, moduleType: .like)
             let tabBarController = AppTabBarController(viewControllers:
                                                         [profileCoordinator.start(),
-                                                         mainViewCoordinator.start(),
-                                                         likeCoordinator.start()])
+                                                         addPostCoordinator.start(),
+                                                         mainViewCoordinator.start()
+                                                         ])
             addCoordinator(coordinator: profileCoordinator)
+            addCoordinator(coordinator: addPostCoordinator)
             addCoordinator(coordinator: mainViewCoordinator)
-            addCoordinator(coordinator: likeCoordinator)
         
             (module!.view as? UINavigationController)?.pushViewController(tabBarController, animated: true)
         }

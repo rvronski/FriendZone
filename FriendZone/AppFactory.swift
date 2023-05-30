@@ -28,9 +28,9 @@ class AppFactory {
             let viewModel = ProfileViewModel(firebaseService: firebaseService)
             let view = UINavigationController(rootViewController: ProfileViewController(viewModel: viewModel))
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
-        case .like:
-            let viewModel = LikeViewModel()
-            let view = UINavigationController(rootViewController: LikeViewController())
+        case .addPost:
+            let viewModel = AddPostViewModel()
+            let view = UINavigationController(rootViewController: AddPostViewController())
             return Module(moduleType: moduleType, viewModel: viewModel, view: view)
        
         }

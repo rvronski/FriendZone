@@ -106,7 +106,7 @@ class ProfileViewController: UIViewController {
     }
     
     func bindViewModel() {
-        viewModel.onStateDidChange = { [weak self] state in
+        ProfileViewModel.onStateDidChange = { [weak self] state in
             guard let self = self else {
                 return
             }
@@ -118,6 +118,8 @@ class ProfileViewController: UIViewController {
                     self.profileView.reload()
                     CustomHeaderView().reload()
                 }
+            case .addPost:
+                self.viewModel.viewInputDidChange(viewInput: .tapPublication)
             }
         }
     }
