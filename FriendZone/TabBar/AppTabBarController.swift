@@ -86,10 +86,9 @@ final class AppTabBarController: UITabBarController {
         let button = UIButton(type: .custom)
         button.backgroundColor = .buttonColor
         button.translatesAutoresizingMaskIntoConstraints = false
-        //        button.bottomAnchor.constraint(equalTo: self.middleButton.topAnchor, constant: 16).isActive = true
         button.widthAnchor.constraint(equalToConstant: 180).isActive = true
         button.layer.cornerRadius = 15
-        
+        button.setTitle("Добавить пост", for: .normal)
         if buttonIsTapped == true {
             UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut) {
                 button.imageView?.tintColor = .clear
@@ -137,16 +136,12 @@ final class AppTabBarController: UITabBarController {
         self.optionButton.append(button)
         self.view.addSubview(button)
         button.imageView?.isHidden = false
-        
         button.centerXAnchor.constraint(equalTo: tabBar.centerXAnchor).isActive = true
         button.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor, constant: -16).isActive = true
-        
-        button.setTitle("Добавить пост", for: .normal)
         self.view.bringSubviewToFront(button)
         button.addTarget(self, action: #selector(optionHandler(sender:)), for: .touchUpInside)
         
     }
-    
     
     @objc func optionHandler(sender: UIButton) {
         self.selectedIndex = 0
