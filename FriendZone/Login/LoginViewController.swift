@@ -86,6 +86,9 @@ class LoginViewController: UIViewController {
         button.tapButton = { [weak self] in
             self?.didTapButton()
         }
+        guard isFirstTime == true else { viewModel.viewInputDidChange(viewInput: .tapSignUp)
+            return
+        }
     }
     
     private func removeObserver() {
@@ -141,9 +144,7 @@ class LoginViewController: UIViewController {
      
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard isFirstTime == true else { viewModel.viewInputDidChange(viewInput: .tapSignUp)
-            return
-        }
+       
         if currentReachabilityStatus == .notReachable {
             self.alertOk(title: "Проверьте интернет соединение", message: nil)
         }
