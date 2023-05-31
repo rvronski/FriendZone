@@ -149,6 +149,6 @@ class MainViewModel: MainViewModelProtocol {
         }
     }
     func removeObservers() {
-        firebaseService.removeObservers()
+//        firebaseService.removeObservers() 
     }
 }

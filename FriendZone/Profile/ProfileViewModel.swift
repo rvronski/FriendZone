@@ -184,7 +184,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
         firebaseService.changeName(userName: userName, lastName: lastName)
     }
     func removeObservers() {
-        firebaseService.removeObservers()
+//        firebaseService.removeObservers()
     }
     func popToLogin() {
         coordinator?.popToLogin()

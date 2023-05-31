@@ -55,6 +55,7 @@ class ProfileViewController: UIViewController {
         self.setupGesture()
         bindViewModel()
         setupNavigationBar()
+        UserDefaults.standard.set(true, forKey: "isFirstTime")
         self.tabBarController?.tabBar.isHidden = false
         profileView.configureTableView(dataSource: self, delegate: self)
         profileView.delegate = self

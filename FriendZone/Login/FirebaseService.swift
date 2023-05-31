@@ -23,7 +23,7 @@ protocol FirebaseServiceProtocol {
     func downloadImage(imageURL: String, completion: @escaping (Data?) -> Void)
     func downloadAllUsers(completion: @escaping (NSDictionary?, [String]?) -> Void)
     func changeName(userName: String, lastName: String)
-    func removeObservers()
+    
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -180,6 +180,7 @@ class FirebaseService: FirebaseServiceProtocol {
             if error != nil {
               completion(false)
           } else {
+              print("delete succsess")
               var ref: DatabaseReference!
               ref = Database.database().reference()
               ref.child("Users").child(uid).child("posts").child(postID).removeValue()
@@ -211,13 +212,4 @@ class FirebaseService: FirebaseServiceProtocol {
         ref.child("Users/\(uid)/userName").setValue(userName)
         ref.child("Users/\(uid)/lastName").setValue(lastName)
     }
-    
-    func removeObservers() {
-//        var ref: DatabaseReference!
-//        ref = Database.database().reference()
-//        guard let uid = UserDefaults.standard.string(forKey: "UserID") else { return }
-//        ref.child("Users").child(uid).removeAllObservers()
-//        ref.child("Users").removeAllObservers()
-    }
-    
 }
