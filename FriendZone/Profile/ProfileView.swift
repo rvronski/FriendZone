@@ -42,6 +42,8 @@ final class ProfileView: UIView {
     
     lazy var fotoButton = ButtonWithSystemImage(background: nil, image: "photo.stack", imageSize: 20, symbolScale: .medium, tintcolor: .black)
 
+   
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -118,13 +120,13 @@ final class ProfileView: UIView {
         NSLayoutConstraint.activate([
         
             self.avatarImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
-            self.avatarImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.avatarImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             self.avatarImage.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.2415),
             self.avatarImage.heightAnchor.constraint(equalTo: self.avatarImage.widthAnchor),
             
             self.nameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant:27),
             self.nameLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.57),
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.avatarImage.trailingAnchor, constant: 20),
+            self.nameLabel.leadingAnchor.constraint(equalTo: self.avatarImage.trailingAnchor, constant: 10),
             
             self.followButton.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 30),
             self.followButton.leadingAnchor.constraint(equalTo: self.nameLabel.leadingAnchor),
@@ -140,6 +142,7 @@ final class ProfileView: UIView {
             
             self.publicationsButton.centerYAnchor.constraint(equalTo: self.followersButton.centerYAnchor),
             self.publicationsButton.leadingAnchor.constraint(equalTo: self.followersButton.trailingAnchor, constant: 20),
+            self.publicationsButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
             
             self.publicationsCount.bottomAnchor.constraint(equalTo: self.publicationsButton.topAnchor, constant: -5),
             self.publicationsCount.centerXAnchor.constraint(equalTo: self.publicationsButton.centerXAnchor),

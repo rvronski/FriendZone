@@ -126,8 +126,6 @@ class ProfileEditViewController: UIViewController {
         self.viewModel.changeName(userName: name ?? "", lastName: lastName ?? "")
         self.viewModel.pop()
     }
-    
-    
 }
 extension ProfileEditViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {

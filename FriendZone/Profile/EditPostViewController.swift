@@ -66,12 +66,9 @@ class EditPostViewController: UIViewController {
                     }
                 })
             })
-            
         }
-        
     }
-    
-   
+
     private func setupView() {
         self.view.backgroundColor = .white
         self.view.layer.cornerRadius = 50

@@ -168,7 +168,7 @@ class FirebaseService: FirebaseServiceProtocol {
                     "image":  url.absoluteString,
                     "likesCount": likesCount,
                     "isLike": false
-                ])
+                ] as [String : Any])
             }
         }
     }
