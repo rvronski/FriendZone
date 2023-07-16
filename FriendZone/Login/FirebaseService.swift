@@ -116,11 +116,17 @@ class FirebaseService: FirebaseServiceProtocol {
         var postStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference()
-        ref.child("Users").child(userID).observe(DataEventType.value, with: { snapshot in
-            guard let value = snapshot.value, snapshot.exists() else {
-                print("Error with getting data")
+        ref.child("Users").child(userID).getData(completion:  { error, snapshot in
+            guard error == nil else {
+                print(error!.localizedDescription)
                 return
             }
+            guard let snapshot else { return }
+//            guard let value = snapshot.value, snapshot.exists() else {
+//                print("Error with getting data")
+//                return
+//            }
+            let value = snapshot.value
             
             for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
                 for readingSnapshot in meterSnapshot.children.allObjects as! [DataSnapshot] {
@@ -136,13 +142,18 @@ class FirebaseService: FirebaseServiceProtocol {
         var usersStringIDs = [String]()
         var ref: DatabaseReference!
         ref = Database.database().reference().child("Users")
-        ref.observe(.value) { snapshot in
+        ref.getData(completion:  { error, snapshot in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            guard let snapshot else { return }
             let value = snapshot.value as? NSDictionary
             for meterSnapshot in snapshot.children.allObjects as! [DataSnapshot] {
                     usersStringIDs.append(meterSnapshot.key)
                 }
             completion(value, usersStringIDs)
-        }
+        })
     }
     
     func addposts(userName: String, image: Data, likesCount: Int, postText: String?, postID: String) {

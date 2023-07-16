@@ -24,15 +24,15 @@ class UserProfileViewController: UIViewController {
     
     lazy var nameLabel = CustomLabel(inform: "", size: 18, weight: .bold, color: .createColor(light: .black, dark: .white))
 
-    lazy var publicationsButton = CustomButton(buttonText: "Публикации", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
+    lazy var publicationsButton = CustomButton(buttonText: "Публикации", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 13, fontWeight: .regular)
     
     lazy var publicationsCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
     
-    lazy var followButton = CustomButton(buttonText: "Подписок", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
+    lazy var followButton = CustomButton(buttonText: "Подписок", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 13, fontWeight: .regular)
     
     lazy var followCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
     
-    lazy var followersButton =  CustomButton(buttonText: "Подписчики", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 14, fontWeight: .regular)
+    lazy var followersButton =  CustomButton(buttonText: "Подписчики", textColor: .createColor(light: .black, dark: .white), background: nil, fontSize: 13, fontWeight: .regular)
     
     lazy var followersCount = CustomLabel(inform: "0", size: 14, weight: .regular, color: .createColor(light: .black, dark: .white))
     

@@ -70,34 +70,6 @@ class MainViewController: UIViewController {
         }
         self.activityIndicator.isHidden = false
         self.activityIndicator.startAnimating()
-        viewModel.downloadAllUsers { 
-            for user in users {
-                let userID = user.userID
-                self.viewModel.downloadUserInfo(userID: userID) { userName, avatarData in
-                    if self.currentReachabilityStatus == .notReachable {
-                        self.alertOk(title: "Проверьте интернет соединение", message: nil)
-                        self.activityIndicator.isHidden = true
-                        self.activityIndicator.stopAnimating()
-                        return
-                    }
-                    guard let userName else {return}
-                    let avatar = Avatar(image: avatarData, name: userName, userID: userID)
-                    if avatarArray.contains(where: {$0.userID == avatar.userID}) {
-                        let index = avatarArray.firstIndex(where: {$0.userID == avatar.userID})
-                        let avtar = avatarArray[index!]
-                        if avtar.image == avatar.image, avtar.name == avatar.name {
-                            print("contains Avatar")
-                        } else {
-                            avatarArray.remove(at: index!)
-                            avatarArray.insert(avatar, at: index!)
-                            self.collectionView.reloadData()
-                        }
-                    } else {
-                        avatarArray.append(avatar)
-                    }
-                }
-            }
-        }
         
     }
     
@@ -127,6 +99,34 @@ class MainViewController: UIViewController {
             self.activityIndicator.isHidden = true
             self.activityIndicator.stopAnimating()
             return
+        }
+        viewModel.downloadAllUsers {
+            for user in users {
+                let userID = user.userID
+                self.viewModel.downloadUserInfo(userID: userID) { userName, avatarData in
+                    if self.currentReachabilityStatus == .notReachable {
+                        self.alertOk(title: "Проверьте интернет соединение", message: nil)
+                        self.activityIndicator.isHidden = true
+                        self.activityIndicator.stopAnimating()
+                        return
+                    }
+                    guard let userName else {return}
+                    let avatar = Avatar(image: avatarData, name: userName, userID: userID)
+                    if avatarArray.contains(where: {$0.userID == avatar.userID}) {
+                        let index = avatarArray.firstIndex(where: {$0.userID == avatar.userID})
+                        let avtar = avatarArray[index!]
+                        if avtar.image == avatar.image, avtar.name == avatar.name {
+                            print("contains Avatar")
+                        } else {
+                            avatarArray.remove(at: index!)
+                            avatarArray.insert(avatar, at: index!)
+                            self.collectionView.reloadData()
+                        }
+                    } else {
+                        avatarArray.append(avatar)
+                    }
+                }
+            }
         }
         self.collectionView.reloadData()
         self.tableView.reloadData()
