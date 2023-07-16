@@ -61,32 +61,6 @@ class ProfileViewController: UIViewController {
         profileView.delegate = self
         self.activityIndicator.isHidden = false
         self.activityIndicator.startAnimating()
-        downloadUserInfo {
-            if self.currentReachabilityStatus == .notReachable {
-                self.alertOk(title: "Проверьте интернет соединение", message: nil)
-                self.activityIndicator.isHidden = true
-                self.activityIndicator.stopAnimating()
-                return
-            }
-            guard (self.avatarUrl != nil) else {
-                DispatchQueue.main.async {
-                    self.profileView.nameLabel.text = self.userName
-                    self.profileView.reload()
-                    self.activityIndicator.isHidden = true
-                    self.activityIndicator.stopAnimating()
-                }
-                return }
-            self.viewModel.downloadImage(imageURL: self.avatarUrl!) { data in
-                DispatchQueue.main.async {
-                    self.profileView.avatarImage.image = UIImage(data: data)
-                    self.profileView.nameLabel.text = self.userName
-                    self.activityIndicator.isHidden = true
-                    self.activityIndicator.stopAnimating()
-                    self.profileView.reload()
-                }
-            }
-        }
-        
     }
     
     private func downloadUserInfo(completion: @escaping () -> Void) {
@@ -123,6 +97,33 @@ class ProfileViewController: UIViewController {
         }
     }
     
+    func getUserInfo() {
+        downloadUserInfo {
+            if self.currentReachabilityStatus == .notReachable {
+                self.alertOk(title: "Проверьте интернет соединение", message: nil)
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
+                return
+            }
+            guard (self.avatarUrl != nil) else {
+                DispatchQueue.main.async {
+                    self.profileView.nameLabel.text = self.userName
+                    self.profileView.reload()
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
+                return }
+            self.viewModel.downloadImage(imageURL: self.avatarUrl!) { data in
+                DispatchQueue.main.async {
+                    self.profileView.avatarImage.image = UIImage(data: data)
+                    self.profileView.nameLabel.text = self.userName
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    self.profileView.reload()
+                }
+            }
+        }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if currentReachabilityStatus == .notReachable {
@@ -131,7 +132,7 @@ class ProfileViewController: UIViewController {
             self.activityIndicator.stopAnimating()
             return
         }
-        
+        getUserInfo()
         profileView.reload()
         CustomHeaderView().reload()
         let userName = UserDefaults.standard.string(forKey: "UserName") ?? ""
