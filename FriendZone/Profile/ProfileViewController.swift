@@ -184,6 +184,8 @@ class ProfileViewController: UIViewController {
             UserDefaults.standard.set(nil, forKey: "UserID")
             UserDefaults.standard.set(nil, forKey: "UserName")
             UserDefaults.standard.set(nil, forKey: "LastName")
+            posts.removeAll()
+            allPosts.removeAll()
             self?.viewModel.popToLogin()
         }
     }
